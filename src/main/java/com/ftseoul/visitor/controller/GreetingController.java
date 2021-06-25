@@ -1,5 +1,7 @@
-package com.ftseoul.visitor.websocket;
+package com.ftseoul.visitor.controller;
 
+import com.ftseoul.visitor.websocket.Greeting;
+import com.ftseoul.visitor.websocket.HelloMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
