@@ -27,6 +27,10 @@ dependencies {
 	implementation 'org.webjars:bootstrap:3.3.7'
 	implementation 'org.webjars:jquery:3.1.1-1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation platform('software.amazon.awssdk:bom:2.16.95')
+	implementation 'software.amazon.awssdk:sns'
+	compileOnly 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.1.RELEASE'
+	compileOnly 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.1.RELEASE'
 
 	runtimeOnly 'mysql:mysql-connector-java'
 
