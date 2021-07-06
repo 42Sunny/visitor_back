@@ -71,12 +71,12 @@ public class TopicController {
     }
 
     @PostMapping("/publish")
-    public String publish(@RequestParam String topicArn, @RequestBody Map<String, Object> message) {
+    public String publish(@RequestParam String topicArn, @RequestBody String message) {
         SnsClient snsClient = credentialService.getSnsClient();
         final PublishRequest publishRequest = PublishRequest.builder()
                 .topicArn(topicArn)
                 .subject("spring boot test sms")
-                .message(message.toString())
+                .message(message)
                 .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
         log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
