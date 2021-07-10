@@ -83,4 +83,17 @@ public class TopicController {
         snsClient.close();
         return "Sent MESSAGE ID = " + publishResponse.messageId();
     }
+
+    @PostMapping("/sms")
+    public String sendMessage(@RequestBody String phoneNumber, @RequestBody String message) {
+        SnsClient snsClient = credentialService.getSnsClient();
+        PublishRequest publishRequest = PublishRequest.builder()
+            .phoneNumber(phoneNumber)
+            .message(message)
+            .build();
+        PublishResponse publishResponse = snsClient.publish(publishRequest);
+        log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
+        snsClient.close();
+        return "Sent MESSAGE ID = " + publishResponse.messageId();
+    }
 }
