@@ -1,4 +1,4 @@
-package com.ftseoul.visitor.service;
+package com.ftseoul.visitor.service.sns;
 
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.sns.model.PublishResponse;
 
 @Slf4j
 @Service
-public class AWSMessageService implements SMSService{
+public class AWSMessageService implements SMSService {
     @Value("${aws.accessKey}")
     private String awsAccessKey;
 
