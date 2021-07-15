@@ -49,6 +49,7 @@ public class ReserveController {
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         if (visitors != null) {
+            smsService.sendMessages(visitors);
             return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

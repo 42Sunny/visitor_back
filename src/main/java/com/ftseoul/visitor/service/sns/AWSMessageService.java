@@ -1,5 +1,7 @@
 package com.ftseoul.visitor.service.sns;
 
+import com.ftseoul.visitor.data.Visitor;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,10 @@ public class AWSMessageService implements SMSService {
     private String awsRegion;
 
     public CredentialService credentialService;
+
+    private final String messageTemplate = "예약번호: ";
+
+    private final String prefix = "+82";
 
     public static class CredentialService {
 
@@ -53,16 +59,22 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessage(String phoneNumber, String message) {
+    public void sendMessage(String phoneNumber, Long reserveId) {
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
-            .phoneNumber(phoneNumber)
-            .message(message)
+            .phoneNumber(prefix.concat(phoneNumber))
+            .message(messageTemplate.concat(reserveId.toString()))
             .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
         log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
         snsClient.close();
         log.info("Sent message Id is {}", publishResponse.messageId());
+    }
+
+    @Override
+    public void sendMessages(List<Visitor> visitors) {
+        visitors
+            .forEach(visitor -> sendMessage(visitor.getPhone(), visitor.getReserveId()));
     }
 
     @PostConstruct
