@@ -3,6 +3,7 @@ package com.ftseoul.visitor.controller;
 import com.ftseoul.visitor.data.Reserve;
 import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.dto.ReserveIdDto;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
 import com.ftseoul.visitor.dto.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
@@ -44,13 +45,13 @@ public class ReserveController {
 
     @Transactional
     @PostMapping(value = "/reserve/create")
-    public ResponseEntity<Boolean> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
+    public ResponseEntity<ReserveIdDto> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         if (visitors != null) {
-            return new ResponseEntity<>(true, HttpStatus.CREATED);
+            return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
