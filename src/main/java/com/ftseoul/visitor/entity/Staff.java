@@ -6,14 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "staff")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +22,14 @@ public class Staff {
 
     private String phone;
 
-    public void updateName(String name) {
+    @Builder
+    public Staff(String name, String phone) {
         this.name = name;
+        this.phone = phone;
     }
 
-    public void updatePhone(String phone) {
+    public void update(String name, String phone) {
+        this.name = name;
         this.phone = phone;
     }
 }
