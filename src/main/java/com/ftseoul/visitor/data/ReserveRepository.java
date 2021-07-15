@@ -1,8 +1,6 @@
-package com.ftseoul.visitor.repository;
+package com.ftseoul.visitor.data;
 
-import com.ftseoul.visitor.entity.Reserve;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReserveRepository extends JpaRepository<Reserve, Long> {
-
 }

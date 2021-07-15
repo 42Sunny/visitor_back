@@ -1,14 +1,12 @@
-package com.ftseoul.visitor.entity;
+package com.ftseoul.visitor.data;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.ftseoul.visitor.dto.ReserveUpdateDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,35 +24,21 @@ public class Reserve {
 
     private Long targetStaff;
 
-    private String visitorOrganization;
-
-    private String visitorName;
-
-    private String visitorPhone;
-
     private String purpose;
 
     private LocalDateTime date;
 
     @Builder
-    public Reserve(String place, Long targetStaff, String visitorOrganization,
-                   String visitorName, String visitorPhone, String purpose, LocalDateTime date) {
+    public Reserve(String place, Long targetStaff, String purpose, LocalDateTime date) {
         this.place = place;
         this.targetStaff = targetStaff;
-        this.visitorOrganization = visitorOrganization;
-        this.visitorName = visitorName;
-        this.visitorPhone = visitorPhone;
         this.purpose = purpose;
         this.date = date;
     }
 
-    public Reserve update(String place, Long targetStaff, String visitorOrganization,
-                          String visitorName, String visitorPhone, String purpose, LocalDateTime date){
+    public Reserve update(String place, Long targetStaff, String purpose, LocalDateTime date){
         this.place = place;
         this.targetStaff = targetStaff;
-        this.visitorOrganization = visitorOrganization;
-        this.visitorName = visitorName;
-        this.visitorPhone = visitorPhone;
         this.purpose = purpose;
         this.date = date;
         return this;
@@ -63,9 +47,6 @@ public class Reserve {
     public Reserve update(ReserveUpdateDto reserveUpdateDto) {
         this.place = reserveUpdateDto.getPlace();
         this.targetStaff = reserveUpdateDto.getTargetStaff();
-        this.visitorOrganization = reserveUpdateDto.getVisitorOrganization();
-        this.visitorName = reserveUpdateDto.getVisitorName();
-        this.visitorPhone = reserveUpdateDto.getVisitorPhone();
         this.purpose = reserveUpdateDto.getPurpose();
         this.date = reserveUpdateDto.getDate();
         return this;
