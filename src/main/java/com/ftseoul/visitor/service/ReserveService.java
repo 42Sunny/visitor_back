@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReserveService {
 
-    private final ReserveRepository repository;
+    private final ReserveRepository reserveRepository;
 
     public Reserve findById(Long id) {
-        return repository.findById(id)
+        return reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
     }
 }
