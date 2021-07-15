@@ -3,6 +3,7 @@ package com.ftseoul.visitor.service;
 import com.ftseoul.visitor.data.*;
 import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
+import com.ftseoul.visitor.dto.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -71,5 +72,15 @@ public class ReserveService {
             reserveRepository.delete(findById(reserve_id));
         }
         return true;
+    }
+
+    public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
+        Reserve reserve = Reserve.builder()
+            .targetStaff(reserveVisitorDto.getTargetStaff())
+            .place(reserveVisitorDto.getPlace())
+            .purpose(reserveVisitorDto.getPurpose())
+            .date(reserveVisitorDto.getDate())
+            .build();
+        return reserveRepository.save(reserve);
     }
 }

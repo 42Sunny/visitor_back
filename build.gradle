@@ -32,7 +32,7 @@ dependencies {
 	implementation 'software.amazon.awssdk:sns'
 	compileOnly 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.1.RELEASE'
 	compileOnly 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.1.RELEASE'
-
+	compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	runtimeOnly 'mysql:mysql-connector-java'
 
 	compileOnly 'org.projectlombok:lombok'
