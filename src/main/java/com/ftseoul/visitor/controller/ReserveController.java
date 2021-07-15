@@ -4,6 +4,7 @@ import com.ftseoul.visitor.data.Reserve;
 import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.ReserveIdDto;
+import com.ftseoul.visitor.dto.ReserveModifyDto;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
 import com.ftseoul.visitor.dto.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
@@ -41,6 +42,11 @@ public class ReserveController {
     @DeleteMapping("/reserve")
     public boolean reserveDelete(@RequestParam Long reserve_id, @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
         return reserveService.reserveDelete(reserve_id, deleteRequestDto);
+    }
+
+    @PutMapping("/reserve")
+    public boolean reserveUpdate(@RequestBody ReserveModifyDto reserveModifyDto) {
+        return reserveService.updateReserve(reserveModifyDto) && visitorService.updateVisitors(reserveModifyDto);
     }
 
     @Transactional

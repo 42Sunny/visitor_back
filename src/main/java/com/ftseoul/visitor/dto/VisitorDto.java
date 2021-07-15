@@ -16,8 +16,4 @@ public class VisitorDto implements Serializable {
     private String phone;
 
     private String organization;
-
-    public void updateReserveId(Long reserve_id) {
-        this.reserve_id = reserve_id;
-    }
 }

@@ -2,10 +2,12 @@ package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.*;
 import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
+import com.ftseoul.visitor.dto.ReserveModifyDto;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
 import com.ftseoul.visitor.dto.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,4 +85,15 @@ public class ReserveService {
             .build();
         return reserveRepository.save(reserve);
     }
+
+    public boolean updateReserve(ReserveModifyDto reserveModifyDto) {
+        Reserve reserve = reserveRepository
+            .findById(reserveModifyDto.getReserveId())
+            .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", reserveModifyDto.getReserveId()));
+        reserve.update(reserveModifyDto.getPlace(), reserveModifyDto.getTargetStaff(),
+            reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
+        reserveRepository.save(reserve);
+        return true;
+    }
+
 }

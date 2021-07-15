@@ -13,4 +13,6 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     List<Visitor> findAllByReserveId(Long reserve_id);
 
     Optional<Visitor> findByNameAndPhoneAndReserveId(String name, String phone, Long reserveId);
+
+    void deleteAllByReserveId(Long reserveId);
 }
