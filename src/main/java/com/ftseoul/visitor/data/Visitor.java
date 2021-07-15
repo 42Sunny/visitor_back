@@ -16,7 +16,7 @@ public class Visitor {
     private Long id;
 
     @Column(nullable = false)
-    private Long reserve_id;
+    private Long reserveId;
 
     @Column(length = 20)
     private String name;
@@ -29,7 +29,7 @@ public class Visitor {
 
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
-        this.reserve_id = reserve_id;
+        this.reserveId = reserve_id;
         this.name = name;
         this.phone = phone;
         this.organization = organization;

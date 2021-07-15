@@ -9,4 +9,8 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     List<Visitor> findAllByNameAndPhone(String name, String phone);
     Optional<Visitor> findByName(String name);
     Optional<Visitor> findByPhone(String phone);
+
+    List<Visitor> findAllByReserveId(Long reserve_id);
+
+    Optional<Visitor> findByNameAndPhoneAndReserveId(String name, String phone, Long reserveId);
 }

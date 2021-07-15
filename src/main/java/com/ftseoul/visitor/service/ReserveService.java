@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.*;
+import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
@@ -34,8 +35,8 @@ public class ReserveService {
         List<ReserveResponseDto> reserveList = new ArrayList<>();
         for (int i = 0; i < visitorList.size(); i++) {
             int finalI = i;
-            Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserve_id())
-                    .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserve_id()));
+            Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
             ReserveResponseDto.builder()
                     .staff(staffRepository.findById(reserve.getTargetStaff())
                             .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff())))
@@ -48,5 +49,27 @@ public class ReserveService {
 
         }
         return reserveList;
+    }
+
+    public boolean reserveDelete(Long reserve_id, ReserveDeleteRequestDto requestDto) {
+        visitorRepository.findByPhone(requestDto.getPhone())
+                .orElseThrow(() -> new ResourceNotFoundException("Visitor", "phone", requestDto.getPhone()));
+        visitorRepository.findByName(requestDto.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Visitor", "name", requestDto.getName()));
+        visitorRepository.findAllByNameAndPhone(requestDto.getName(), requestDto.getPhone());
+
+        List<Visitor> list = visitorRepository.findAllByReserveId(reserve_id);
+        if (list.size() > 1) {
+            for (Visitor v : list) {
+            }
+            Visitor v = visitorRepository.findByNameAndPhoneAndReserveId(requestDto.getName(), requestDto.getPhone(), reserve_id)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
+                    );
+            visitorRepository.delete(v);
+        } else {
+            reserveRepository.delete(findById(reserve_id));
+        }
+        return true;
     }
 }

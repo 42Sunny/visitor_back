@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.data.Reserve;
+import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.service.ReserveService;
@@ -25,5 +26,10 @@ public class ReserveController {
     @PostMapping("/reserves")
     public List<ReserveResponseDto> searchReserveList(@RequestBody SearchReserveRequestDto reserveRequestDto) {
         return reserveService.findAllByNameAndPhone(reserveRequestDto);
+    }
+
+    @DeleteMapping("/reserve")
+    public boolean reserveDelete(@RequestParam Long reserve_id, @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
+        return reserveService.reserveDelete(reserve_id, deleteRequestDto);
     }
 }
