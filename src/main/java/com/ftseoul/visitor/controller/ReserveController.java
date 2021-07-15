@@ -1,11 +1,18 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.data.Reserve;
+import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.ReserveResponseDto;
+import com.ftseoul.visitor.dto.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.service.ReserveService;
+import com.ftseoul.visitor.service.VisitorService;
+import com.ftseoul.visitor.service.sns.SMSService;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +23,8 @@ import java.util.List;
 public class ReserveController {
 
     private final ReserveService reserveService;
+    private final VisitorService visitorService;
+    private final SMSService smsService;
 
     @GetMapping("/reserve/{id}")
     public Reserve findById(@PathVariable Long id) {
@@ -25,5 +34,17 @@ public class ReserveController {
     @PostMapping("/reserves")
     public List<ReserveResponseDto> searchReserveList(@RequestBody SearchReserveRequestDto reserveRequestDto) {
         return reserveService.findAllByNameAndPhone(reserveRequestDto);
+    }
+
+    @Transactional
+    @PostMapping(value = "/reserve/create")
+    public ResponseEntity<Boolean> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
+        Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
+        List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
+        if (visitors != null) {
+            return new ResponseEntity<>(true, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
