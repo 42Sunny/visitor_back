@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ftseoul'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2'
 sourceCompatibility = '11'
 
 configurations {
@@ -34,7 +34,7 @@ dependencies {
 	compileOnly 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.1.RELEASE'
 	compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	runtimeOnly 'mysql:mysql-connector-java'
-
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'

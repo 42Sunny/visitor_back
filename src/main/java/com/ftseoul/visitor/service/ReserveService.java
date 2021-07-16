@@ -1,11 +1,7 @@
 package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.*;
-import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
-import com.ftseoul.visitor.dto.ReserveModifyDto;
-import com.ftseoul.visitor.dto.ReserveResponseDto;
-import com.ftseoul.visitor.dto.ReserveVisitorDto;
-import com.ftseoul.visitor.dto.SearchReserveRequestDto;
+import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +19,18 @@ public class ReserveService {
     private final VisitorRepository visitorRepository;
     private final StaffRepository staffRepository;
 
-    public Reserve findById(Long id) {
-        return reserveRepository.findById(id)
+    public ReserveListResponseDto findById(Long id) {
+        Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
+        return ReserveListResponseDto.builder()
+                .staff(staffRepository.findById(reserve.getTargetStaff())
+                        .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff())))
+                .place(reserve.getPlace())
+                .date(reserve.getDate())
+                .id(reserve.getId())
+                .purpose(reserve.getPurpose())
+                .visitor(visitorRepository.findAllByReserveId(id))
+                .build();
     }
 
     public List<ReserveResponseDto> findAllByNameAndPhone(SearchReserveRequestDto reserveRequestDto) {

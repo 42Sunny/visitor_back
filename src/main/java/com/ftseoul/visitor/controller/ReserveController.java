@@ -1,13 +1,8 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.data.Reserve;
-import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
+import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.data.Visitor;
-import com.ftseoul.visitor.dto.ReserveIdDto;
-import com.ftseoul.visitor.dto.ReserveModifyDto;
-import com.ftseoul.visitor.dto.ReserveResponseDto;
-import com.ftseoul.visitor.dto.ReserveVisitorDto;
-import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.VisitorService;
 import com.ftseoul.visitor.service.sns.SMSService;
@@ -30,7 +25,7 @@ public class ReserveController {
     private final SMSService smsService;
 
     @GetMapping("/reserve/{id}")
-    public Reserve findById(@PathVariable Long id) {
+    public ReserveListResponseDto findById(@PathVariable Long id) {
         return reserveService.findById(id);
     }
 
