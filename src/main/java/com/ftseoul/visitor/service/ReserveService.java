@@ -29,10 +29,14 @@ public class ReserveService {
     }
 
     public List<ReserveResponseDto> findAllByNameAndPhone(SearchReserveRequestDto reserveRequestDto) {
-        visitorRepository.findByName(reserveRequestDto.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor", "name", reserveRequestDto.getName()));
-        visitorRepository.findByPhone(reserveRequestDto.getPhone())
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor", "phone", reserveRequestDto.getPhone()));
+        if (visitorRepository.findAllByName(reserveRequestDto.getName()).size() == 0)
+        {
+            throw new ResourceNotFoundException("Visitor", "name", reserveRequestDto.getName());
+        }
+        if (visitorRepository.findAllByPhone(reserveRequestDto.getPhone()).size() == 0)
+        {
+            throw new ResourceNotFoundException("Visitor", "phone", reserveRequestDto.getPhone());
+        }
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(reserveRequestDto.getName(),
                 reserveRequestDto.getPhone());
         List<ReserveResponseDto> reserveList = new ArrayList<>();
