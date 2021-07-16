@@ -40,7 +40,7 @@ public class ReserveService {
             int finalI = i;
             Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
                     .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
-            ReserveResponseDto.builder()
+            reserveList.add(ReserveResponseDto.builder()
                     .staff(staffRepository.findById(reserve.getTargetStaff())
                             .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff())))
                     .visitor(visitorList.get(i))
@@ -48,7 +48,7 @@ public class ReserveService {
                     .id(reserve.getId())
                     .purpose(reserve.getPurpose())
                     .place(reserve.getPlace())
-                    .build();
+                    .build());
 
         }
         return reserveList;
