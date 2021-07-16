@@ -4,12 +4,14 @@ import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class StaffService {
     private final StaffRepository staffRepository;
 
@@ -20,6 +22,7 @@ public class StaffService {
     }
 
     public Staff findByName(String name) {
+        log.info("Staff name: " + name);
         return staffRepository
                 .findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", name));

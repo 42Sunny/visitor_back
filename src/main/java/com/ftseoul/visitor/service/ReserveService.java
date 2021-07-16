@@ -118,7 +118,9 @@ public class ReserveService {
         Reserve reserve = reserveRepository
             .findById(reserveModifyDto.getReserveId())
             .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", reserveModifyDto.getReserveId()));
-        reserve.update(reserveModifyDto.getPlace(), reserveModifyDto.getTargetStaff(),
+        Staff staff = staffRepository.findByName(reserveModifyDto.getTargetStaffName())
+            .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", reserveModifyDto.getTargetStaffName()));
+        reserve.update(reserveModifyDto.getPlace(), staff.getId(),
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
         reserveRepository.save(reserve);
         return true;
