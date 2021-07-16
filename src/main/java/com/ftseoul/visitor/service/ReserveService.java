@@ -59,12 +59,14 @@ public class ReserveService {
     }
 
     public boolean reserveDelete(Long reserve_id, ReserveDeleteRequestDto requestDto) {
-        visitorRepository.findByPhone(requestDto.getPhone())
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor", "phone", requestDto.getPhone()));
-        visitorRepository.findByName(requestDto.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor", "name", requestDto.getName()));
-        visitorRepository.findAllByNameAndPhone(requestDto.getName(), requestDto.getPhone());
-
+        if (visitorRepository.findAllByName(requestDto.getName()).size() == 0)
+        {
+            throw new ResourceNotFoundException("Visitor", "name", requestDto.getName());
+        }
+        if (visitorRepository.findAllByPhone(requestDto.getPhone()).size() == 0)
+        {
+            throw new ResourceNotFoundException("Visitor", "phone", requestDto.getPhone());
+        }
         List<Visitor> list = visitorRepository.findAllByReserveId(reserve_id);
         if (list.size() > 1) {
             for (Visitor v : list) {
