@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VisitorService {
 
     private final VisitorRepository visitorRepository;
@@ -24,7 +25,6 @@ public class VisitorService {
         return visitorRepository.saveAll(visitors);
     }
 
-    @Transactional
     public boolean updateVisitors(ReserveModifyDto modifyDto) {
         visitorRepository.deleteAllByReserveId(modifyDto.getReserveId());
         saveVisitors(modifyDto.getReserveId(), modifyDto.getVisitor());

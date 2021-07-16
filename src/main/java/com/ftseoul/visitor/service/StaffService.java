@@ -5,9 +5,11 @@ import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StaffService {
     private final StaffRepository staffRepository;
 

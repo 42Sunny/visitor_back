@@ -7,12 +7,14 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class ReserveService {
 
     private final ReserveRepository reserveRepository;
