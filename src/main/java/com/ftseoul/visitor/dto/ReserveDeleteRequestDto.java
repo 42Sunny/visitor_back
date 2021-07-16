@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ReserveDeleteRequestDto implements Serializable {
     private String phone;
     private String name;
