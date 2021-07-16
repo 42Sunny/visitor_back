@@ -64,6 +64,13 @@ public class ReserveService {
     }
 
     public boolean reserveDelete(Long reserve_id, ReserveDeleteRequestDto requestDto) {
+        if (requestDto == null) {
+            if (visitorRepository.findAllByReserveId(reserve_id).size() > 0) {
+                reserveRepository.deleteById(reserve_id);
+                visitorRepository.deleteAllByReserveId(reserve_id);
+            }
+            return true;
+        }
         if (visitorRepository.findAllByName(requestDto.getName()).size() == 0)
         {
             throw new ResourceNotFoundException("Visitor", "name", requestDto.getName());
@@ -84,7 +91,7 @@ public class ReserveService {
             visitorRepository.delete(v);
         }
         if (list.size() == 1) {
-            reserveRepository.delete(findById(reserve_id));
+            reserveRepository.delete(reserveRepository.findById(reserve_id).get());
         }
         return true;
     }
