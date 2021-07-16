@@ -1,9 +1,11 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.data.Reserve;
+import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.service.ReserveService;
+import com.ftseoul.visitor.service.StaffService;
 import com.ftseoul.visitor.service.VisitorService;
 import com.ftseoul.visitor.service.sns.SMSService;
 import javax.transaction.Transactional;
@@ -22,6 +24,7 @@ public class ReserveController {
 
     private final ReserveService reserveService;
     private final VisitorService visitorService;
+    private final StaffService  staffService;
     private final SMSService smsService;
 
     @GetMapping("/reserve/{id}")
@@ -49,8 +52,10 @@ public class ReserveController {
     public ResponseEntity<ReserveIdDto> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
+        Staff staff = staffService.findById(reserveVisitorDto.getTargetStaff());
         if (visitors != null) {
             smsService.sendMessages(visitors);
+            smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));
             return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
