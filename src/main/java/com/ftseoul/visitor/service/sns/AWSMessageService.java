@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.service.sns;
 
 import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.dto.StaffDto;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class AWSMessageService implements SMSService {
     private final String messageTemplate = "예약번호: ";
 
     private final String prefix = "+82";
+
+    private final String suffix = "로예약 신청되었습니다.";
 
     public static class CredentialService {
 
@@ -64,6 +67,19 @@ public class AWSMessageService implements SMSService {
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(phoneNumber))
             .message(messageTemplate.concat(reserveId.toString()))
+            .build();
+        PublishResponse publishResponse = snsClient.publish(publishRequest);
+        log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
+        snsClient.close();
+        log.info("Sent message Id is {}", publishResponse.messageId());
+    }
+
+    @Override
+    public void sendMessage(StaffDto staffDto) {
+        SnsClient snsClient = credentialService.getSnsClient();
+        PublishRequest publishRequest = PublishRequest.builder()
+            .phoneNumber(prefix.concat(staffDto.getPhone()))
+            .message(messageTemplate.concat(staffDto.getReserveId().toString()).concat(suffix))
             .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
         log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
