@@ -16,7 +16,7 @@ public class ReserveModifyDto implements Serializable {
 
     private String place;
 
-    private Long targetStaff;
+    private String targetStaffName;
 
     private String purpose;
 
