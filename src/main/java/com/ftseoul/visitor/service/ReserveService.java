@@ -5,6 +5,7 @@ import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class ReserveService {
 
     private final ReserveRepository reserveRepository;
@@ -66,6 +68,7 @@ public class ReserveService {
     }
 
     public boolean reserveDelete(Long reserve_id, ReserveDeleteRequestDto requestDto) {
+        log.info("reserve delete");
         if (requestDto == null) {
             if (visitorRepository.findAllByReserveId(reserve_id).size() > 0) {
                 reserveRepository.deleteById(reserve_id);
@@ -100,11 +103,14 @@ public class ReserveService {
 
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
         Reserve reserve = Reserve.builder()
-            .targetStaff(reserveVisitorDto.getTargetStaff())
-            .place(reserveVisitorDto.getPlace())
-            .purpose(reserveVisitorDto.getPurpose())
-            .date(reserveVisitorDto.getDate())
-            .build();
+                .targetStaff(staffRepository.findByName(reserveVisitorDto.getTargetStaffName())
+                        .orElseThrow(
+                                () -> new ResourceNotFoundException("Staff", "name", reserveVisitorDto.getTargetStaffName())
+                        ).getId())
+                .place(reserveVisitorDto.getPlace())
+                .purpose(reserveVisitorDto.getPurpose())
+                .date(reserveVisitorDto.getDate())
+                .build();
         return reserveRepository.save(reserve);
     }
 

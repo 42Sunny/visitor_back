@@ -53,8 +53,8 @@ public class ReserveController {
         log.info("/reserve/create");
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
-        log.info("target Staff id: " + reserveVisitorDto.getTargetStaff().toString());
-        Staff staff = staffService.findById(reserveVisitorDto.getTargetStaff());
+        log.info("target Staff id: " + reserveVisitorDto.getTargetStaffName());
+        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         if (visitors != null) {
             smsService.sendMessages(visitors);
             smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));

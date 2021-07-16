@@ -18,4 +18,10 @@ public class StaffService {
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", id));
     }
+
+    public Staff findByName(String name) {
+        return staffRepository
+                .findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", name));
+    }
 }
