@@ -38,7 +38,7 @@ public class ReserveController {
     }
 
     @DeleteMapping("/reserve")
-    public boolean reserveDelete(@RequestParam Long reserve_id, @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
+    public boolean reserveDelete(Long reserve_id, @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
         return reserveService.reserveDelete(reserve_id, deleteRequestDto);
     }
 
