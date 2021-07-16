@@ -68,15 +68,17 @@ public class ReserveService {
             throw new ResourceNotFoundException("Visitor", "phone", requestDto.getPhone());
         }
         List<Visitor> list = visitorRepository.findAllByReserveId(reserve_id);
-        if (list.size() > 1) {
-            for (Visitor v : list) {
-            }
+        if (list.size() == 0) {
+            throw new ResourceNotFoundException("Reserve", "id", reserve_id);
+        }
+        else {
             Visitor v = visitorRepository.findByNameAndPhoneAndReserveId(requestDto.getName(), requestDto.getPhone(), reserve_id)
                     .orElseThrow(
                             () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
                     );
             visitorRepository.delete(v);
-        } else {
+        }
+        if (list.size() == 1) {
             reserveRepository.delete(findById(reserve_id));
         }
         return true;
