@@ -50,9 +50,11 @@ public class ReserveController {
     @Transactional
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
+        log.info("/reserve/create");
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
-        Staff staff = staffService.findById(reserveVisitorDto.getTargetStaff());
+        log.info("target Staff id: " + reserveVisitorDto.getTargetStaffName());
+        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         if (visitors != null) {
             smsService.sendMessages(visitors);
             smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));

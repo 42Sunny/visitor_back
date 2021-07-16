@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ReserveVisitorDto implements Serializable {
     private String place;
 
-    private Long targetStaff;
+    private String targetStaffName;
 
     private String purpose;
 
