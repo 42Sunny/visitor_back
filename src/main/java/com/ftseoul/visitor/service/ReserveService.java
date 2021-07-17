@@ -3,6 +3,7 @@ package com.ftseoul.visitor.service;
 import com.ftseoul.visitor.data.*;
 import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.service.sns.SMSService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final VisitorRepository visitorRepository;
     private final StaffRepository staffRepository;
+    private final SMSService smsService;
 
     public ReserveListResponseDto findById(Long id) {
         log.info("findById: " + id.toString());
@@ -150,6 +152,7 @@ public class ReserveService {
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
         log.info("reserve update: " + reserve);
         reserveRepository.save(reserve);
+        smsService.sendMessage(new StaffDto(staff.getId(), staff.getPhone()));
         return true;
     }
 
