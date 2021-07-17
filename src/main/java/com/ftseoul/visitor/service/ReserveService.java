@@ -117,10 +117,10 @@ public class ReserveService {
                             () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
                     );
             visitorRepository.delete(v);
-            log.info("Visitor delete: " + v.toString());
+            log.info("Visitor delete: " + v);
         }
         if (list.size() == 1) {
-            log.info("Reserve delete: " + reserve_id.toString());
+            log.info("Reserve delete: " + reserve_id);
             reserveRepository.delete(reserveRepository.findById(reserve_id).get());
         }
         return true;
@@ -136,6 +136,7 @@ public class ReserveService {
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
                 .build();
+        log.info("save repository: " + reserve);
         return reserveRepository.save(reserve);
     }
 
@@ -147,6 +148,7 @@ public class ReserveService {
             .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", reserveModifyDto.getTargetStaffName()));
         reserve.update(reserveModifyDto.getPlace(), staff.getId(),
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
+        log.info("reserve update: " + reserve);
         reserveRepository.save(reserve);
         return true;
     }
