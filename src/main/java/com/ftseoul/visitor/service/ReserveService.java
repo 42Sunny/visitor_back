@@ -61,6 +61,28 @@ public class ReserveService {
         return reserveList;
     }
 
+    public List<ReserveListResponseDto> findReserveByVisitor(SearchReserveRequestDto requestDto) {
+        checkExistVisitorName(requestDto.getName(), requestDto.getPhone());
+        List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(requestDto.getName(), requestDto.getPhone());
+        List<ReserveListResponseDto> responseDtos = new ArrayList<>();
+        for (int i = 0; i < visitorList.size(); i++) {
+            int finalI = i;
+            Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
+            responseDtos
+                    .add(ReserveListResponseDto.builder()
+                            .id(reserve.getId())
+                            .date(reserve.getDate())
+                            .place(reserve.getPlace())
+                            .purpose(reserve.getPurpose())
+                            .staff(staffRepository.findById(reserve.getTargetStaff())
+                                    .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff())))
+                            .visitor(visitorRepository.findAllByReserveId(reserve.getId()))
+                            .build());
+        }
+        return responseDtos;
+    }
+
     private void checkExistVisitorName(String name, String phone) {
         if (visitorRepository.findAllByName(name).size() == 0)
         {
@@ -95,10 +117,10 @@ public class ReserveService {
                             () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
                     );
             visitorRepository.delete(v);
-            log.info("Visitor delete: " + v.toString());
+            log.info("Visitor delete: " + v);
         }
         if (list.size() == 1) {
-            log.info("Reserve delete: " + reserve_id.toString());
+            log.info("Reserve delete: " + reserve_id);
             reserveRepository.delete(reserveRepository.findById(reserve_id).get());
         }
         return true;
@@ -114,6 +136,7 @@ public class ReserveService {
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
                 .build();
+        log.info("save repository: " + reserve);
         return reserveRepository.save(reserve);
     }
 
@@ -125,6 +148,7 @@ public class ReserveService {
             .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", reserveModifyDto.getTargetStaffName()));
         reserve.update(reserveModifyDto.getPlace(), staff.getId(),
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
+        log.info("reserve update: " + reserve);
         reserveRepository.save(reserve);
         return true;
     }
