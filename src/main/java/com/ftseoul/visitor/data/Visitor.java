@@ -18,10 +18,10 @@ public class Visitor {
     @Column(nullable = false)
     private Long reserveId;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String name;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String phone;
 
     @Column(length = 50)
