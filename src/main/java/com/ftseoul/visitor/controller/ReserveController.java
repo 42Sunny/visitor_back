@@ -29,7 +29,6 @@ public class ReserveController {
 
     @GetMapping("/reserve/{id}")
     public ReserveListResponseDto findById(@PathVariable Long id) {
-        log.info();
         return reserveService.findById(id);
     }
 
