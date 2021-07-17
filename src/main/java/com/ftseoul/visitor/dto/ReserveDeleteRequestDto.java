@@ -17,4 +17,12 @@ public class ReserveDeleteRequestDto implements Serializable {
         this.phone = phone;
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "ReserveDeleteRequestDto{" +
+                "phone='" + phone + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

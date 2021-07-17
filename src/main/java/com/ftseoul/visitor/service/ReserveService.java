@@ -24,6 +24,7 @@ public class ReserveService {
     private final StaffRepository staffRepository;
 
     public ReserveListResponseDto findById(Long id) {
+        log.info("findById: " + id.toString());
         Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
         return ReserveListResponseDto.builder()
@@ -38,14 +39,7 @@ public class ReserveService {
     }
 
     public List<ReserveResponseDto> findAllByNameAndPhone(SearchReserveRequestDto reserveRequestDto) {
-        if (visitorRepository.findAllByName(reserveRequestDto.getName()).size() == 0)
-        {
-            throw new ResourceNotFoundException("Visitor", "name", reserveRequestDto.getName());
-        }
-        if (visitorRepository.findAllByPhone(reserveRequestDto.getPhone()).size() == 0)
-        {
-            throw new ResourceNotFoundException("Visitor", "phone", reserveRequestDto.getPhone());
-        }
+        checkExistVisitorName(reserveRequestDto.getName(), reserveRequestDto.getPhone());
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(reserveRequestDto.getName(),
                 reserveRequestDto.getPhone());
         List<ReserveResponseDto> reserveList = new ArrayList<>();
@@ -67,25 +61,32 @@ public class ReserveService {
         return reserveList;
     }
 
+    private void checkExistVisitorName(String name, String phone) {
+        if (visitorRepository.findAllByName(name).size() == 0)
+        {
+            log.error("visitor name is not found");
+            throw new ResourceNotFoundException("Visitor", "name", name);
+        }
+        if (visitorRepository.findAllByPhone(phone).size() == 0)
+        {
+            log.error("visitor phone is not phone");
+            throw new ResourceNotFoundException("Visitor", "phone", phone);
+        }
+    }
+
     public boolean reserveDelete(Long reserve_id, ReserveDeleteRequestDto requestDto) {
-        log.info("reserve delete");
         if (requestDto == null) {
+            log.info("dto is null, reserve_id: " + reserve_id.toString());
             if (visitorRepository.findAllByReserveId(reserve_id).size() > 0) {
                 reserveRepository.deleteById(reserve_id);
                 visitorRepository.deleteAllByReserveId(reserve_id);
             }
             return true;
         }
-        if (visitorRepository.findAllByName(requestDto.getName()).size() == 0)
-        {
-            throw new ResourceNotFoundException("Visitor", "name", requestDto.getName());
-        }
-        if (visitorRepository.findAllByPhone(requestDto.getPhone()).size() == 0)
-        {
-            throw new ResourceNotFoundException("Visitor", "phone", requestDto.getPhone());
-        }
+        checkExistVisitorName(requestDto.getName(), requestDto.getPhone());
         List<Visitor> list = visitorRepository.findAllByReserveId(reserve_id);
         if (list.size() == 0) {
+            log.error("reserve id is not found: " + reserve_id.toString());
             throw new ResourceNotFoundException("Reserve", "id", reserve_id);
         }
         else {
@@ -94,6 +95,7 @@ public class ReserveService {
                             () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
                     );
             visitorRepository.delete(v);
+            log.info(v.toString())
         }
         if (list.size() == 1) {
             reserveRepository.delete(reserveRepository.findById(reserve_id).get());

@@ -34,4 +34,15 @@ public class Visitor {
         this.phone = phone;
         this.organization = organization;
     }
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "id=" + id +
+                ", reserveId=" + reserveId +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", organization='" + organization + '\'' +
+                '}';
+    }
 }

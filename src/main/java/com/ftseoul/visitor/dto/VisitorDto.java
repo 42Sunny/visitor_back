@@ -16,4 +16,14 @@ public class VisitorDto implements Serializable {
     private String phone;
 
     private String organization;
+
+    @Override
+    public String toString() {
+        return "VisitorDto{" +
+                "reserve_id=" + reserve_id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", organization='" + organization + '\'' +
+                '}';
+    }
 }
