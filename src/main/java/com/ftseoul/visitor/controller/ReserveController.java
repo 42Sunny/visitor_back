@@ -33,8 +33,8 @@ public class ReserveController {
     }
 
     @PostMapping("/reserves")
-    public List<ReserveResponseDto> searchReserveList(@RequestBody SearchReserveRequestDto reserveRequestDto) {
-        return reserveService.findAllByNameAndPhone(reserveRequestDto);
+    public List<ReserveListResponseDto> searchReserveList(@RequestBody SearchReserveRequestDto reserveRequestDto) {
+        return reserveService.findReserveByVisitor(reserveRequestDto);
     }
 
     @DeleteMapping("/reserve")
