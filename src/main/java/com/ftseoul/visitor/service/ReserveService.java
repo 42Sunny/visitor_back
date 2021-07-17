@@ -95,9 +95,10 @@ public class ReserveService {
                             () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
                     );
             visitorRepository.delete(v);
-            log.info(v.toString())
+            log.info("Visitor delete: " + v.toString());
         }
         if (list.size() == 1) {
+            log.info("Reserve delete: " + reserve_id.toString());
             reserveRepository.delete(reserveRepository.findById(reserve_id).get());
         }
         return true;
