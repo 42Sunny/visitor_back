@@ -30,4 +30,13 @@ public class Staff {
         this.name = name;
         this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }

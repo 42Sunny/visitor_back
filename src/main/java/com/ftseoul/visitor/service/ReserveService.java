@@ -61,6 +61,28 @@ public class ReserveService {
         return reserveList;
     }
 
+    public List<ReserveListResponseDto> findReserveByVisitor(SearchReserveRequestDto requestDto) {
+        checkExistVisitorName(requestDto.getName(), requestDto.getPhone());
+        List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(requestDto.getName(), requestDto.getPhone());
+        List<ReserveListResponseDto> responseDtos = new ArrayList<>();
+        for (int i = 0; i < visitorList.size(); i++) {
+            int finalI = i;
+            Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
+            responseDtos
+                    .add(ReserveListResponseDto.builder()
+                            .id(reserve.getId())
+                            .date(reserve.getDate())
+                            .place(reserve.getPlace())
+                            .purpose(reserve.getPurpose())
+                            .staff(staffRepository.findById(reserve.getTargetStaff())
+                                    .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff())))
+                            .visitor(visitorRepository.findAllByReserveId(reserve.getId()))
+                            .build());
+        }
+        return responseDtos;
+    }
+
     private void checkExistVisitorName(String name, String phone) {
         if (visitorRepository.findAllByName(name).size() == 0)
         {

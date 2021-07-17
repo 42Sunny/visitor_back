@@ -31,4 +31,16 @@ public class ReserveListResponseDto {
         this.purpose = purpose;
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "ReserveListResponseDto{" +
+                "id=" + id +
+                ", place='" + place + '\'' +
+                ", staff=" + staff +
+                ", visitor=" + visitor +
+                ", purpose='" + purpose + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }
