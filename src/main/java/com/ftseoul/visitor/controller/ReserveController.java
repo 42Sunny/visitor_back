@@ -29,6 +29,7 @@ public class ReserveController {
 
     @GetMapping("/reserve/{id}")
     public ReserveListResponseDto findById(@PathVariable Long id) {
+        log.info();
         return reserveService.findById(id);
     }
 
@@ -39,11 +40,15 @@ public class ReserveController {
 
     @DeleteMapping("/reserve")
     public boolean reserveDelete(Long reserve_id, @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
+        log.info("reserve delete");
+        log.info("id: " + reserve_id.toString() + ", dto: " + deleteRequestDto.toString());
         return reserveService.reserveDelete(reserve_id, deleteRequestDto);
     }
 
     @PutMapping("/reserve")
     public boolean reserveUpdate(@RequestBody ReserveModifyDto reserveModifyDto) {
+        log.info("reserve update");
+        log.info(reserveModifyDto.toString());
         return reserveService.updateReserve(reserveModifyDto) && visitorService.updateVisitors(reserveModifyDto);
     }
 
@@ -51,9 +56,10 @@ public class ReserveController {
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
         log.info("/reserve/create");
+        log.info("dto: " + reserveVisitorDto.toString());
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
-        log.info("target Staff id: " + reserveVisitorDto.getTargetStaffName());
+        log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         if (visitors != null) {
             smsService.sendMessages(visitors);

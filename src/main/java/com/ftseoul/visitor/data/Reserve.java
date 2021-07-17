@@ -17,14 +17,16 @@ public class Reserve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 4)
+    @Column(length = 4, nullable = false)
     private String place;
 
+    @Column(nullable = false)
     private Long targetStaff;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String purpose;
 
+    @Column(nullable = false)
     private LocalDateTime date;
 
     @Builder

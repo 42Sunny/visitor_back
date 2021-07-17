@@ -22,5 +22,16 @@ public class ReserveVisitorDto implements Serializable {
     private LocalDateTime date;
 
     private List<VisitorDto> visitor;
+
+    @Override
+    public String toString() {
+        return "ReserveVisitorDto{" +
+                "place='" + place + '\'' +
+                ", targetStaffName='" + targetStaffName + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", date=" + date +
+                ", visitor=" + visitor +
+                '}';
+    }
 }
 

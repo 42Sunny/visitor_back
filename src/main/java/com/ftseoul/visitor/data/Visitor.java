@@ -18,10 +18,10 @@ public class Visitor {
     @Column(nullable = false)
     private Long reserveId;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String name;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String phone;
 
     @Column(length = 50)
@@ -33,5 +33,16 @@ public class Visitor {
         this.name = name;
         this.phone = phone;
         this.organization = organization;
+    }
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "id=" + id +
+                ", reserveId=" + reserveId +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", organization='" + organization + '\'' +
+                '}';
     }
 }
