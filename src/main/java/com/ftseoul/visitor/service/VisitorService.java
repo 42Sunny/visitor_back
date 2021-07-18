@@ -34,7 +34,6 @@ public class VisitorService {
         List<VisitorModifyDto> visitorList = modifyDto.getVisitor();
         updateDeletedVisitors(visitorList, reserveId);
         List<Visitor> newVisitors = updateNewVisitors(visitorList, reserveId);
-        checkDuplicatedPhone(newVisitors);
         smsService.sendMessages(newVisitors);
         return true;
     }
@@ -53,6 +52,7 @@ public class VisitorService {
            .filter(VisitorModifyDto::isChanged)
            .map(v -> new Visitor(reserveId, v.getName(), v.getPhone(), v.getOrganization()))
            .collect(Collectors.toList());
+       checkDuplicatedPhone(newVisitors);
        return visitorRepository.saveAll(newVisitors);
    }
 

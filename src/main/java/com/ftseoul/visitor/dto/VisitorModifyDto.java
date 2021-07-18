@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class VisitorModifyDto implements Serializable {
 
     private String organization;
 
+    @JsonProperty("isChanged")
     private boolean isChanged;
 
     @Override

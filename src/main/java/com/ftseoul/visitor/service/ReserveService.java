@@ -152,7 +152,7 @@ public class ReserveService {
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
         log.info("reserve update: " + reserve);
         reserveRepository.save(reserve);
-        smsService.sendMessage(new StaffDto(staff.getId(), staff.getPhone()));
+        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));
         return true;
     }
 
