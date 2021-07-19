@@ -23,7 +23,7 @@ public class ReserveModifyDto implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime date;
 
-    private List<VisitorDto> visitor;
+    private List<VisitorModifyDto> visitor;
 
     @Override
     public String toString() {
