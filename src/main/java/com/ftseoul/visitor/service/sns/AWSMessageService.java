@@ -35,7 +35,7 @@ public class AWSMessageService implements SMSService {
 
     private final String suffix = "로예약 신청되었습니다.";
 
-    private final String QRCodePath = "\nQR코드: https://visitor.dev.42seoul.io/";
+    private final String QRCodePath = "\nQR코드: https://visitor.dev.42seoul.io/qr/";
 
     public static class CredentialService {
 
