@@ -1,9 +1,11 @@
 package com.ftseoul.visitor.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.Visitor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +22,7 @@ public class ReserveListResponseDto {
 
     private String purpose;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime date;
 
     @Builder
