@@ -24,6 +24,7 @@ public class ReserveService {
     private final VisitorRepository visitorRepository;
     private final StaffRepository staffRepository;
     private final SMSService smsService;
+    private final QRcodeService qrCodeService;
 
     public ReserveListResponseDto findById(Long id) {
         log.info("findById: " + id.toString());
