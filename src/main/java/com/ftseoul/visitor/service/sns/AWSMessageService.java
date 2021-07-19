@@ -97,7 +97,7 @@ public class AWSMessageService implements SMSService {
             .forEach(visitor -> sendMessage(
                 visitor.getPhone(),
                 visitor.getReserveId(),
-                QRcodeService.serialize(visitor.getId())
+                visitor.getId().toString()
                 ));
     }
 
