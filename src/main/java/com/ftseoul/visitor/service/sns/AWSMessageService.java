@@ -2,6 +2,7 @@ package com.ftseoul.visitor.service.sns;
 
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.StaffDto;
+import com.ftseoul.visitor.service.QRcodeService;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,8 @@ public class AWSMessageService implements SMSService {
 
     private final String suffix = "로예약 신청되었습니다.";
 
+    private final String QRCodePath = "\nQR코드: https://visitor.dev.42seoul.io/qr/";
+
     public static class CredentialService {
 
         private final String accessKey;
@@ -62,11 +65,12 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessage(String phoneNumber, Long reserveId) {
+    public void sendMessage(String phoneNumber, Long reserveId, String QRcode) {
+        String message = messageTemplate + reserveId.toString() + QRCodePath + QRcode;
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(phoneNumber))
-            .message(messageTemplate.concat(reserveId.toString()))
+            .message(message)
             .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
         log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
@@ -90,7 +94,11 @@ public class AWSMessageService implements SMSService {
     @Override
     public void sendMessages(List<Visitor> visitors) {
         visitors
-            .forEach(visitor -> sendMessage(visitor.getPhone(), visitor.getReserveId()));
+            .forEach(visitor -> sendMessage(
+                visitor.getPhone(),
+                visitor.getReserveId(),
+                visitor.getId().toString()
+                ));
     }
 
     @PostConstruct

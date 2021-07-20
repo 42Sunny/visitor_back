@@ -20,6 +20,7 @@ public class VisitorService {
 
     private final VisitorRepository visitorRepository;
     private final SMSService smsService;
+    private final QRcodeService qrcodeService;
 
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         List<Visitor> visitors = visitorDto
