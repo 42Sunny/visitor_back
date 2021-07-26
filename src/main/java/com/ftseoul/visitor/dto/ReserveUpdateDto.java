@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
