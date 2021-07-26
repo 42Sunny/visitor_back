@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -24,10 +25,12 @@ public class ReserveModifyDto implements Serializable {
     @NotBlank(message = "방문 목적을 입력해주세요")
     private String purpose;
 
-    @NotBlank(message = "방문 시간을 입력해주세요")
+    @NotNull(message = "방문 시간을 입력해주세요")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime date;
 
+    @Valid
+    @NotNull(message = "방문자가 존재하지 않습니다")
     private List<VisitorModifyDto> visitor;
 
     @Override
