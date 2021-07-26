@@ -9,6 +9,7 @@ import com.ftseoul.visitor.service.StaffService;
 import com.ftseoul.visitor.service.VisitorService;
 import com.ftseoul.visitor.service.sns.SMSService;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,26 +34,26 @@ public class ReserveController {
     }
 
     @PostMapping("/reserves")
-    public List<ReserveListResponseDto> searchReserveList(@RequestBody SearchReserveRequestDto reserveRequestDto) {
+    public List<ReserveListResponseDto> searchReserveList(@Valid @RequestBody SearchReserveRequestDto reserveRequestDto) {
         return reserveService.findReserveByVisitor(reserveRequestDto);
     }
 
     @DeleteMapping("/reserve")
-    public boolean reserveDelete(Long reserve_id, @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
+    public boolean reserveDelete(Long reserve_id, @Valid @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
         log.info("reserve delete");
         log.info("id: " + reserve_id.toString() + ", dto: " + deleteRequestDto);
         return reserveService.reserveDelete(reserve_id, deleteRequestDto);
     }
 
     @PutMapping("/reserve")
-    public boolean reserveUpdate(@RequestBody ReserveModifyDto reserveModifyDto) {
+    public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
         log.info("reserve update: " + reserveModifyDto);
         return reserveService.updateReserve(reserveModifyDto) && visitorService.updateVisitors(reserveModifyDto);
     }
 
     @Transactional
     @PostMapping(value = "/reserve/create")
-    public ResponseEntity<ReserveIdDto> enrollReserve(@RequestBody ReserveVisitorDto reserveVisitorDto) {
+    public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         log.info("/reserve/create");
         log.info("dto: " + reserveVisitorDto);
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
