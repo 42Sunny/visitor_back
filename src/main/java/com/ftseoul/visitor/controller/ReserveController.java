@@ -48,7 +48,7 @@ public class ReserveController {
     @PutMapping("/reserve")
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
         log.info("reserve update: " + reserveModifyDto);
-        return reserveService.updateReserve(reserveModifyDto) && visitorService.updateVisitors(reserveModifyDto);
+        return reserveService.updateReserve(reserveModifyDto);
     }
 
     @Transactional
@@ -62,7 +62,8 @@ public class ReserveController {
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         if (visitors != null) {
             smsService.sendMessages(visitors);
-            smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));
+            smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(), reserveVisitorDto.getDate(),
+                visitors));
             return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

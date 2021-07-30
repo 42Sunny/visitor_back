@@ -23,6 +23,7 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final VisitorRepository visitorRepository;
     private final StaffRepository staffRepository;
+    private final VisitorService visitorService;
     private final SMSService smsService;
     private final QRcodeService qrCodeService;
 
@@ -153,7 +154,8 @@ public class ReserveService {
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
         log.info("reserve update: " + reserve);
         reserveRepository.save(reserve);
-        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));
+        List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
+        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(), reserveModifyDto.getDate(), visitors));
         return true;
     }
 
