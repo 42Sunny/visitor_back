@@ -28,7 +28,6 @@ public class ReserveService {
     private final QRcodeService qrCodeService;
 
     public ReserveListResponseDto findById(Long id) {
-        log.info("findById: " + id.toString());
         Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
         return ReserveListResponseDto.builder()

@@ -18,4 +18,12 @@ public class SearchReserveRequestDto {
         this.phone = phone;
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "SearchReserveRequestDto{" +
+                "phone='" + phone + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
