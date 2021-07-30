@@ -42,8 +42,7 @@ public class ReserveController {
 
     @DeleteMapping("/reserve")
     public boolean reserveDelete(Long reserve_id, @Valid @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
-        log.info("reserve delete");
-        log.info("id: " + reserve_id.toString() + ", dto: " + deleteRequestDto);
+        log.info("reserve delete\nid: " + reserve_id.toString() + ", dto: " + deleteRequestDto);
         return reserveService.reserveDelete(reserve_id, deleteRequestDto);
     }
 
@@ -56,14 +55,15 @@ public class ReserveController {
     @Transactional
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
-        log.info("/reserve/create");
-        log.info("dto: " + reserveVisitorDto);
+        log.info("/reserve/create\ndto: " + reserveVisitorDto);
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         if (visitors != null) {
+            log.info("send msg(visitor): " + visitors);
             smsService.sendMessages(visitors);
+            log.info("send msg(staff): " + new StaffDto(reserve.getId(), staff.getPhone()));
             smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone()));
             return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
         } else {
