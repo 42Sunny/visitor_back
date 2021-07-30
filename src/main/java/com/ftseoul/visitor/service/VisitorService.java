@@ -11,11 +11,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class VisitorService {
 
     private final VisitorRepository visitorRepository;
@@ -35,6 +37,7 @@ public class VisitorService {
         List<VisitorModifyDto> visitorList = modifyDto.getVisitor();
         updateDeletedVisitors(visitorList, reserveId);
         List<Visitor> newVisitors = updateNewVisitors(visitorList, reserveId);
+        log.info("send message: " + newVisitors);
         smsService.sendMessages(newVisitors);
         return true;
     }
@@ -44,6 +47,7 @@ public class VisitorService {
            .stream()
            .map(VisitorModifyDto::getPhone)
            .collect(Collectors.toList());
+       log.info("id: " + reserveId + "\nvisitor update: " + visitors);
        visitorRepository.updateDeletedVisitors(phoneLists, reserveId);
    }
 

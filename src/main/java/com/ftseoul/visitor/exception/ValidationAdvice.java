@@ -23,9 +23,9 @@ public class ValidationAdvice {
         final BindingResult br = exception.getBindingResult();
         final List<FieldError> fieldErrors = br.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
-            log.error("field: {}", fieldError.getField());
-            log.error("message: {}", fieldError.getDefaultMessage());
-            log.error("rejectedValue: {}", fieldError.getRejectedValue());
+            log.error("field: " + fieldError.getField() + "\n"
+                    + "message: " + fieldError.getDefaultMessage() + "\n"
+                    + "rejectedValue: " + fieldError.getRejectedValue());
         }
 
       return new ErrorMessage(fieldErrors

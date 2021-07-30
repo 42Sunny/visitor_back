@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisitorDto implements Serializable {
-    @NotNull(message = "예약 아이디를 입력 해주세요")
     private Long reserve_id;
     @NotBlank(message = "성함을 입력해주세요")
     private String name;
