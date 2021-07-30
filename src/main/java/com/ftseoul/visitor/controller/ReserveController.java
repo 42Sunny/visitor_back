@@ -30,11 +30,13 @@ public class ReserveController {
 
     @GetMapping("/reserve/{id}")
     public ReserveListResponseDto findById(@PathVariable Long id) {
+        log.info("/reserve/" + id + "\n");
         return reserveService.findById(id);
     }
 
     @PostMapping("/reserves")
     public List<ReserveListResponseDto> searchReserveList(@Valid @RequestBody SearchReserveRequestDto reserveRequestDto) {
+        log.info("/reserves\n" + "parameter: " + reserveRequestDto);
         return reserveService.findReserveByVisitor(reserveRequestDto);
     }
 
