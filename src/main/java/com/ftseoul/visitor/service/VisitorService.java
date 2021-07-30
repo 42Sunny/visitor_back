@@ -32,14 +32,14 @@ public class VisitorService {
         return visitorRepository.saveAll(visitors);
     }
 
-    public boolean updateVisitors(ReserveModifyDto modifyDto) {
+    public List<Visitor> updateVisitors(ReserveModifyDto modifyDto) {
         Long reserveId = modifyDto.getReserveId();
         List<VisitorModifyDto> visitorList = modifyDto.getVisitor();
         updateDeletedVisitors(visitorList, reserveId);
         List<Visitor> newVisitors = updateNewVisitors(visitorList, reserveId);
         log.info("send message: " + newVisitors);
         smsService.sendMessages(newVisitors);
-        return true;
+        return newVisitors;
     }
 
     private void updateDeletedVisitors(List<VisitorModifyDto> visitors, Long reserveId) {

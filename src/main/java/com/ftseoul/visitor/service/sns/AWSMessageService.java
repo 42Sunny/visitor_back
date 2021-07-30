@@ -3,6 +3,7 @@ package com.ftseoul.visitor.service.sns;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.service.QRcodeService;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,6 @@ public class AWSMessageService implements SMSService {
     private final String messageTemplate = "예약번호: ";
 
     private final String prefix = "+82";
-
-    private final String suffix = "로예약 신청되었습니다.";
 
     private final String QRCodePath = "\nQR코드: https://visitor.dev.42seoul.io/qr/";
 
@@ -80,10 +79,17 @@ public class AWSMessageService implements SMSService {
 
     @Override
     public void sendMessage(StaffDto staffDto) {
+        String message = messageTemplate + (staffDto.getReserveId().toString())
+            +"\n일시: " + staffDto.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+            + "\n예약자 명단: ";
+        List<Visitor> visitors = staffDto.getVisitors();
+        long count = visitors.stream().count() - 1;
+        String representor = visitors.get(0).getName();
+        message += representor + "님 외 " + String.valueOf(count) + "명";
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(staffDto.getPhone()))
-            .message(messageTemplate.concat(staffDto.getReserveId().toString()).concat(suffix))
+            .message(message)
             .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
         log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
