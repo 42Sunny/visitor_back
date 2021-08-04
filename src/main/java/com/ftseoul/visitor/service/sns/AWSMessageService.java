@@ -3,6 +3,7 @@ package com.ftseoul.visitor.service.sns;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.service.QRcodeService;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -29,8 +30,6 @@ public class AWSMessageService implements SMSService {
     private String awsRegion;
 
     public CredentialService credentialService;
-
-    private final String messageTemplate = "예약번호: ";
 
     private final String prefix = "+82";
 
@@ -64,8 +63,10 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessage(String phoneNumber, Long reserveId, String QRcode) {
-        String message = messageTemplate + reserveId.toString() + QRCodePath + QRcode;
+    public void sendMessage(String phoneNumber, Long reserveId, String QRcode, LocalDateTime date) {
+        String message = "[방문 신청 완료]"
+            //+ "일시: " + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n"
+            + QRCodePath + QRcode;
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(phoneNumber))
@@ -79,13 +80,16 @@ public class AWSMessageService implements SMSService {
 
     @Override
     public void sendMessage(StaffDto staffDto) {
-        String message = messageTemplate + (staffDto.getReserveId().toString())
-            +"\n일시: " + staffDto.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-            + "\n예약자 명단: ";
+        String message = "[방문 신청]"
+            +"\n일시: " + staffDto.getDate().format(DateTimeFormatter.ofPattern("MM-dd HH:mm"))
+            +"\n예약확인 : " + "https://visitor.dev.42seoul.io/";
+//            +"\n장소: " + staffDto.getPlace()
+//            +"\n목적: " + staffDto.getVisitorPurpose()
+//            + "\n예약자 명단: ";
         List<Visitor> visitors = staffDto.getVisitors();
         long count = visitors.stream().count() - 1;
         String representor = visitors.get(0).getName();
-        message += representor + "님 외 " + String.valueOf(count) + "명";
+//        message += representor + "님 외 " + String.valueOf(count) + "명";
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(staffDto.getPhone()))
@@ -98,12 +102,13 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessages(List<Visitor> visitors) {
+    public void sendMessages(List<Visitor> visitors, LocalDateTime date) {
         visitors
             .forEach(visitor -> sendMessage(
                 visitor.getPhone(),
                 visitor.getReserveId(),
-                visitor.getId().toString()
+                visitor.getId().toString(),
+                date
                 ));
     }
 

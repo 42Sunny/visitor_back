@@ -154,7 +154,9 @@ public class ReserveService {
         log.info("reserve update: " + reserve);
         reserveRepository.save(reserve);
         List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
-        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(), reserveModifyDto.getDate(), visitors));
+        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
+            reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
+            reserveModifyDto.getDate(), visitors));
         return true;
     }
 

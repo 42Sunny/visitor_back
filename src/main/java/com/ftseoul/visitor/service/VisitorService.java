@@ -38,7 +38,7 @@ public class VisitorService {
         updateDeletedVisitors(visitorList, reserveId);
         List<Visitor> newVisitors = updateNewVisitors(visitorList, reserveId);
         log.info("send message: " + newVisitors);
-        smsService.sendMessages(newVisitors);
+        smsService.sendMessages(newVisitors, modifyDto.getDate());
         return newVisitors;
     }
 

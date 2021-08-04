@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReserveModifyDto implements Serializable {
-    @NotBlank(message = "예약 아이디를 입력해주세요")
-    private Long reserveId;
+    @NotNull(message = "예약 아이디를 입력해주세요")
+    private long reserveId;
     @NotBlank(message = "장소를 입력해주세요")
     private String place;
     @NotBlank(message = "방문 직원의 이름을 입력해주세요")

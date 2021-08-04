@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VisitorModifyDto implements Serializable {
     @NotNull(message = "예약 아이디를 입력해주세요")
-    private Long reserve_id;
+    private long reserveId;
     @NotBlank(message = "성함을 입력해주세요")
     private String name;
     @NotBlank(message = "전화번호를 입력해주세요")
@@ -28,7 +28,7 @@ public class VisitorModifyDto implements Serializable {
     @Override
     public String toString() {
         return "VisitorModifyDto{" +
-            "reserve_id=" + reserve_id +
+            "reserveId =" + reserveId +
             ", name='" + name + '\'' +
             ", phone='" + phone + '\'' +
             ", organization='" + organization + '\'' +
