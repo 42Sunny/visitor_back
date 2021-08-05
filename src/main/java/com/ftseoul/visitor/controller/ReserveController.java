@@ -4,6 +4,7 @@ import com.ftseoul.visitor.data.Reserve;
 import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.StaffService;
 import com.ftseoul.visitor.service.VisitorService;
@@ -27,6 +28,7 @@ public class ReserveController {
     private final VisitorService visitorService;
     private final StaffService  staffService;
     private final SMSService smsService;
+    private final Seed seed;
 
     @GetMapping("/reserve/{id}")
     public ReserveListResponseDto findById(@PathVariable Long id) {
@@ -56,7 +58,7 @@ public class ReserveController {
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         log.info("/reserve/create\ndto: " + reserveVisitorDto);
-        Reserve reserve = reserveService.saveReserve(reserveVisitorDto);
+        Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());

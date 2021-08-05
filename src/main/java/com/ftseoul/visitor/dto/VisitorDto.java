@@ -27,6 +27,12 @@ public class VisitorDto implements Serializable {
                 '}';
     }
 
+    public VisitorDto encryptDto(Seed seed) {
+        this.name = seed.encrypt(this.name);
+        this.phone = seed.encrypt(this.phone);
+        return this;
+    }
+
     public VisitorDto decryptDto(Seed seed) {
         this.name = seed.decrypt(this.name);
         this.phone = seed.decrypt(this.phone);
