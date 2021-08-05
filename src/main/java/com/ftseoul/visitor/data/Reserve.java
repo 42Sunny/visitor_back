@@ -52,4 +52,15 @@ public class Reserve {
         this.date = reserveUpdateDto.getDate();
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Reserve{" +
+                "id=" + id +
+                ", place='" + place + '\'' +
+                ", targetStaff=" + targetStaff +
+                ", purpose='" + purpose + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }
