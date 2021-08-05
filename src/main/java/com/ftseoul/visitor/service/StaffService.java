@@ -27,4 +27,9 @@ public class StaffService {
                 .findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", name));
     }
+
+    public boolean existByName(String name) {
+        log.info("Staff name: " + name);
+        return staffRepository.existsStaffByName(name);
+    }
 }
