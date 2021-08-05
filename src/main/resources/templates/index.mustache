@@ -1,0 +1,32 @@
+{{>layout/header}}
+
+<div class="col-md-12">
+    <h1 class="header">Root Admin Page</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <a href="/staff/save" role="button" class="btn btn-primary">staff add</a>
+        </div>
+    </div>
+    <br>
+<!--목록 출력 영역-->
+    <table class="table">
+        <thead class="thead-strong">
+        <tr>
+            <th>id</th>
+            <th>Name</th>
+            <th>Phone</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {{#staffs}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{phone}}</td>
+            </tr>
+        {{/staffs}}
+        </tbody>
+    </table>
+</div>
+
+{{>layout/footer}}

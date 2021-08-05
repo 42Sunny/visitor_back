@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.encrypt.Seed;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +45,15 @@ public class ReserveModifyDto implements Serializable {
                 ", date=" + date +
                 ", visitor=" + visitor +
                 '}';
+    }
+
+    public ReserveModifyDto encrypt(Seed seed) {
+        seed.encrypt(this.targetStaffName);
+        for (VisitorModifyDto v:
+             this.visitor) {
+            seed.encrypt(v.getName());
+            seed.encrypt(v.getPhone());
+        }
+        return this;
     }
 }
