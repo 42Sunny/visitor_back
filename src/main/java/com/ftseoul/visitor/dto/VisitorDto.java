@@ -21,7 +21,7 @@ public class VisitorDto implements Serializable {
     @Override
     public String toString() {
         return "VisitorDto{" +
-                ", name='" + name + '\'' +
+                " name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", organization='" + organization + '\'' +
                 '}';

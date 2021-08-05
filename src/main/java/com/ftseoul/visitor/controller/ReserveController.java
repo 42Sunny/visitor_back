@@ -59,7 +59,9 @@ public class ReserveController {
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         log.info("/reserve/create\ndto: " + reserveVisitorDto);
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
+        log.info("" + reserve);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
+        log.info("" + visitors);
         log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         if (visitors != null) {
