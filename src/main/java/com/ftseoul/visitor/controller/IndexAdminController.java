@@ -22,7 +22,7 @@ public class IndexAdminController {
         return "index";
     }
 
-    @GetMapping("/staff/save")
+    @GetMapping("/staff-add")
     public String staffSave() {
         return "staff-add";
     }
