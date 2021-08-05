@@ -3,9 +3,13 @@ package com.ftseoul.visitor.service;
 import com.ftseoul.visitor.data.*;
 import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.sns.SMSService;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +152,7 @@ public class ReserveService {
     }
 
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
+        checkDuplicatedPhone(reserveVisitorDto.getVisitor());
         Reserve reserve = Reserve.builder()
                 .targetStaff(staffRepository.findByName(seed.encrypt(reserveVisitorDto.getTargetStaffName()))
                         .orElseThrow(
@@ -174,8 +179,20 @@ public class ReserveService {
         reserveModifyDto.encrypt(seed);
         List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
         smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
-                reserveModifyDto.getDate(), visitors));
+            reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
+            reserveModifyDto.getDate(), visitors));
         return true;
     }
-
+    public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {
+        log.info("Check phone Duplication");
+        boolean result = false;
+        Set<String> phones = new HashSet<>();
+        List<VisitorDto> collected = visitorDto
+            .stream()
+            .filter(visitor -> !phones.add(visitor.getPhone()))
+            .collect(Collectors.toList());
+        if (collected.size() > 0) {
+            throw new PhoneDuplicatedException("전화번호 중복");
+        }
+    }
 }

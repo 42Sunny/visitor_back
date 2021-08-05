@@ -15,6 +15,10 @@ public class StaffDto {
 
     private String phone;
 
+    private String visitorPurpose;
+
+    private String place;
+
     private LocalDateTime date;
 
     private List<Visitor> visitors;

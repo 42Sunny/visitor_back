@@ -66,4 +66,9 @@ public class StaffService {
                 .phone(staff.getPhone())
                 .build().decryptDto(seed);
     }
+
+    public boolean existByName(String name) {
+        log.info("Staff name: " + name);
+        return staffRepository.existsStaffByName(name);
+    }
 }
