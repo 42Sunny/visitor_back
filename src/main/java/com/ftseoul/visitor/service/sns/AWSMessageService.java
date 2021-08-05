@@ -2,11 +2,13 @@ package com.ftseoul.visitor.service.sns;
 
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.StaffDto;
-import com.ftseoul.visitor.service.QRcodeService;
+import com.ftseoul.visitor.encrypt.Seed;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -28,6 +30,8 @@ public class AWSMessageService implements SMSService {
     @Value("${aws.region}")
     private String awsRegion;
 
+    private final Seed seed;
+
     public CredentialService credentialService;
 
     private final String messageTemplate = "예약번호: ";
@@ -35,6 +39,10 @@ public class AWSMessageService implements SMSService {
     private final String prefix = "+82";
 
     private final String QRCodePath = "\nQR코드: https://visitor.dev.42seoul.io/qr/";
+
+    public AWSMessageService(Seed seed) {
+        this.seed = seed;
+    }
 
     public static class CredentialService {
 
@@ -84,11 +92,11 @@ public class AWSMessageService implements SMSService {
             + "\n예약자 명단: ";
         List<Visitor> visitors = staffDto.getVisitors();
         long count = visitors.stream().count() - 1;
-        String representor = visitors.get(0).getName();
+        String representor = seed.decrypt(visitors.get(0).getName());
         message += representor + "님 외 " + String.valueOf(count) + "명";
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
-            .phoneNumber(prefix.concat(staffDto.getPhone()))
+            .phoneNumber(prefix.concat(seed.decrypt(staffDto.getPhone())))
             .message(message)
             .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
@@ -101,7 +109,7 @@ public class AWSMessageService implements SMSService {
     public void sendMessages(List<Visitor> visitors) {
         visitors
             .forEach(visitor -> sendMessage(
-                visitor.getPhone(),
+                seed.decrypt(visitor.getPhone()),
                 visitor.getReserveId(),
                 visitor.getId().toString()
                 ));

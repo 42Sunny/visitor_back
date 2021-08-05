@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.ftseoul.visitor.encrypt.Seed;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +42,12 @@ public class ReserveVisitorDto implements Serializable {
                 ", date=" + date +
                 ", visitor=" + visitor +
                 '}';
+    }
+
+    public ReserveVisitorDto decryptDto(Seed seed) {
+        this.targetStaffName = seed.decrypt(this.targetStaffName);
+        visitor = visitor.stream().map(visitorDto -> visitorDto.decryptDto(seed)).collect(Collectors.toList());
+        return this;
     }
 }
 

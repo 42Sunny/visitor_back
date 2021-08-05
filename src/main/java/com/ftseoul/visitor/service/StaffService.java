@@ -56,8 +56,14 @@ public class StaffService {
                                 .build())
                 .map(staffDecryptDto -> staffDecryptDto.decryptDto(seed))
                 .collect(Collectors.toList());
-
-        System.out.println(staffList);
         return staffList;
+    }
+
+    public StaffDecryptDto decrypt(Staff staff) {
+        return StaffDecryptDto.builder()
+                .id(staff.getId())
+                .name(staff.getName())
+                .phone(staff.getPhone())
+                .build().decryptDto(seed);
     }
 }

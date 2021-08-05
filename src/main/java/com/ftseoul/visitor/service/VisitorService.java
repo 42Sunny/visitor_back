@@ -3,8 +3,10 @@ package com.ftseoul.visitor.service;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.ReserveModifyDto;
+import com.ftseoul.visitor.dto.VisitorDecryptDto;
 import com.ftseoul.visitor.dto.VisitorDto;
 import com.ftseoul.visitor.dto.VisitorModifyDto;
+import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.sns.SMSService;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,16 @@ public class VisitorService {
     private final VisitorRepository visitorRepository;
     private final SMSService smsService;
     private final QRcodeService qrcodeService;
+    private final Seed seed;
+
+    public VisitorDecryptDto decryptDto(Visitor visitor) {
+        return VisitorDecryptDto.builder()
+                .reserveId(visitor.getReserveId())
+                .name(seed.decrypt(visitor.getName()))
+                .phone(seed.decrypt(visitor.getPhone()))
+                .organization(visitor.getOrganization())
+                .build();
+    }
 
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         List<Visitor> visitors = visitorDto

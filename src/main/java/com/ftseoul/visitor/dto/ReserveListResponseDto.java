@@ -2,10 +2,8 @@ package com.ftseoul.visitor.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ftseoul.visitor.data.Staff;
-import com.ftseoul.visitor.data.Visitor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,9 +14,9 @@ public class ReserveListResponseDto {
 
     private String place;
 
-    private Staff staff;
+    private StaffDecryptDto staff;
 
-    private List<Visitor> visitor;
+    private List<VisitorDecryptDto> visitor;
 
     private String purpose;
 
@@ -26,7 +24,7 @@ public class ReserveListResponseDto {
     private LocalDateTime date;
 
     @Builder
-    public ReserveListResponseDto(Long id, String place, Staff staff, List<Visitor> visitor, String purpose, LocalDateTime date) {
+    public ReserveListResponseDto(Long id, String place, StaffDecryptDto staff, List<VisitorDecryptDto> visitor, String purpose, LocalDateTime date) {
         this.id = id;
         this.place = place;
         this.staff = staff;

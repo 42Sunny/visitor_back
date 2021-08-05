@@ -15,9 +15,9 @@ public class ReserveResponseDto {
 
     private String place;
 
-    private Staff staff;
+    private StaffDecryptDto staff;
 
-    private Visitor visitor;
+    private VisitorDecryptDto visitor;
 
     private String purpose;
 
@@ -25,7 +25,7 @@ public class ReserveResponseDto {
     private LocalDateTime date;
 
     @Builder
-    public ReserveResponseDto(Long id, String place, Staff staff, Visitor visitor, String purpose, LocalDateTime date) {
+    public ReserveResponseDto(Long id, String place, StaffDecryptDto staff, VisitorDecryptDto visitor, String purpose, LocalDateTime date) {
         this.id = id;
         this.place = place;
         this.staff = staff;

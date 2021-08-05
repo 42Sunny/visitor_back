@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.dto;
 
+import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.encrypt.Seed;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,5 +22,13 @@ public class StaffDecryptDto {
         this.name = seed.decrypt(this.name);
         this.phone = seed.decrypt(this.phone);
         return this;
+    }
+
+    public Staff toEntity(){
+        return Staff.builder()
+                .name(name)
+                .phone(phone)
+                .build();
+
     }
 }
