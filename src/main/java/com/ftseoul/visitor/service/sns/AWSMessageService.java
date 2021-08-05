@@ -87,9 +87,11 @@ public class AWSMessageService implements SMSService {
 //            +"\n목적: " + staffDto.getVisitorPurpose()
 //            + "\n예약자 명단: ";
         List<Visitor> visitors = staffDto.getVisitors();
-        long count = visitors.stream().count() - 1;
-        String representor = visitors.get(0).getName();
+        if (visitors != null) {
+            long count = visitors.stream().count() - 1;
+            String representor = visitors.get(0).getName();
 //        message += representor + "님 외 " + String.valueOf(count) + "명";
+        }
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(staffDto.getPhone()))
