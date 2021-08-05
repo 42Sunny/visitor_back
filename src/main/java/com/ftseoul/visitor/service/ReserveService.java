@@ -154,7 +154,7 @@ public class ReserveService {
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
         Reserve reserve = Reserve.builder()
-                .targetStaff(staffRepository.findByName(seed.encrypt(reserveVisitorDto.getTargetStaffName()))
+                .targetStaff(staffRepository.findByName(reserveVisitorDto.getTargetStaffName())
                         .orElseThrow(
                                 () -> new ResourceNotFoundException("Staff", "name", reserveVisitorDto.getTargetStaffName())
                         ).getId())
