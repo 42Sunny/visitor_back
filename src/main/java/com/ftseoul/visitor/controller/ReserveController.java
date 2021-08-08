@@ -65,15 +65,11 @@ public class ReserveController {
         log.info("" + visitors);
         log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
-        if (visitors != null) {
-            log.info("send msg(visitor): " + visitors);
-            smsService.sendMessages(visitors, reserveVisitorDto.getDate());
-            smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
+        log.info("send msg(visitor): " + visitors);
+        smsService.sendMessages(visitors, reserveVisitorDto.getDate());
+        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
                 reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
                 visitors));
-            return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }
 }
