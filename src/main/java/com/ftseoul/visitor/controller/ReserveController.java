@@ -60,6 +60,7 @@ public class ReserveController {
         log.info("/reserve/create\ndto: " + reserveVisitorDto);
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
         log.info("" + reserve);
+        log.info("" + reserveVisitorDto);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         log.info("" + visitors);
         log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
