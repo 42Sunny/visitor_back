@@ -1,5 +1,7 @@
 package com.ftseoul.visitor.service;
 
+import com.ftseoul.visitor.data.VisitorRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +11,11 @@ import java.util.Base64;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional
 public class QRcodeService {
+
+    private final VisitorRepository visitorRepository;
 
     public static String serialize(Object object) {
         return Base64.getEncoder()
@@ -23,4 +28,7 @@ public class QRcodeService {
         ));
     }
 
+    public boolean checkQRCode(String text) {
+        return visitorRepository.existsById(Long.parseLong(text));
+    }
 }
