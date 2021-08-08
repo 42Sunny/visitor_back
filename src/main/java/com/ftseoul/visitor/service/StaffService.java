@@ -32,9 +32,8 @@ public class StaffService {
 
     public Staff findByName(String name) {
         log.info("Staff name: " + name);
-        String encrypted = seed.encrypt(name);
         return staffRepository
-                .findByName(encrypted)
+                .findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", name))
                 .decrypt(seed);
     }
