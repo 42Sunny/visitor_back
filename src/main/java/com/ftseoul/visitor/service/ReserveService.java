@@ -179,7 +179,7 @@ public class ReserveService {
         reserveRepository.save(reserve);
         reserveModifyDto.encrypt(seed);
         List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
-        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
+        smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
             reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
             reserveModifyDto.getDate(), visitors));
         return true;
