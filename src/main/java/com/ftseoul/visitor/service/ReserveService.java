@@ -89,10 +89,11 @@ public class ReserveService {
                     .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
             List<VisitorDecryptDto> visitors = visitorRepository.findAllByReserveId(reserve.getId())
                     .stream().map(v -> VisitorDecryptDto.builder()
-                    .name(v.getName())
-                    .phone(v.getPhone())
-                    .organization(v.getOrganization())
-                    .build().decryptDto(seed)).collect(Collectors.toList());
+                            .reserveId(v.getReserveId())
+                            .name(v.getName())
+                            .phone(v.getPhone())
+                            .organization(v.getOrganization())
+                            .build().decryptDto(seed)).collect(Collectors.toList());
             responseDtos
                     .add(ReserveListResponseDto.builder()
                             .id(reserve.getId())
