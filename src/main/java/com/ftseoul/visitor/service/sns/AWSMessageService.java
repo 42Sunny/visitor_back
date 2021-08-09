@@ -101,7 +101,7 @@ public class AWSMessageService implements SMSService {
         }
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
-            .phoneNumber(prefix.concat(seed.decrypt(staffDto.getPhone())))
+            .phoneNumber(prefix.concat(staffDto.getPhone()))
             .message(message)
             .build();
         PublishResponse publishResponse = snsClient.publish(publishRequest);
