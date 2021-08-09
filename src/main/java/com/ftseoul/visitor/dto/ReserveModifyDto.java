@@ -51,8 +51,8 @@ public class ReserveModifyDto implements Serializable {
         seed.encrypt(this.targetStaffName);
         for (VisitorModifyDto v:
              this.visitor) {
-            seed.encrypt(v.getName());
-            seed.encrypt(v.getPhone());
+            v.updateNameAndPhone(seed.encrypt(v.getName())
+                    , seed.encrypt(v.getPhone()));
         }
         return this;
     }

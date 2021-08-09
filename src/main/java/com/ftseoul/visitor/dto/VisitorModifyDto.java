@@ -25,6 +25,11 @@ public class VisitorModifyDto implements Serializable {
     @JsonProperty("isChanged")
     private boolean isChanged;
 
+    public void updateNameAndPhone(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "VisitorModifyDto{" +

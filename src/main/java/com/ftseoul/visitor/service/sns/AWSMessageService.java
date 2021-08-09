@@ -94,7 +94,7 @@ public class AWSMessageService implements SMSService {
 //            +"\n목적: " + staffDto.getVisitorPurpose()
 //            + "\n예약자 명단: ";
         List<Visitor> visitors = staffDto.getVisitors();
-        if (visitors != null) {
+        if (visitors != null && visitors.size() > 0) {
             long count = visitors.stream().count() - 1;
             String representor = seed.decrypt(visitors.get(0).getName());
 //        message += representor + "님 외 " + String.valueOf(count) + "명";
