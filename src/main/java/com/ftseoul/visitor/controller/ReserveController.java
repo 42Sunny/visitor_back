@@ -67,6 +67,7 @@ public class ReserveController {
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         log.info("send msg(visitor): " + visitors);
         smsService.sendMessages(visitors, reserveVisitorDto.getDate());
+        log.info("send msg(staff): " + staff);
         smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
                 reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
                 visitors));

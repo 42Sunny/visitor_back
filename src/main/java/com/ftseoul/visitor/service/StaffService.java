@@ -35,8 +35,7 @@ public class StaffService {
         String encrypted = seed.encrypt(name);
         return staffRepository
                 .findByName(encrypted)
-                .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", name))
-                .decrypt(seed);
+                .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", name));
     }
 
     public boolean saveStaff(AddStaffRequestDto requestDto) {
