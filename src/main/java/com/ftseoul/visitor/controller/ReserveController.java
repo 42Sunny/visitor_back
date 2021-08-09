@@ -68,7 +68,7 @@ public class ReserveController {
         log.info("send msg(visitor): " + visitors);
         smsService.sendMessages(visitors, reserveVisitorDto.getDate());
         log.info("send msg(staff): " + staff);
-        smsService.sendMessage(new StaffDto(reserve.getId(), staff.getPhone(),
+        smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
                 reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
                 visitors));
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
