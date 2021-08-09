@@ -40,7 +40,7 @@ public class StaffController {
         log.info("To find staff name: {}", staffNameDto);
         boolean result = staffService.existByName(staffNameDto.getStaffName());
         if (result) {
-            return new ResponseEntity<>(true, HttpStatus.FOUND);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         }
         return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
