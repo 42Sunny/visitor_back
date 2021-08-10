@@ -20,7 +20,7 @@ public class QRcodeController {
     @PostMapping("/qrcode")
     public ResponseEntity<Boolean> qrcodeCheck(String code) {
         log.info("Check qrcode text: {}", code);
-        String originalText = seed.decrypt(code);
+        String originalText = seed.decryptUrl(code);
         Boolean result = qRcodeService.checkQRCode(originalText);
         if (!result) {
             log.error("Not a valid qrcode");

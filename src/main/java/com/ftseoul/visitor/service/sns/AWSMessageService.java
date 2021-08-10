@@ -122,7 +122,7 @@ public class AWSMessageService implements SMSService {
 
         List<ShortUrlDto> shortUrlDtoList = visitors
             .stream()
-                .map(v -> new ShortUrlDto(seed.encrypt(v.getId().toString())
+                .map(v -> new ShortUrlDto(seed.encryptUrl(v.getId().toString())
                     , seed.decrypt(v.getPhone())
                     , null))
                     .collect(Collectors.toList());
