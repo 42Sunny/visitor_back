@@ -154,7 +154,7 @@ public class ReserveService {
 
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
-        Reserve reserve = Reserve.builder()
+        Reserve reserve = reserveRepository.save(Reserve.builder()
                 .targetStaff(staffRepository.findByName(reserveVisitorDto.getTargetStaffName())
                         .orElseThrow(
                                 () -> new ResourceNotFoundException("Staff", "name", reserveVisitorDto.getTargetStaffName())
@@ -162,7 +162,7 @@ public class ReserveService {
                 .place(reserveVisitorDto.getPlace())
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
-                .build();
+                .build());
         log.info("" + reserve);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         log.info("" + visitors);
@@ -174,7 +174,7 @@ public class ReserveService {
         smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
             reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
             visitors));
-        return reserveRepository.save(reserve);
+        return reserve;
     }
 
     public boolean updateReserve(ReserveModifyDto reserveModifyDto) {

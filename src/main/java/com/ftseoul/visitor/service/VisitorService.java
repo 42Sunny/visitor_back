@@ -37,6 +37,7 @@ public class VisitorService {
     }
 
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
+        log.info("Reserve Id is {}", reserveId);
         List<Visitor> visitors = visitorDto
             .stream()
             .map(v -> new Visitor(reserveId, v.getName(), v.getPhone(), v.getOrganization()))

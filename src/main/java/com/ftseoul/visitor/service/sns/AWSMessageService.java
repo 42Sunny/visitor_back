@@ -1,12 +1,16 @@
 package com.ftseoul.visitor.service.sns;
 
 import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.dto.ShortUrlDto;
+import com.ftseoul.visitor.dto.ShortUrlResponseListDto;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.service.ShortUrlService;
 import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,10 +40,13 @@ public class AWSMessageService implements SMSService {
 
     private final String prefix = "+82";
 
-    private final String QRCodePath = "\nQR코드: https://visitor.dev.42seoul.io/qr/";
+    private final String domain = "https://dev.vstr.kr";
 
-    public AWSMessageService(Seed seed) {
+    private final ShortUrlService shortUrlService;
+
+    public AWSMessageService(Seed seed, ShortUrlService shortUrlService) {
         this.seed = seed;
+        this.shortUrlService = shortUrlService;
     }
 
     public static class CredentialService {
@@ -70,10 +77,10 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessage(String phoneNumber, Long reserveId, String QRcode, LocalDateTime date) {
-        String message = "[방문 신청 완료]"
-            //+ "일시: " + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n"
-            + QRCodePath + QRcode;
+    public void sendMessage(String phoneNumber, String value) {
+        String message = "[이노베이션아카데미]\n"
+            +"아래 링크 QR을 출입 시 제시해주세요\n"
+            +domain + "/" + value;
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(phoneNumber))
@@ -112,13 +119,18 @@ public class AWSMessageService implements SMSService {
 
     @Override
     public void sendMessages(List<Visitor> visitors, LocalDateTime date) {
-        visitors
-            .forEach(visitor -> sendMessage(
-                seed.decrypt(visitor.getPhone()),
-                visitor.getReserveId(),
-                visitor.getId().toString(),
-                date
-                ));
+
+        List<ShortUrlDto> shortUrlDtoList = visitors
+            .stream()
+                .map(v -> new ShortUrlDto(seed.encrypt(v.getId().toString())
+                    , seed.decrypt(v.getPhone())
+                    , null))
+                    .collect(Collectors.toList());
+
+        ShortUrlResponseListDto shortUrlLists = shortUrlService.createUrls(shortUrlDtoList);
+
+        shortUrlLists.getUrlResponseList().forEach(shorUrl ->
+            sendMessage(shorUrl.getId(), shorUrl.getValue()));
     }
 
     @PostConstruct
