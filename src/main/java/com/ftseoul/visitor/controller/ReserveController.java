@@ -27,7 +27,6 @@ public class ReserveController {
     private final ReserveService reserveService;
     private final VisitorService visitorService;
     private final StaffService  staffService;
-    private final SMSService smsService;
     private final Seed seed;
 
     @GetMapping("/reserve/{id}")
@@ -59,18 +58,6 @@ public class ReserveController {
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         log.info("/reserve/create\ndto: " + reserveVisitorDto);
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
-        log.info("" + reserve);
-        log.info("" + reserveVisitorDto);
-        List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
-        log.info("" + visitors);
-        log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
-        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
-        log.info("send msg(visitor): " + visitors);
-        smsService.sendMessages(visitors, reserveVisitorDto.getDate());
-        log.info("send msg(staff): " + staff);
-        smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
-                reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
-                visitors));
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }
 }

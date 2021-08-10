@@ -163,7 +163,17 @@ public class ReserveService {
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
                 .build();
-        log.info("save repository: " + reserve);
+        log.info("" + reserve);
+        List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
+        log.info("" + visitors);
+        log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
+        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
+        log.info("send msg(visitor): " + visitors);
+        smsService.sendMessages(visitors, reserveVisitorDto.getDate());
+        log.info("send msg(staff): " + staff);
+        smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
+            reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
+            visitors));
         return reserveRepository.save(reserve);
     }
 
