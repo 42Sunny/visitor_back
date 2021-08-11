@@ -32,7 +32,6 @@ public class ReserveService {
     private final StaffRepository staffRepository;
     private final VisitorService visitorService;
     private final SMSService smsService;
-    private final QRcodeService qrCodeService;
     private final Seed seed;
 
     public ReserveListResponseDto findById(Long id) {
