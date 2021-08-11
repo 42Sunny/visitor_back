@@ -37,20 +37,20 @@ public class KISA_SEED_CBCTest {
         assertThat(rawMsg).isNotEqualTo(new String(encryptedMsg));
     }
 
-    @Test
-    public void seed_test() {
-        String rawphone = "01012345678";
-        String rawname = "홍길동";
-
-        String encryptedPhone = seed.encrypt(rawphone);
-        String encryptedName = seed.encrypt(rawname);
-        System.out.println("암호화된 데이터1 => " + encryptedPhone);
-        System.out.println("암호화된 데이터2 => " + encryptedName);
-
-        System.out.println("복호화된 데이터1 => " + seed.decrypt(encryptedPhone));
-        System.out.println("복호화된 데이터1 => " + seed.decrypt(encryptedName));
-
-        assertThat(rawphone).isEqualTo(seed.decrypt(encryptedPhone));
-        assertThat(rawname).isEqualTo(seed.decrypt(encryptedName));
-    }
+//    @Test
+//    public void seed_test() {
+//        String rawphone = "01012345678";
+//        String rawname = "홍길동";
+//
+//        String encryptedPhone = seed.encrypt(rawphone);
+//        String encryptedName = seed.encrypt(rawname);
+//        System.out.println("암호화된 데이터1 => " + encryptedPhone);
+//        System.out.println("암호화된 데이터2 => " + encryptedName);
+//
+//        System.out.println("복호화된 데이터1 => " + seed.decrypt(encryptedPhone));
+//        System.out.println("복호화된 데이터1 => " + seed.decrypt(encryptedName));
+//
+//        assertThat(rawphone).isEqualTo(seed.decrypt(encryptedPhone));
+//        assertThat(rawname).isEqualTo(seed.decrypt(encryptedName));
+//    }
 }

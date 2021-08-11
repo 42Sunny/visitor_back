@@ -61,25 +61,25 @@ class ReserveServiceTest {
 
     @Test
     public void Reserve_조회1() throws Exception {
-        // given
-        Staff staff = createStaff();
-        staffRepository.save(staff);
-        Reserve reserve = createReserve(staff.getId());
-        reserveRepository.save(reserve);
-        Visitor visitor = Visitor.builder()
-                .name("방문객")
-                .phone("+8201012345678")
-                .reserve_id(reserve.getId())
-                .organization("소속")
-                .build();
-        visitorRepository.save(visitor);
-
-        // when
-        reserveService.findAllByNameAndPhone(
-                SearchReserveRequestDto.builder()
-                        .name(visitor.getName())
-                        .phone(visitor.getPhone())
-                        .build());
+//        // given
+//        Staff staff = createStaff();
+//        staffRepository.save(staff);
+//        Reserve reserve = createReserve(staff.getId());
+//        reserveRepository.save(reserve);
+//        Visitor visitor = Visitor.builder()
+//                .name("방문객")
+//                .phone("+8201012345678")
+//                .reserve_id(reserve.getId())
+//                .organization("소속")
+//                .build();
+//        visitorRepository.save(visitor);
+//
+//        // when
+//        reserveService.findAllByNameAndPhone(
+//                SearchReserveRequestDto.builder()
+//                        .name(visitor.getName())
+//                        .phone(visitor.getPhone())
+//                        .build());
         // then
 //        assertThat()
     }
