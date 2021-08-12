@@ -94,18 +94,16 @@ public class AWSMessageService implements SMSService {
 
     @Override
     public void sendMessage(StaffDto staffDto) {
-        String message = "[방문 신청]"
-            +"\n일시: " + staffDto.getDate().format(DateTimeFormatter.ofPattern("MM-dd HH:mm"))
-            +"\n예약확인 : " + "https://visitor.dev.42seoul.io/";
-//            +"\n장소: " + staffDto.getPlace()
-//            +"\n목적: " + staffDto.getVisitorPurpose()
-//            + "\n예약자 명단: ";
+        String shortUrl = shortUrlService.createUrl(staffDto.getReserveId().toString());
+        String message = "[방문신청]\n"
+            + staffDto.getDate().format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n";
         List<Visitor> visitors = staffDto.getVisitors();
         if (visitors != null && visitors.size() > 0) {
             long count = visitors.stream().count() - 1;
             String representor = seed.decrypt(visitors.get(0).getName());
-//        message += representor + "님 외 " + String.valueOf(count) + "명";
+            message += representor + "님 외 " + count + "명";
         }
+        message += "\n상세 확인: " + shortUrl;
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(staffDto.getPhone()))
