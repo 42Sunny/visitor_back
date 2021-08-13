@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ErrorMessage {
-    private List<String> errorMessage;
+public class ErrorValidationDto {
+    private List<String> error;
 }

@@ -1,12 +1,11 @@
 package com.ftseoul.visitor.exception;
 
-import com.ftseoul.visitor.dto.ErrorMessage;
+import com.ftseoul.visitor.dto.ErrorValidationDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,7 +19,7 @@ public class ValidationAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception) {
+    public ErrorValidationDto methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception) {
         final BindingResult br = exception.getBindingResult();
         final List<FieldError> fieldErrors = br.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
@@ -29,7 +28,7 @@ public class ValidationAdvice {
                     + "rejectedValue: " + fieldError.getRejectedValue());
         }
 
-      return new ErrorMessage(fieldErrors
+      return new ErrorValidationDto(fieldErrors
             .stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList()));

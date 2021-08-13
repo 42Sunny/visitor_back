@@ -25,8 +25,6 @@ import java.util.List;
 public class ReserveController {
 
     private final ReserveService reserveService;
-    private final VisitorService visitorService;
-    private final StaffService  staffService;
     private final Seed seed;
 
     @GetMapping("/reserve/{id}")
