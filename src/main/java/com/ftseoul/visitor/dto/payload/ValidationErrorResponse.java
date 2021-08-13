@@ -10,5 +10,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ValidationErrorResponse {
+    private String code;
     private String message;
 }

@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ValidationAdvice {
 
+    private final String validationErrorCode = "4000";
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     public ErrorValidationDto methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception) {
         final BindingResult br = exception.getBindingResult();
         final List<FieldError> fieldErrors = br.getFieldErrors();
@@ -31,7 +33,7 @@ public class ValidationAdvice {
 
       return new ErrorValidationDto(fieldErrors
             .stream()
-            .map(v -> new ValidationErrorResponse(v.getDefaultMessage()))
+            .map(v -> new ValidationErrorResponse(validationErrorCode,v.getDefaultMessage()))
             .collect(Collectors.toList()));
     }
 

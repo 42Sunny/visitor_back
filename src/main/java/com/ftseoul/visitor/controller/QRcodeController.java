@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.QRcodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class QRcodeController {
         Boolean result = qRcodeService.checkQRCode(originalText);
         if (!result) {
             log.error("Not a valid qrcode");
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("QRCode", "code", code);
         }
         log.info("Valid qrcode: {}", originalText);
         return new ResponseEntity<>(true, HttpStatus.OK);
