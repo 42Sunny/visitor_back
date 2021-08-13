@@ -5,7 +5,6 @@ import com.ftseoul.visitor.dto.payload.ValidationErrorResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ValidationAdvice {
-
-    private final String validationErrorCode = "4000";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.OK)
@@ -33,7 +30,7 @@ public class ValidationAdvice {
 
       return new ErrorValidationDto(fieldErrors
             .stream()
-            .map(v -> new ValidationErrorResponse(validationErrorCode,v.getDefaultMessage()))
+            .map(v -> new ValidationErrorResponse(v.getDefaultMessage()))
             .collect(Collectors.toList()));
     }
 
