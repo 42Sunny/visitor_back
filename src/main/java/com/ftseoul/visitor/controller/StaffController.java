@@ -4,6 +4,7 @@ import com.ftseoul.visitor.dto.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.StaffDecryptDto;
 import com.ftseoul.visitor.dto.StaffNameDto;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +40,9 @@ public class StaffController {
     public ResponseEntity<Boolean> checkStaffByName(@RequestBody StaffNameDto staffNameDto) {
         log.info("To find staff name: {}", staffNameDto);
         boolean result = staffService.existByName(staffNameDto.getStaffName());
-        if (result) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
+        if (!result) {
+            throw new ResourceNotFoundException("Staff", "StaffName", staffNameDto.getStaffName());
         }
-        return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }
