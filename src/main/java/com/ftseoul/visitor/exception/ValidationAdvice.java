@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.exception;
 
 import com.ftseoul.visitor.dto.ErrorValidationDto;
+import com.ftseoul.visitor.dto.payload.ValidationErrorResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +24,14 @@ public class ValidationAdvice {
         final BindingResult br = exception.getBindingResult();
         final List<FieldError> fieldErrors = br.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
-            log.error("field: " + fieldError.getField() + "\n"
-                    + "message: " + fieldError.getDefaultMessage() + "\n"
+            log.error("field: " + fieldError.getField() + "\t"
+                    + "message: " + fieldError.getDefaultMessage() + "\t"
                     + "rejectedValue: " + fieldError.getRejectedValue());
         }
 
       return new ErrorValidationDto(fieldErrors
             .stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .map(v -> new ValidationErrorResponse(v.getDefaultMessage()))
             .collect(Collectors.toList()));
     }
 

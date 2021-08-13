@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.dto;
 
+import com.ftseoul.visitor.dto.payload.ValidationErrorResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,5 +10,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ErrorValidationDto {
-    private List<String> error;
+    private List<ValidationErrorResponse> error;
 }
