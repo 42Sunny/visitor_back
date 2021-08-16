@@ -51,7 +51,6 @@ public class ReserveController {
         return reserveService.updateReserve(reserveModifyDto);
     }
 
-    @Transactional
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         log.info("/reserve/create\ndto: " + reserveVisitorDto);

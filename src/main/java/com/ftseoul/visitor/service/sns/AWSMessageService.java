@@ -2,6 +2,7 @@ package com.ftseoul.visitor.service.sns;
 
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.ShortUrlDto;
+import com.ftseoul.visitor.dto.ShortUrlResponseDto;
 import com.ftseoul.visitor.dto.ShortUrlResponseListDto;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.encrypt.Seed;
@@ -93,8 +94,7 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessage(StaffDto staffDto) {
-        String shortUrl = shortUrlService.createUrl(staffDto.getReserveId().toString());
+    public void sendMessage(StaffDto staffDto, String shortUrl) {
         String message = "[방문신청]\n"
             + staffDto.getDate().format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n";
         List<Visitor> visitors = staffDto.getVisitors();
@@ -116,19 +116,22 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessages(List<Visitor> visitors, LocalDateTime date) {
+    public void sendMessages(List<ShortUrlDto> shortUrlDtoList, StaffDto staffDto) {
 
-        List<ShortUrlDto> shortUrlDtoList = visitors
+        List<ShortUrlResponseDto> shortUrlLists = shortUrlService.createUrls(shortUrlDtoList);
+
+        List<ShortUrlResponseDto> visitorShortUrls = shortUrlLists
             .stream()
-                .map(v -> new ShortUrlDto(seed.encryptUrl(v.getId().toString())
-                    , seed.decrypt(v.getPhone())
-                    , null))
-                    .collect(Collectors.toList());
+            .filter(url -> !url.getId().equals("staff"))
+            .collect(Collectors.toList());
+        List<ShortUrlResponseDto> staffShortUrl = shortUrlLists
+            .stream()
+            .filter(url -> url.getId().equals("staff"))
+            .collect(Collectors.toList());
 
-        ShortUrlResponseListDto shortUrlLists = shortUrlService.createUrls(shortUrlDtoList);
-
-        shortUrlLists.getUrlResponseList().forEach(shorUrl ->
+        visitorShortUrls.forEach(shorUrl ->
             sendMessage(shorUrl.getId(), shorUrl.getValue()));
+        sendMessage(staffDto, domain + "/" + staffShortUrl.get(0).getValue());
     }
 
     @PostConstruct

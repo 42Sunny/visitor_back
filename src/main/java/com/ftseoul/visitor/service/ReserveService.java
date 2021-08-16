@@ -1,24 +1,34 @@
 package com.ftseoul.visitor.service;
 
-import com.ftseoul.visitor.data.*;
-import com.ftseoul.visitor.dto.*;
+import com.ftseoul.visitor.data.Reserve;
+import com.ftseoul.visitor.data.ReserveRepository;
+import com.ftseoul.visitor.data.Staff;
+import com.ftseoul.visitor.data.StaffRepository;
+import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.data.VisitorRepository;
+import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
+import com.ftseoul.visitor.dto.ReserveListResponseDto;
+import com.ftseoul.visitor.dto.ReserveModifyDto;
+import com.ftseoul.visitor.dto.ReserveResponseDto;
+import com.ftseoul.visitor.dto.ReserveVisitorDto;
+import com.ftseoul.visitor.dto.SearchReserveRequestDto;
+import com.ftseoul.visitor.dto.ShortUrlDto;
+import com.ftseoul.visitor.dto.StaffDto;
+import com.ftseoul.visitor.dto.VisitorDecryptDto;
+import com.ftseoul.visitor.dto.VisitorDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.sns.SMSService;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +42,7 @@ public class ReserveService {
     private final StaffRepository staffRepository;
     private final VisitorService visitorService;
     private final SMSService smsService;
+    private final ShortUrlService shortUrlService;
     private final Seed seed;
 
     public ReserveListResponseDto findById(Long id) {
@@ -153,11 +164,10 @@ public class ReserveService {
 
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
+        log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
+        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         Reserve reserve = reserveRepository.save(Reserve.builder()
-                .targetStaff(staffRepository.findByName(reserveVisitorDto.getTargetStaffName())
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException("Staff", "name", reserveVisitorDto.getTargetStaffName())
-                        ).getId())
+                .targetStaff(staff.getId())
                 .place(reserveVisitorDto.getPlace())
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
@@ -165,14 +175,13 @@ public class ReserveService {
         log.info("" + reserve);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
         log.info("" + visitors);
-        log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
-        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         log.info("send msg(visitor): " + visitors);
-        smsService.sendMessages(visitors, reserveVisitorDto.getDate());
-        log.info("send msg(staff): " + staff);
-        smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
+        StaffDto staffReserveInfo = new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
             reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
-            visitors));
+            visitors);
+        List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
+        smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
+        log.info("send msg(staff): " + staff);
         return reserve;
     }
 
@@ -188,9 +197,11 @@ public class ReserveService {
         reserveRepository.save(reserve);
         reserveModifyDto.encrypt(seed);
         List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
-        smsService.sendMessage(new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
+        StaffDto staffReserveInfo = new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
             reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
-            reserveModifyDto.getDate(), visitors));
+            reserveModifyDto.getDate(), visitors);
+        List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
+        smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
         return true;
     }
     public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {

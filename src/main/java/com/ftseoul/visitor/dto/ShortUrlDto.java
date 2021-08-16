@@ -15,5 +15,5 @@ import lombok.ToString;
 public class ShortUrlDto implements Serializable {
     private String id;
     private String phone;
-    private String qrPath;
+    private boolean isStaff;
 }
