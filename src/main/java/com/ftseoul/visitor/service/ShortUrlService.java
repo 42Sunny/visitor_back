@@ -1,6 +1,5 @@
 package com.ftseoul.visitor.service;
 
-import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.ShortUrlCreateDto;
 import com.ftseoul.visitor.dto.ShortUrlCreateListDto;
@@ -8,18 +7,11 @@ import com.ftseoul.visitor.dto.ShortUrlDto;
 import com.ftseoul.visitor.dto.ShortUrlResponseDto;
 import com.ftseoul.visitor.dto.ShortUrlResponseListDto;
 import com.ftseoul.visitor.dto.StaffDto;
-import com.ftseoul.visitor.dto.StaffShortUrlDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -27,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 public class ShortUrlService {
     private final String domain = "Https://dev.vstr.kr";
     private final String qrPath = "https://visitor.dev.42seoul.io/qr/";
-    private final String lookUpPath = "https://visitor.dev.42seoul.io/lookup";
+    private final String lookUpPath = "https://visitor.dev.42seoul.io/reserve-info/";
     private final Seed seed;
 
     public ShortUrlService(Seed seed) {
@@ -50,7 +42,7 @@ public class ShortUrlService {
                 result.addUrl(new ShortUrlCreateDto(shortUrlDto.getPhone(),
                     qrPath + shortUrlDto.getId()));
             } else {
-                result.addUrl(new ShortUrlCreateDto("staff", lookUpPath));
+                result.addUrl(new ShortUrlCreateDto("staff", lookUpPath + shortUrlDto.getId()));
             }
         }
         return result;
