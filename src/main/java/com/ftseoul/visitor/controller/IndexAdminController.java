@@ -26,4 +26,9 @@ public class IndexAdminController {
     public String staffSave() {
         return "staff-add";
     }
+
+    @GetMapping("/loginform")
+    public String loginform() {
+        return "loginForm";
+    }
 }

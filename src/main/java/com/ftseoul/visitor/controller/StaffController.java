@@ -24,14 +24,14 @@ public class StaffController {
     private final Seed seed;
     private final StaffService staffService;
 
-    @PostMapping("/staff/save")
+    @PostMapping("/admin/staff/save")
     public boolean add_staff(@RequestBody AddStaffRequestDto requestDto) {
         log.info("Add Staff: " + requestDto);
         staffService.saveStaff(requestDto);
         return true;
     }
 
-    @GetMapping("/staff")
+    @GetMapping("/admin/staff")
     public List<StaffDecryptDto> staffListAll() {
         return staffService.findAllStaff();
     }

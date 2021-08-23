@@ -2,6 +2,8 @@
 
 <div class="col-md-12">
     <h1 class="header">Root Admin Page</h1>
+    {{#userName}}
+
     <div class="row">
         <div class="col-md-6">
             <a href="/staff-add" role="button" class="btn btn-primary">staff add</a>
@@ -27,6 +29,12 @@
         {{/staffs}}
         </tbody>
     </table>
+    {{/userName}}
+    {{^userName}}
+        <a href="/loginform" role="button" class="btn btn-primary">Login</a>
+
+        <a href="/join">회원 가입</a>
+    {{/userName}}
 </div>
 
 {{>layout/footer}}

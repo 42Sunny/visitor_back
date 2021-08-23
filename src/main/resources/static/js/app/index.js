@@ -21,7 +21,7 @@ var main = {
 
         $.ajax({
             type: 'POST',
-            url: '/staff/save',
+            url: '/admin/staff/save',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
