@@ -36,8 +36,6 @@ public class AdminService implements UserDetailsService {
 
     @Value("${admin.login.id}")
     private String id;
-    @Value("${admin.login.pwd}")
-    private String pwd;
 
     public Long signUp(AdminLoginDto adminDto) {
         log.info("signUp");
