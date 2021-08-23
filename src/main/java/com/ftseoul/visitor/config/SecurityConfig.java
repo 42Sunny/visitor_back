@@ -31,15 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf()
+                .disable()
+             .authorizeRequests()
                 .antMatchers("/admin/**", "/staff-add")
                 .hasRole(Role.ADMIN.name())
-                .antMatchers("/", "/login", "/join", "/qrcode",
-                        "/reserve/**", "/reserves", "/reserve", "/staff")
+                .anyRequest()
                 .permitAll()
             .and()
         .formLogin()
-                .loginPage("/loginform")
                 .loginProcessingUrl("/login")
             .defaultSuccessUrl("/")
             .permitAll()

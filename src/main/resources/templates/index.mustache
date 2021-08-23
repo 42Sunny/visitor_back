@@ -7,6 +7,7 @@
     <div class="row">
         <div class="col-md-6">
             <a href="/staff-add" role="button" class="btn btn-primary">staff add</a>
+            <a href="/logout" class="btn btn-info active" role="button">Logout</a>
         </div>
     </div>
     <br>
@@ -31,9 +32,8 @@
     </table>
     {{/userName}}
     {{^userName}}
-        <a href="/loginform" role="button" class="btn btn-primary">Login</a>
-
-        <a href="/join">회원 가입</a>
+        <a href="/login" role="button" class="btn btn-primary">Login</a>
+        <a href="/joinform" role="button" class="btn btn-secondary">회원 가입</a>
     {{/userName}}
 </div>
 

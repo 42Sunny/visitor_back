@@ -3,9 +3,13 @@ package com.ftseoul.visitor.dto;
 import com.ftseoul.visitor.data.Admin;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Getter
-public class AdminLoginDto {
+@NoArgsConstructor
+public class AdminLoginDto implements Serializable {
     private String username;
     private String password;
 
@@ -24,5 +28,13 @@ public class AdminLoginDto {
                 .username(username)
                 .password(password)
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "AdminLoginDto{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

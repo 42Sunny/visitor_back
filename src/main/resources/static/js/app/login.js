@@ -4,13 +4,8 @@ var login = {
         $('#login-btn').on('click', function () {
             _this.login();
         });
-
-        $('#btn-update').on('click', function () {
-            _this.update();
-        });
-
-        $('#btn-delete').on('click', function () {
-            _this.delete();
+        $('#join-btn').on('click', function () {
+            _this.join();
         });
     },
     login: function () {
@@ -26,10 +21,33 @@ var login = {
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
         }).done(function() {
-            alert('staff가 추가되었습니다.');
+            alert('login 되었습니다');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
+    join: function () {
+        var data = {
+            username: $('#id').val(),
+            password: $('#passwd').val()
+        };
+        console.log(data);
+        console.log(JSON.stringify(data));
+
+        $.ajax({
+            type: 'POST',
+            url: '/join',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('회원가입 되었습니다');
             window.location.href = '/';
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
     }
-}
+};
+
+login.init();
