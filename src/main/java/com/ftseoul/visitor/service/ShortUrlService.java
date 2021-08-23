@@ -11,6 +11,9 @@ import com.ftseoul.visitor.encrypt.Seed;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +25,9 @@ public class ShortUrlService {
     private final String lookUpPath = "https://visitor.dev.42seoul.io/reserve-info/";
     private final Seed seed;
 
+    @Value("${api-key}")
+    private String apiKey;
+
     public ShortUrlService(Seed seed) {
         this.seed = seed;
     }
@@ -29,9 +35,12 @@ public class ShortUrlService {
     public List<ShortUrlResponseDto> createUrls(List<ShortUrlDto> shortUrlDtoList) {
         log.info("Create Short Urls");
         RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-API-KEY", apiKey);
         ShortUrlCreateListDto urlRequestObj = createUrlRequestJson(shortUrlDtoList);
+        HttpEntity<ShortUrlCreateListDto> request = new HttpEntity<>(urlRequestObj, headers);
         ShortUrlResponseListDto shortUrlResponseListDto = restTemplate.postForObject(
-            domain + "/urls", urlRequestObj, ShortUrlResponseListDto.class);
+            domain + "/urls", request, ShortUrlResponseListDto.class);
         return shortUrlResponseListDto.getUrlResponseList();
     }
 
