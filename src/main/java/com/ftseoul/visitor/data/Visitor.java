@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.data;
 
+import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.encrypt.Seed;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +28,10 @@ public class Visitor {
 
     @Column(length = 50)
     private String organization;
+
+    // default value - 대기
+    @Enumerated(value = EnumType.STRING)
+    VisitorStatus status = VisitorStatus.대기;
 
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
@@ -56,6 +61,7 @@ public class Visitor {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", organization='" + organization + '\'' +
+                ", status'" + status + '\'' +
                 '}';
     }
 }
