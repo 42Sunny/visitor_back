@@ -1,5 +1,7 @@
 package com.ftseoul.visitor.controller;
 
+import com.ftseoul.visitor.data.visitor.VisitorStatus;
+import com.ftseoul.visitor.dto.QRCheckResponseDto;
 import com.ftseoul.visitor.dto.payload.QRCodePayload;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
@@ -17,25 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class QRcodeController {
 
-    private final Seed seed;
     private final QRcodeService qRcodeService;
 
     @PostMapping("/qrcode")
-    public ResponseEntity<Boolean> qrcodeCheck(@RequestBody QRCodePayload qrCodePayload) {
+    public ResponseEntity<?> qrcodeCheck(@RequestBody QRCodePayload qrCodePayload) {
         log.info("Check qrcode text: {}", qrCodePayload.getCode());
-        String originalText = null;
-        try {
-            originalText = seed.decryptUrl(qrCodePayload.getCode());
-        } catch (IllegalArgumentException ex) {
-            throw new ResourceNotFoundException("QRCode", "code", qrCodePayload.getCode());
-        }
-        Boolean result = qRcodeService.checkQRCode(originalText);
-        if (!result) {
-            log.error("Not a valid qrcode");
-            throw new ResourceNotFoundException("QRCode", "code", qrCodePayload.getCode());
-        }
-        log.info("Valid qrcode: {}", originalText);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        String code = qRcodeService.decodeQRText(qrCodePayload.getCode());
+        QRCheckResponseDto qrCheckResponseDto = qRcodeService.checkQRCode(code);
+        return new ResponseEntity<>(qrCheckResponseDto, HttpStatus.OK);
     }
 
 }

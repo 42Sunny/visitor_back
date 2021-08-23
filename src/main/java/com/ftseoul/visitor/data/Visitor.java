@@ -53,6 +53,10 @@ public class Visitor {
         return this;
     }
 
+    public void updateStatus(VisitorStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Visitor{" +
