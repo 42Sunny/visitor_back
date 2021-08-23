@@ -29,9 +29,9 @@ public class Visitor {
     @Column(length = 50)
     private String organization;
 
-    // default value - 대기
+    @Column(columnDefinition = "varchar(10) default '대기'")
     @Enumerated(value = EnumType.STRING)
-    VisitorStatus status = VisitorStatus.대기;
+    VisitorStatus status;
 
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
