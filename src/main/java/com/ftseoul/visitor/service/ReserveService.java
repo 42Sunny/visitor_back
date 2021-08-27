@@ -129,6 +129,9 @@ public class ReserveService {
         LocalDateTime endDay = date.plusDays(1).atStartOfDay();
 
         List<DateFoundResponseDto> result = reserveRepository.findAllReserveWithStaffByDate(startDay, endDay);
+        if (result == null) {
+            throw new ResourceNotFoundException("Reserve", "Date", date.toString());
+        }
 
         for (DateFoundResponseDto response : result) {
             response.setStaffName(seed.decrypt(response.getStaffName()));
