@@ -6,6 +6,7 @@ import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
+import com.ftseoul.visitor.dto.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.dto.ReserveListResponseDto;
 import com.ftseoul.visitor.dto.ReserveModifyDto;
@@ -15,16 +16,21 @@ import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.dto.ShortUrlDto;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.dto.VisitorDecryptDto;
+import com.ftseoul.visitor.dto.VisitorDecryptWithIdDto;
 import com.ftseoul.visitor.dto.VisitorDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.sns.SMSService;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -118,6 +124,21 @@ public class ReserveService {
         return responseDtos;
     }
 
+    public List<DateFoundResponseDto> findAllByDate(LocalDate date) {
+        LocalDateTime startDay = date.atStartOfDay();
+        LocalDateTime endDay = date.plusDays(1).atStartOfDay();
+
+        List<DateFoundResponseDto> result = reserveRepository.findAllReserveWithStaffByDate(startDay, endDay);
+
+        for (DateFoundResponseDto response : result) {
+            response.setStaffName(seed.decrypt(response.getStaffName()));
+            response.setStaffPhone(seed.decrypt(response.getStaffPhone()));
+            List<Visitor> visitorList = visitorRepository.findAllByReserveId(response.getId());
+            response.setVisitors(decryptVisitorList(visitorList));
+        }
+        return result;
+    }
+
     private void checkExistVisitorName(String name, String phone) {
         if (visitorRepository.findAllByName(name).size() == 0)
         {
@@ -204,6 +225,7 @@ public class ReserveService {
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
         return true;
     }
+
     public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {
         log.info("Check phone Duplication");
         boolean result = false;
@@ -215,5 +237,13 @@ public class ReserveService {
         if (collected.size() > 0) {
             throw new PhoneDuplicatedException("전화번호 중복");
         }
+    }
+
+    private List<VisitorDecryptWithIdDto> decryptVisitorList(List<Visitor> visitorList) {
+        return visitorList
+            .stream()
+            .map(v -> new VisitorDecryptWithIdDto(v.getId(), v.getReserveId(), v.getName(),
+               v.getPhone(), v.getOrganization()).decryptDto(seed))
+            .collect(Collectors.toList());
     }
 }

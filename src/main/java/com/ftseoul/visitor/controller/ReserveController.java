@@ -9,6 +9,7 @@ import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.StaffService;
 import com.ftseoul.visitor.service.VisitorService;
 import com.ftseoul.visitor.service.sns.SMSService;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,11 @@ public class ReserveController {
     public ReserveListResponseDto findById(@PathVariable Long id) {
         log.info("/reserve/" + id + "\n");
         return reserveService.findById(id);
+    }
+    @PostMapping("/reserve/date")
+    public List<DateFoundResponseDto> findByDate(@RequestBody DateRequestDto date) {
+        log.info("/reserve/date\n parameter: {}", date);
+        return reserveService.findAllByDate(date.getDate());
     }
 
     @PostMapping("/reserves")
