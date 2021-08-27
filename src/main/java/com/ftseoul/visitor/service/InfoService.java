@@ -4,6 +4,7 @@ import com.ftseoul.visitor.data.ReserveRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.DateFoundResponseDto;
+import com.ftseoul.visitor.dto.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.VisitorDecryptWithIdDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
@@ -50,4 +51,16 @@ public class InfoService {
                 v.getPhone(), v.getOrganization()).decryptDto(seed))
             .collect(Collectors.toList());
     }
+
+    public boolean changeVisitorStatus(UpdateVisitorStatusDto dto) {
+        Visitor visitor = visitorRepository.findById(dto.getVisitorId())
+            .orElseThrow(() -> new ResourceNotFoundException("Visitor", "VisitorId", dto.getVisitorId()));
+        if (visitor.getStatus() == dto.getVisitorStatus()) {
+            return false;
+        }
+        visitor.updateStatus(dto.getVisitorStatus());
+        visitorRepository.save(visitor);
+        return true;
+    }
+
 }
