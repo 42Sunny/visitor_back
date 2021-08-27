@@ -33,11 +33,6 @@ public class ReserveController {
         log.info("/reserve/" + id + "\n");
         return reserveService.findById(id);
     }
-    @PostMapping("/reserve/date")
-    public List<DateFoundResponseDto> findByDate(@RequestBody DateRequestDto date) {
-        log.info("/reserve/date\n parameter: {}", date);
-        return reserveService.findAllByDate(date.getDate());
-    }
 
     @PostMapping("/reserves")
     public List<ReserveListResponseDto> searchReserveList(@Valid @RequestBody SearchReserveRequestDto reserveRequestDto) {

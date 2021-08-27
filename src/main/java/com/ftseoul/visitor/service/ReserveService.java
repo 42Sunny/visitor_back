@@ -25,12 +25,10 @@ import com.ftseoul.visitor.service.sns.SMSService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -122,24 +120,6 @@ public class ReserveService {
                             .build());
         }
         return responseDtos;
-    }
-
-    public List<DateFoundResponseDto> findAllByDate(LocalDate date) {
-        LocalDateTime startDay = date.atStartOfDay();
-        LocalDateTime endDay = date.plusDays(1).atStartOfDay();
-
-        List<DateFoundResponseDto> result = reserveRepository.findAllReserveWithStaffByDate(startDay, endDay);
-        if (result == null) {
-            throw new ResourceNotFoundException("Reserve", "Date", date.toString());
-        }
-
-        for (DateFoundResponseDto response : result) {
-            response.setStaffName(seed.decrypt(response.getStaffName()));
-            response.setStaffPhone(seed.decrypt(response.getStaffPhone()));
-            List<Visitor> visitorList = visitorRepository.findAllByReserveId(response.getId());
-            response.setVisitors(decryptVisitorList(visitorList));
-        }
-        return result;
     }
 
     private void checkExistVisitorName(String name, String phone) {
@@ -240,13 +220,5 @@ public class ReserveService {
         if (collected.size() > 0) {
             throw new PhoneDuplicatedException("전화번호 중복");
         }
-    }
-
-    private List<VisitorDecryptWithIdDto> decryptVisitorList(List<Visitor> visitorList) {
-        return visitorList
-            .stream()
-            .map(v -> new VisitorDecryptWithIdDto(v.getId(), v.getReserveId(), v.getName(),
-               v.getPhone(), v.getOrganization()).decryptDto(seed))
-            .collect(Collectors.toList());
     }
 }
