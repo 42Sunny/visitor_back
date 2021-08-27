@@ -31,7 +31,7 @@ public class Visitor {
 
     @Column(columnDefinition = "varchar(10) default '대기'")
     @Enumerated(value = EnumType.STRING)
-    private VisitorStatus status;
+    private VisitorStatus status = VisitorStatus.대기;
 
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
