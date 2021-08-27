@@ -48,7 +48,7 @@ public class InfoService {
         return visitorList
             .stream()
             .map(v -> new VisitorDecryptWithIdDto(v.getId(), v.getReserveId(), v.getName(),
-                v.getPhone(), v.getOrganization()).decryptDto(seed))
+                v.getPhone(), v.getOrganization(), v.getStatus()).decryptDto(seed))
             .collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.dto;
 
 import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.encrypt.Seed;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class VisitorDecryptWithIdDto implements Serializable {
 
     private String organization;
 
+    private VisitorStatus status;
 
     public VisitorDecryptWithIdDto decryptDto(Seed seed) {
         this.name = seed.decrypt(this.name);
