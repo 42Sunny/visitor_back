@@ -18,18 +18,14 @@ public class GreetingController {
 
     private final GreetingService greetingService;
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
-    public Greeting greeting(HelloMessage message) throws Exception {
-        System.out.println(message.getName());
-        Thread.sleep(1000);
-        greetingService.save(message.getName());
+//    @MessageMapping("/hello")
+//    @SendTo("/topic/greetings")
+//    public Greeting greeting(HelloMessage message) throws Exception {
+//        System.out.println(message.getName());
+//        Thread.sleep(1000);
+//        greetingService.save(message.getName());
 //        return greetingService.findAll();
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
-    }
+//        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+//    }
 
-    @GetMapping("/api/v1/greeting-list")
-    public List<Greeting> greetingList() {
-        return greetingService.findAll();
-    }
 }
