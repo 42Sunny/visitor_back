@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ErrorResponse implements Serializable {
+public class Response implements Serializable {
     private String code;
     private String message;
 }

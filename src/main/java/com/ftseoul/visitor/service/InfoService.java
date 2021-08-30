@@ -6,6 +6,8 @@ import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.VisitorDecryptWithIdDto;
+import com.ftseoul.visitor.dto.payload.Response;
+import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.time.LocalDate;
@@ -52,15 +54,15 @@ public class InfoService {
             .collect(Collectors.toList());
     }
 
-    public boolean changeVisitorStatus(UpdateVisitorStatusDto dto) {
-        Visitor visitor = visitorRepository.findById(dto.getVisitorId())
-            .orElseThrow(() -> new ResourceNotFoundException("Visitor", "VisitorId", dto.getVisitorId()));
-        if (visitor.getStatus() == dto.getVisitorStatus()) {
-            return false;
+    public VisitorStatusInfo changeVisitorStatus(UpdateVisitorStatusDto dto) {
+        Visitor visitor = visitorRepository.findById(dto.getVisitor().getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Visitor", "VisitorId", dto.getVisitor().getId()));
+        if (visitor.getStatus() == dto.getVisitor().getStatus()) {
+            return null;
         }
-        visitor.updateStatus(dto.getVisitorStatus());
-        visitorRepository.save(visitor);
-        return true;
+        visitor.updateStatus(dto.getVisitor().getStatus());
+        Visitor savedVisitor = visitorRepository.save(visitor);
+        return new VisitorStatusInfo(savedVisitor.getId(), savedVisitor.getStatus());
     }
 
 }
