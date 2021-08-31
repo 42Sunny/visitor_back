@@ -19,6 +19,6 @@ public class FrontErrorController {
         (@RequestBody Map<String, Object> frontError) throws Exception{
         ObjectMapper objectMapper = new ObjectMapper();
         log.info("Front error: {}", objectMapper.writeValueAsString(frontError));
-        return new ResponseEntity<>(new FrontErrorResponseDto("ok"), HttpStatus.OK);
+        return new ResponseEntity<>(new FrontErrorResponseDto("2000", "성공"), HttpStatus.OK);
     }
 }

@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class FrontErrorResponseDto implements Serializable {
+    private String code;
     private String message;
 }
