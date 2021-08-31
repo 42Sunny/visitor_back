@@ -28,4 +28,10 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     @Transactional
     @Query("DELETE FROM Visitor v WHERE v.reserveId = :id AND v.phone NOT IN :toDelete")
     void updateDeletedVisitors(@Param("toDelete") Collection<String> toDelete, @Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Visitor v Set v.status = '만료' "
+        + "WHERE current_date > (SELECT DISTINCT r.date FROM Reserve r WHERE r.id = v.reserveId)")
+    int updateExpiredVisitors();
 }
