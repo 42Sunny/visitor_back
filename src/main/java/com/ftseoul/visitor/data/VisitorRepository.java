@@ -32,6 +32,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE Visitor v Set v.status = '만료' "
-        + "WHERE current_date > (SELECT DISTINCT r.date FROM Reserve r WHERE r.id = v.reserveId)")
+        + "WHERE current_date > (SELECT DISTINCT r.date FROM Reserve r WHERE r.id = v.reserveId) "
+        + "AND v.status = '대기'")
     int updateExpiredVisitors();
 }
