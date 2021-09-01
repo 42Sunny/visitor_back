@@ -13,4 +13,5 @@ import lombok.ToString;
 public class QRCheckResponseDto implements Serializable {
     private String code;
     private String message;
+    private String status;
 }
