@@ -20,6 +20,7 @@ public class QRcodeController {
     public ResponseEntity<?> qrcodeCheck(String code) {
         log.info("Check qrcode text: {}", code);
         String decodeQRText = qRcodeService.decodeQRText(code);
+        log.info("decodeQRText is {}", decodeQRText);
         QRCheckResponseDto qrCheckResponseDto = qRcodeService.checkQRCode(decodeQRText);
         return new ResponseEntity<>(qrCheckResponseDto, HttpStatus.OK);
     }

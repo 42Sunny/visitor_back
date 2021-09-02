@@ -5,6 +5,7 @@ import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.dto.QRCheckResponseDto;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.InvalidQRCodeException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class QRcodeService {
 
     public QRCheckResponseDto checkQRCode(String text) {
         Visitor visitor = visitorRepository.findById(Long.parseLong(text))
-            .orElseThrow(() -> new ResourceNotFoundException("QRCode", "Visitor Id", text));
+            .orElseThrow(() -> new InvalidQRCodeException("code", text));
         return checkQRCodeStatus(visitor);
     }
 
@@ -34,7 +35,7 @@ public class QRcodeService {
         try {
             result = seed.decryptUrl(text);
         } catch (IllegalArgumentException ex) {
-            throw new ResourceNotFoundException("QRCode", "code", text);
+            throw new InvalidQRCodeException("code", text);
         }
         return result;
     }
