@@ -3,6 +3,7 @@ package com.ftseoul.visitor.controller;
 import com.ftseoul.visitor.dto.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.StaffDecryptDto;
 import com.ftseoul.visitor.dto.StaffNameDto;
+import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.StaffService;
@@ -37,12 +38,12 @@ public class StaffController {
     }
 
     @PostMapping("/staff")
-    public ResponseEntity<Boolean> checkStaffByName(@RequestBody StaffNameDto staffNameDto) {
+    public ResponseEntity<?> checkStaffByName(@RequestBody StaffNameDto staffNameDto) {
         log.info("To find staff name: {}", staffNameDto);
         boolean result = staffService.existByName(staffNameDto.getStaffName());
         if (!result) {
             throw new ResourceNotFoundException("Staff", "StaffName", staffNameDto.getStaffName());
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(new Response("2000", "조회성공"), HttpStatus.OK);
     }
 }
