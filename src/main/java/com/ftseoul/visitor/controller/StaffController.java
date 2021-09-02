@@ -4,7 +4,6 @@ import com.ftseoul.visitor.dto.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.StaffDecryptDto;
 import com.ftseoul.visitor.dto.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
-import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.StaffService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StaffController {
-    private final Seed seed;
     private final StaffService staffService;
 
     @PostMapping("/admin/staff/save")

@@ -2,6 +2,7 @@ package com.ftseoul.visitor.data;
 
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.encrypt.Seed;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,12 @@ public class Visitor {
     @Enumerated(value = EnumType.STRING)
     private VisitorStatus status = VisitorStatus.대기;
 
+    @Column
+    private LocalDateTime checkInTime;
+
+    @Column
+    private LocalDateTime checkOutTime;
+
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
         this.reserveId = reserve_id;
@@ -55,6 +62,14 @@ public class Visitor {
 
     public void updateStatus(VisitorStatus status) {
         this.status = status;
+    }
+
+    public void updateCheckInTime(LocalDateTime checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public void updateCheckOutTime(LocalDateTime checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 
     @Override
