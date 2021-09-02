@@ -7,6 +7,8 @@ import com.ftseoul.visitor.dto.QRCheckResponseDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.InvalidQRCodeException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,7 @@ public class QRcodeService {
 
         if (visitor.getStatus() == VisitorStatus.대기) {
             visitor.updateStatus(VisitorStatus.입실);
+            visitor.updateCheckInTime(LocalDateTime.now());
             log.info("{}님이 입실 하셨습니다", seed.decrypt(visitor.getName()));
             visitorRepository.save(visitor);
             result = new QRCheckResponseDto("2000", "입실처리완료", "입실");
@@ -52,8 +55,9 @@ public class QRcodeService {
         else if (visitor.getStatus() == VisitorStatus.입실)
         {
             visitor.updateStatus(VisitorStatus.퇴실);
-            visitorRepository.save(visitor);
+            visitor.updateCheckOutTime(LocalDateTime.now());
             log.info("{}님이 퇴실 처리 되었습니다", seed.decrypt(visitor.getName()));
+            visitorRepository.save(visitor);
             result = new QRCheckResponseDto("2000", "퇴실처리완료", "퇴실");
         }
         else if (visitor.getStatus() == VisitorStatus.퇴실)
