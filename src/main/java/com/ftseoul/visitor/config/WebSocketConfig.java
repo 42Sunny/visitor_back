@@ -10,15 +10,18 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final String[] allowedOrigins = {"http://localhost:3000",
+        "https://visitor.dev.42seoul.io", "http://visitor.dev.42seoul.io",
+        "http://admin.dev.42seoul.io", "https://admin.dev.42seoul.io"};
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+        config.enableSimpleBroker("/visitor");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gs-guide-websocket")
-                .setAllowedOrigins("http://localhost:3000", "https://visitor.dev.42seoul.io", "http://visitor.dev.42seoul.io").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins(allowedOrigins).withSockJS();
     }
 }
