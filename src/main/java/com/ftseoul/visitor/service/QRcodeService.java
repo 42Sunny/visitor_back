@@ -95,7 +95,7 @@ public class QRcodeService {
     }
     private void sendToInfo(String message, LocalDateTime date) {
         String prefixDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
-        message = prefixDate + message;
+        message = prefixDate + " " + message;
         socketService.sendMessageToSubscriber("/visitor", message);
     }
 }
