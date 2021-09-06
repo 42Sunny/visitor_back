@@ -6,7 +6,6 @@ import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
-import com.ftseoul.visitor.dto.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
 import com.ftseoul.visitor.dto.ReserveListResponseDto;
 import com.ftseoul.visitor.dto.ReserveModifyDto;
@@ -21,6 +20,7 @@ import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.sns.SMSService;
+import com.ftseoul.visitor.websocket.WebSocketService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +45,7 @@ public class ReserveService {
     private final SMSService smsService;
     private final ShortUrlService shortUrlService;
     private final Seed seed;
+    private final WebSocketService socketService;
 
     public ReserveListResponseDto findById(Long id) {
         Reserve reserve = reserveRepository.findById(id)
@@ -159,6 +160,8 @@ public class ReserveService {
         if (list.size() == 1) {
             log.info("Reserve delete: " + reserve_id);
             reserveRepository.delete(reserveRepository.findById(reserve_id).get());
+            socketService.sendMessageToSubscriber("/visitor",
+                "예약 번호: "+ String.valueOf(reserve_id)+ " 예약이 삭제되었습니다");
         }
         return true;
     }
@@ -183,6 +186,8 @@ public class ReserveService {
         List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
         log.info("send msg(staff): " + staff);
+        socketService.sendMessageToSubscriber("/visitor",
+            "새로운 예약이 신청됐습니다. 예약번호 :" + String.valueOf(reserve.getId()));
         return reserve;
     }
 
@@ -203,6 +208,8 @@ public class ReserveService {
             reserveModifyDto.getDate(), visitors);
         List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
+        socketService.sendMessageToSubscriber("/visitor",
+            "예약이 수정되었습니다 예약번호: " + String.valueOf(reserve.getId()));
         return true;
     }
 
