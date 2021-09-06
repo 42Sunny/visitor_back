@@ -15,6 +15,7 @@ public class WebSocketService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public void sendMessageToSubscriber(String endpoint, String message) {
+        log.info("Send to {}, message is {}", endpoint, message);
         simpMessagingTemplate.convertAndSend(endpoint, message);
     }
 
