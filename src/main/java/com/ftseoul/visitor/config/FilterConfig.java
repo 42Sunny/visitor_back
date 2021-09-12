@@ -5,6 +5,7 @@ import com.ftseoul.visitor.filter.MultiReadableHttpServletRequestFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @Configuration
 public class FilterConfig {
@@ -26,4 +27,5 @@ public class FilterConfig {
         registrationBean.setOrder(2);
         return registrationBean;
     }
+
 }

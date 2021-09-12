@@ -23,7 +23,7 @@ public class ValidationAdvice {
         final BindingResult br = exception.getBindingResult();
         final List<FieldError> fieldErrors = br.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
-            log.error("field: " + fieldError.getField() + "\t"
+            log.warn("field: " + fieldError.getField() + "\t"
                     + "message: " + fieldError.getDefaultMessage() + "\t"
                     + "rejectedValue: " + fieldError.getRejectedValue());
         }

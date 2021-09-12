@@ -17,7 +17,7 @@ public class LogbackMDCFilter implements Filter {
     public void init(FilterConfig filterConfig) {
 
     }
-// TODO: Header, paramaeter mapping / log 수정
+//  TODO:  종합 에러
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
@@ -33,7 +33,6 @@ public class LogbackMDCFilter implements Filter {
 
         MDCUtil.set(MDCUtil.BODY_CONTENT_MDC, requestWrapper.getBodyContents());
 
-        System.out.println(requestWrapper.getBodyContents());
         try {
             chain.doFilter(request, response);
         } finally {

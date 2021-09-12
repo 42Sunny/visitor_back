@@ -76,7 +76,7 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         SlackField bodyParams = new SlackField();
         bodyParams.setTitle("Http Body Parameter 정보");
         String bodyParameterInfo = MDCUtil.toPrettyJson(errorLog.getParameterMap());
-        if (bodyParameterInfo == null || bodyParameterInfo.isEmpty()) {
+        if (bodyParameterInfo == null || bodyParameterInfo.equals("{ }")) {
             bodyParameterInfo = "없음";
         }
         bodyParams.setValue(bodyParameterInfo);
@@ -86,7 +86,7 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         SlackField bodyContent = new SlackField();
         bodyContent.setTitle("Body 내용");
         String contents = MDCUtil.get(MDCUtil.BODY_CONTENT_MDC);
-        if (contents == null || contents.isEmpty()) {
+        if (contents == null || contents.equals("{ }")) {
             contents = "없음";
         }
         bodyContent.setValue(contents);

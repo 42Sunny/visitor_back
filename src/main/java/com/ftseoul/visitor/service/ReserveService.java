@@ -68,29 +68,6 @@ public class ReserveService {
                 .build();
     }
 
-    public List<ReserveResponseDto> findAllByNameAndPhone(SearchReserveRequestDto reserveRequestDto) {
-        checkExistVisitorName(seed.encrypt(reserveRequestDto.getName()), seed.encrypt(reserveRequestDto.getPhone()));
-        List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(reserveRequestDto.getName()),
-                seed.encrypt(reserveRequestDto.getPhone()));
-        List<ReserveResponseDto> reserveList = new ArrayList<>();
-        for (int i = 0; i < visitorList.size(); i++) {
-            int finalI = i;
-            Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
-            reserveList.add(ReserveResponseDto.builder()
-                    .staff(staffService.decrypt(staffRepository.findById(reserve.getTargetStaff())
-                            .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff()))))
-                    .visitor(visitorService.decryptDto(visitorList.get(i)))
-                    .date(reserve.getDate())
-                    .id(reserve.getId())
-                    .purpose(reserve.getPurpose())
-                    .place(reserve.getPlace())
-                    .build());
-
-        }
-        return reserveList;
-    }
-
     public List<ReserveListResponseDto> findReserveByVisitor(SearchReserveRequestDto requestDto) {
         checkExistVisitorName(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));

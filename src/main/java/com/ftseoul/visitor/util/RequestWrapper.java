@@ -6,11 +6,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
-import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 
+@EqualsAndHashCode
 public class RequestWrapper {
 
     private HttpServletRequest request;
@@ -31,7 +32,6 @@ public class RequestWrapper {
         Map<String, String> convertedHeaderMap = new HashMap<>();
 
         Enumeration<String> headerNames = request.getHeaderNames();
-        System.out.println("Header: " + headerNames);
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);

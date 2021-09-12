@@ -12,7 +12,7 @@ public class InvalidQRCodeException extends RuntimeException{
     public InvalidQRCodeException(String code, Object value) {
         super(String.format("유효하지 않은 QRCode %s : '%s'", code,
             value));
-        log.error("유효하지 않은 QRCode" + code + ": '" + value + "'");
+        log.warn("유효하지 않은 QRCode" + code + ": '" + value + "'");
         this.code = code;
         this.value = value;
     }
