@@ -6,7 +6,6 @@ import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.VisitorDecryptWithIdDto;
-import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;

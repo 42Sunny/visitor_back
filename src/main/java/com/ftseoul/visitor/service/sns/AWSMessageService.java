@@ -80,7 +80,7 @@ public class AWSMessageService implements SMSService {
     @Override
     public void sendMessage(String phoneNumber, String value) {
         String message = "[이노베이션아카데미]\n"
-            +"아래 링크 QR을 출입 시 제시해주세요\n"
+            +"아래 링크 QR을 출입시 제시해주세요\n"
             +domain + "/" + value;
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()

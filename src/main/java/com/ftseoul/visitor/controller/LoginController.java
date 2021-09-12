@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final AdminRepository adminRepository;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/join")

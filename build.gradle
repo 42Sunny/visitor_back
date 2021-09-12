@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ftseoul'
-version = '0.1.14'
+version = '0.1.15'
 sourceCompatibility = '11'
 
 configurations {
@@ -36,9 +36,12 @@ dependencies {
 	compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.4'
+
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testCompileOnly 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'junit:junit:4.12'
@@ -52,6 +55,9 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation group: 'net.gpedro.integrations.slack', name: 'slack-webhook', version: '1.4.0'
+
 }
 
 test {
