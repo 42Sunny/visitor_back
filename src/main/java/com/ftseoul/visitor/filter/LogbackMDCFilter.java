@@ -14,10 +14,10 @@ import org.slf4j.MDC;
 public class LogbackMDCFilter implements Filter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
-
+// TODO: Header, paramaeter mapping / log 수정
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
@@ -31,6 +31,9 @@ public class LogbackMDCFilter implements Filter {
 
         MDCUtil.set("IP", requestWrapper.getIPAddress());
 
+        MDCUtil.set(MDCUtil.BODY_CONTENT_MDC, requestWrapper.getBodyContents());
+
+        System.out.println(requestWrapper.getBodyContents());
         try {
             chain.doFilter(request, response);
         } finally {

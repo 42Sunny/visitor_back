@@ -67,13 +67,25 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         headerInfo.setShorten(false);
         fields.add(headerInfo);
 
-        SlackField bodyInfo = new SlackField();
-        bodyInfo.setTitle("Http Body 정보");
-        headerInfo.setValue(MDCUtil.toPrettyJson(errorLog.getParameterMap()));
-        headerInfo.setShorten(false);
-        fields.add(bodyInfo);
+        SlackField ipInfo = new SlackField();
+        ipInfo.setTitle("ip 정보");
+        ipInfo.setValue(errorLog.getIp());
+        ipInfo.setShorten(false);
+        fields.add(ipInfo);
 
-        String title = errorLog.getMessage();
+        SlackField bodyParams = new SlackField();
+        bodyParams.setTitle("Http Body Parameter 정보");
+        bodyParams.setValue(MDCUtil.toPrettyJson(errorLog.getParameterMap()));
+        bodyParams.setShorten(false);
+        fields.add(bodyParams);
+
+        SlackField bodyContent = new SlackField();
+        bodyContent.setTitle("Body 내용");
+        bodyContent.setValue(MDCUtil.get(MDCUtil.BODY_CONTENT_MDC));
+        bodyContent.setShorten(false);
+        fields.add(bodyContent);
+
+        String title = "[방문 예약 서비스 에러]";
 
         SlackAttachment slackAttachment = new SlackAttachment();
         slackAttachment.setFallback("Error");
@@ -85,7 +97,6 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         SlackMessage slackMessage = new SlackMessage("");
         slackMessage.setChannel("#" + logConfig.getSlackConfig().getChannel());
         slackMessage.setUsername(String.format("[%s] - ErrorReport", errorLog.getServiceName()));
-        slackMessage.setIcon(":exclamation:");
         slackMessage.setAttachments(Collections.singletonList(slackAttachment));
 
         slackApi.call(slackMessage);

@@ -14,6 +14,8 @@ public class MDCUtil {
 
     public static final String HEADER_MAP_MDC = "HEADER_MAP_MDC";
 
+    public static final String BODY_CONTENT_MDC = "BODY_CONTENT_MDC";
+
     public static final String PARAMETER_MAP_MDC = "PARAMETER_MAP_MDC";
 
     public static final String REQUEST_URI_MDC = "REQUEST_URI_MDC";

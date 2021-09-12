@@ -2,6 +2,8 @@ package com.ftseoul.visitor.filter;
 
 import com.ftseoul.visitor.util.MultiReadableHttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -19,11 +21,9 @@ public class MultiReadableHttpServletRequestFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-
         MultiReadableHttpServletRequest multiRequest = new MultiReadableHttpServletRequest((HttpServletRequest) request);
         chain.doFilter(multiRequest, response);
     }
-
 
     public void destroy() {
 
