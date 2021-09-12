@@ -41,12 +41,11 @@ public class RequestWrapper {
     }
 
     public String getBodyContents() throws IOException {
-        Map<String, String[]> parameterMap = this.request.getParameterMap();
-        String json = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
-        return json;
+        String result = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
+        return result;
     }
 
-    public Map<String, String> parameterMap() throws IOException {
+    public Map<String, String> parameterMap() {
         Map<String, String> convertedParameterMap = new HashMap<>();
         Map<String, String[]> parameterMap = this.request.getParameterMap();
 

@@ -75,13 +75,21 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
 
         SlackField bodyParams = new SlackField();
         bodyParams.setTitle("Http Body Parameter 정보");
-        bodyParams.setValue(MDCUtil.toPrettyJson(errorLog.getParameterMap()));
+        String bodyParameterInfo = MDCUtil.toPrettyJson(errorLog.getParameterMap());
+        if (bodyParameterInfo == null || bodyParameterInfo.isEmpty()) {
+            bodyParameterInfo = "없음";
+        }
+        bodyParams.setValue(bodyParameterInfo);
         bodyParams.setShorten(false);
         fields.add(bodyParams);
 
         SlackField bodyContent = new SlackField();
         bodyContent.setTitle("Body 내용");
-        bodyContent.setValue(MDCUtil.get(MDCUtil.BODY_CONTENT_MDC));
+        String contents = MDCUtil.get(MDCUtil.BODY_CONTENT_MDC);
+        if (contents == null || contents.isEmpty()) {
+            contents = "없음";
+        }
+        bodyContent.setValue(contents);
         bodyContent.setShorten(false);
         fields.add(bodyContent);
 
@@ -96,7 +104,6 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
 
         SlackMessage slackMessage = new SlackMessage("");
         slackMessage.setChannel("#" + logConfig.getSlackConfig().getChannel());
-        slackMessage.setUsername(String.format("[%s] - ErrorReport", errorLog.getServiceName()));
         slackMessage.setAttachments(Collections.singletonList(slackAttachment));
 
         slackApi.call(slackMessage);
