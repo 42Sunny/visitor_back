@@ -100,12 +100,12 @@ public class ReserveService {
     private void checkExistVisitorName(String name, String phone) {
         if (visitorRepository.findAllByName(name).size() == 0)
         {
-            log.error("visitor name is not found");
+            log.info("visitor name is not found");
             throw new ResourceNotFoundException("Visitor", "name", name);
         }
         if (visitorRepository.findAllByPhone(phone).size() == 0)
         {
-            log.error("visitor phone is not phone");
+            log.info("visitor phone is not phone");
             throw new ResourceNotFoundException("Visitor", "phone", phone);
         }
     }
@@ -122,7 +122,7 @@ public class ReserveService {
         checkExistVisitorName(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<Visitor> list = visitorRepository.findAllByReserveId(reserve_id);
         if (list.size() == 0) {
-            log.error("reserve id is not found: " + reserve_id.toString());
+            log.info("reserve id is not found: " + reserve_id.toString());
             throw new ResourceNotFoundException("Reserve", "id", reserve_id);
         }
         else {
