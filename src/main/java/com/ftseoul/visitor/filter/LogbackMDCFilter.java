@@ -29,8 +29,6 @@ public class LogbackMDCFilter implements Filter {
 
         MDCUtil.set(MDCUtil.REQUEST_URI_MDC, requestWrapper.getRequestUri());
 
-        MDCUtil.set("IP", requestWrapper.getIPAddress());
-
         MDCUtil.set(MDCUtil.BODY_CONTENT_MDC, requestWrapper.getBodyContents());
 
         try {

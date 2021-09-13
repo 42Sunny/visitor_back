@@ -67,12 +67,6 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         headerInfo.setShorten(false);
         fields.add(headerInfo);
 
-        SlackField ipInfo = new SlackField();
-        ipInfo.setTitle("ip 정보");
-        ipInfo.setValue(errorLog.getIp());
-        ipInfo.setShorten(false);
-        fields.add(ipInfo);
-
         SlackField bodyParams = new SlackField();
         bodyParams.setTitle("Http Body Parameter 정보");
         String bodyParameterInfo = MDCUtil.toPrettyJson(errorLog.getParameterMap());
@@ -114,7 +108,6 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
     private ErrorLog getErrorLog(ILoggingEvent loggingEvent) {
         ErrorLog errorLog = new ErrorLog();
         errorLog.setServiceName("방문 예약 서비스");
-        errorLog.setIp(MDCUtil.get("IP"));
         errorLog.setMessage(loggingEvent.getFormattedMessage());
         errorLog.setHeaderMap(MDCUtil.get(MDCUtil.HEADER_MAP_MDC));
         errorLog.setParameterMap(MDCUtil.get(MDCUtil.PARAMETER_MAP_MDC));
