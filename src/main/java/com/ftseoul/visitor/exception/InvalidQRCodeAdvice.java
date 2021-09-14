@@ -14,10 +14,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class InvalidQRCodeAdvice {
 
     private final String NotFoundCode = "4040";
+    private final String UnAuthorizedCode = "4030";
 
     @ExceptionHandler(InvalidQRCodeException.class)
     @ResponseStatus(HttpStatus.OK)
     public QRCheckResponseDto InvalidQRCodeExceptionHandler(InvalidQRCodeException ex) {
         return new QRCheckResponseDto(NotFoundCode, ex.getMessage(), "무효");
+    }
+
+    @ExceptionHandler(InvalidDeviceException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public QRCheckResponseDto InvalidDeviceExceptionHandler(InvalidDeviceException ex) {
+        return new QRCheckResponseDto(UnAuthorizedCode, ex.getMessage(), "무효");
     }
 }

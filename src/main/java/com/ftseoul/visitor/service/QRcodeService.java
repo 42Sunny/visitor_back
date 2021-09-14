@@ -5,6 +5,7 @@ import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.dto.QRCheckResponseDto;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.InvalidDeviceException;
 import com.ftseoul.visitor.exception.InvalidQRCodeException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.websocket.WebSocketService;
@@ -107,6 +108,6 @@ public class QRcodeService {
                 return ;
             }
         }
-        log.error("허용되지 않은 기기: {}", deviceId);
+        throw new InvalidDeviceException(deviceId);
     }
 }
