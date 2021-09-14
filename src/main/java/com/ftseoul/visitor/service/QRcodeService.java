@@ -29,7 +29,7 @@ public class QRcodeService {
     private final VisitorRepository visitorRepository;
     private final WebSocketService socketService;
     private final Seed seed;
-    public final String[] allowedDeviceLists;
+    public final String[] allowedDeviceLists = {"b27d220f7b891725,"};
 
     public QRCheckResponseDto checkQRCode(String text) {
         Visitor visitor = visitorRepository.findById(Long.parseLong(text))
@@ -101,6 +101,12 @@ public class QRcodeService {
     }
 
     public void checkAllowedDevice(String deviceId) {
-        log.info("Device is {},", deviceId);
+        log.info("DeviceId is {},", deviceId);
+        for (String allowedDevice : allowedDeviceLists) {
+            if (allowedDevice.equals(deviceId)) {
+                return ;
+            }
+        }
+        log.error("허용되지 않은 기기: {}", deviceId);
     }
 }
