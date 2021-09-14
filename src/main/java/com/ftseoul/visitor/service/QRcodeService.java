@@ -29,6 +29,7 @@ public class QRcodeService {
     private final VisitorRepository visitorRepository;
     private final WebSocketService socketService;
     private final Seed seed;
+    public final String[] allowedDeviceLists;
 
     public QRCheckResponseDto checkQRCode(String text) {
         Visitor visitor = visitorRepository.findById(Long.parseLong(text))
@@ -97,5 +98,9 @@ public class QRcodeService {
         String prefixDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
         message = prefixDate + " " + message;
         socketService.sendMessageToSubscriber("/visitor", message);
+    }
+
+    public void checkAllowedDevice(String deviceId) {
+        log.info("Device is {},", deviceId);
     }
 }
