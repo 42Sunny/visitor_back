@@ -16,6 +16,7 @@ import com.ftseoul.visitor.dto.ShortUrlDto;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.dto.VisitorDecryptDto;
 import com.ftseoul.visitor.dto.VisitorDto;
+import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
@@ -24,6 +25,7 @@ import com.ftseoul.visitor.websocket.WebSocketService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -201,5 +203,15 @@ public class ReserveService {
         if (collected.size() > 0) {
             throw new PhoneDuplicatedException("전화번호 중복");
         }
+    }
+
+    public Response deleteById(Long id) {
+        Optional<Reserve> reserve = reserveRepository.findById(id);
+        if (reserve.isEmpty()) {
+            return new Response("4000", "예약정보가 존재하지 않습니다");
+        }
+        reserveRepository.deleteById(id);
+        visitorRepository.deleteAllByReserveId(id);
+        return new Response("2000", "예약이 삭제되었습니다");
     }
 }

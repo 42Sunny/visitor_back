@@ -4,6 +4,7 @@ import com.ftseoul.visitor.data.Reserve;
 import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.data.Visitor;
+import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.StaffService;
@@ -32,6 +33,12 @@ public class ReserveController {
     public ReserveListResponseDto findById(@PathVariable Long id) {
         log.info("/reserve/" + id + "\n");
         return reserveService.findById(id);
+    }
+
+    @DeleteMapping("/reserve/{id}")
+    public Response deleteById(@PathVariable Long id) {
+        log.info("DELETE /reserve/" + id.toString());
+        return reserveService.deleteById(id);
     }
 
     @PostMapping("/reserves")
