@@ -14,12 +14,7 @@ import org.springframework.data.repository.query.Param;
 public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     List<Visitor> findAllByNameAndPhone(String name, String phone);
     Optional<Visitor> findByReserveIdAndPhone(Long reserveId, String phone);
-    List<Visitor> findAllByName(String name);
-    List<Visitor> findAllByPhone(String phone);
     List<Visitor> findAllByReserveId(Long reserve_id);
-
-    Optional<Visitor> findByNameAndPhoneAndReserveId(String name, String phone, Long reserveId);
-
     void deleteAllByReserveId(Long reserveId);
 
     @Modifying

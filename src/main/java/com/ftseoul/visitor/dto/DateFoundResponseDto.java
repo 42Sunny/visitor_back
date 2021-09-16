@@ -28,6 +28,9 @@ public class DateFoundResponseDto implements Serializable {
 
     private List<VisitorDecryptWithIdDto> visitors;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private LocalDateTime date;
+
     public DateFoundResponseDto(Long id, String place, Long staffId, String staffName,
         String staffPhone, String purpose, LocalDateTime date) {
         this.id = id;
@@ -38,7 +41,4 @@ public class DateFoundResponseDto implements Serializable {
         this.purpose = purpose;
         this.date = date;
     }
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime date;
 }
