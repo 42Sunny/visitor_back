@@ -10,8 +10,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
     @Query("SELECT new com.ftseoul.visitor.dto.DateFoundResponseDto(r.id , r.place, s.id, s.name, s.phone, r.purpose , r.date) "
         + "FROM Reserve r INNER JOIN FETCH Staff s ON r.targetStaff = s.id "
-        + "WHERE r.date BETWEEN :from AND :to"
-        )
+        + "WHERE r.date BETWEEN :from AND :to")
     List<DateFoundResponseDto> findAllReserveWithStaffByDate(LocalDateTime from, LocalDateTime to);
 
 }

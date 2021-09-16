@@ -1,17 +1,10 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.data.Reserve;
-import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.dto.*;
-import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ReserveService;
-import com.ftseoul.visitor.service.StaffService;
-import com.ftseoul.visitor.service.VisitorService;
-import com.ftseoul.visitor.service.sns.SMSService;
-import java.time.LocalDateTime;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,26 +35,22 @@ public class ReserveController {
     }
 
     @PostMapping("/reserves")
-    public List<ReserveListResponseDto> searchReserveList(@Valid @RequestBody SearchReserveRequestDto reserveRequestDto) {
-        log.info("/reserves\n" + "parameter: " + reserveRequestDto);
-        return reserveService.findReserveByVisitor(reserveRequestDto);
+    public List<ReserveListResponseDto> searchReserveList(@Valid @RequestBody ReserveRequestDto reserveRequestDto) {
+        return reserveService.findReservesByNameAndPhone(reserveRequestDto);
     }
 
     @DeleteMapping("/reserve")
-    public boolean reserveDelete(Long reserve_id, @Valid @RequestBody ReserveDeleteRequestDto deleteRequestDto) {
-        log.info("reserve delete\nid: " + reserve_id.toString() + ", dto: " + deleteRequestDto);
+    public boolean reserveDelete(Long reserve_id, @Valid @RequestBody ReserveRequestDto deleteRequestDto) {
         return reserveService.reserveDelete(reserve_id, deleteRequestDto);
     }
 
     @PutMapping("/reserve")
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
-        log.info("reserve update: " + reserveModifyDto);
         return reserveService.updateReserve(reserveModifyDto);
     }
 
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
-        log.info("/reserve/create\ndto: " + reserveVisitorDto);
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }

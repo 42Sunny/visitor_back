@@ -38,7 +38,7 @@ public class CustomExceptionResponseHandler extends ResponseEntityExceptionHandl
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
         HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status,
         WebRequest request) {
-        log.warn(ex.getMessage());
+        log.error(ex.getMessage());
         Map<String,String> response = makeResponsePayload(ex, status);
         return this.handleExceptionInternal(ex, response, headers, status, request);
     }

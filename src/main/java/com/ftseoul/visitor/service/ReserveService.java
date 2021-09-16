@@ -6,12 +6,10 @@ import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
-import com.ftseoul.visitor.dto.ReserveDeleteRequestDto;
+import com.ftseoul.visitor.dto.ReserveRequestDto;
 import com.ftseoul.visitor.dto.ReserveListResponseDto;
 import com.ftseoul.visitor.dto.ReserveModifyDto;
-import com.ftseoul.visitor.dto.ReserveResponseDto;
 import com.ftseoul.visitor.dto.ReserveVisitorDto;
-import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import com.ftseoul.visitor.dto.ShortUrlDto;
 import com.ftseoul.visitor.dto.StaffDto;
 import com.ftseoul.visitor.dto.VisitorDecryptDto;
@@ -70,10 +68,10 @@ public class ReserveService {
                 .build();
     }
 
-    public List<ReserveListResponseDto> findReserveByVisitor(SearchReserveRequestDto requestDto) {
-        checkExistVisitorName(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
+    public List<ReserveListResponseDto> findReservesByNameAndPhone(ReserveRequestDto requestDto) {
+        log.info("Search reserve lists by name and phone: {}", requestDto);
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
-        List<ReserveListResponseDto> responseDtos = new ArrayList<>();
+        List<ReserveListResponseDto> response = new ArrayList<>();
         for (int i = 0; i < visitorList.size(); i++) {
             int finalI = i;
             Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
@@ -85,7 +83,7 @@ public class ReserveService {
                             .phone(v.getPhone())
                             .organization(v.getOrganization())
                             .build().decryptDto(seed)).collect(Collectors.toList());
-            responseDtos
+            response
                     .add(ReserveListResponseDto.builder()
                             .id(reserve.getId())
                             .date(reserve.getDate())
@@ -96,58 +94,41 @@ public class ReserveService {
                             .visitor(visitors)
                             .build());
         }
-        return responseDtos;
+        return response;
     }
 
-    private void checkExistVisitorName(String name, String phone) {
-        if (visitorRepository.findAllByName(name).size() == 0)
-        {
-            log.info("visitor name is not found");
-            throw new ResourceNotFoundException("Visitor", "name", name);
-        }
-        if (visitorRepository.findAllByPhone(phone).size() == 0)
-        {
-            log.info("visitor phone is not phone");
-            throw new ResourceNotFoundException("Visitor", "phone", phone);
-        }
-    }
 
-    public boolean reserveDelete(Long reserve_id, ReserveDeleteRequestDto requestDto) {
-        if (requestDto == null) {
-            log.info("dto is null, reserve_id: " + reserve_id.toString());
-            if (visitorRepository.findAllByReserveId(reserve_id).size() > 0) {
-                reserveRepository.deleteById(reserve_id);
-                visitorRepository.deleteAllByReserveId(reserve_id);
-            }
-            return true;
-        }
-        checkExistVisitorName(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
-        List<Visitor> list = visitorRepository.findAllByReserveId(reserve_id);
+    public boolean reserveDelete(Long reserveId, ReserveRequestDto requestDto) {
+        log.info("Delete Reserve Id: {}", reserveId);
+        log.info("Delete Visitors: {}", requestDto);
+        List<Visitor> list = visitorRepository.findAllByReserveId(reserveId);
         if (list.size() == 0) {
-            log.info("reserve id is not found: " + reserve_id.toString());
-            throw new ResourceNotFoundException("Reserve", "id", reserve_id);
+            log.error("예약번호 {}에 해당하는 방문자가 존재하지 않습니다", reserveId.toString());
+            return false;
         }
         else {
-            Visitor v = visitorRepository.findByNameAndPhoneAndReserveId(seed.encrypt(requestDto.getName()),
-                    seed.encrypt(requestDto.getPhone()), reserve_id)
-                    .orElseThrow(
-                            () -> new ResourceNotFoundException("Visitor", "name", requestDto.getName())
-                    );
-            visitorRepository.delete(v);
-            log.info("Visitor delete: " + v);
+            Optional<Visitor> toDeleteVisitor = list.stream().filter((visitor) ->
+                (visitor.getName().equals(seed.encrypt(requestDto.getName())))
+                    && (visitor.getPhone().equals(seed.encrypt(requestDto.getPhone()))))
+                .findAny();
+            if (toDeleteVisitor.isEmpty()) {
+                log.error("입력한 정보와 일치하는 방문자가 해 예약에 존재하지 않습니다");
+                return false;
+            }
+            visitorRepository.delete(toDeleteVisitor.get());
+            log.info("Visitor delete: " + toDeleteVisitor.get());
         }
         if (list.size() == 1) {
-            log.info("Reserve delete: " + reserve_id);
-            reserveRepository.delete(reserveRepository.findById(reserve_id).get());
+            log.info("Reserve delete: " + reserveId);
+            reserveRepository.delete(reserveRepository.findById(reserveId).get());
             socketService.sendMessageToSubscriber("/visitor",
-                "예약 번호: "+ String.valueOf(reserve_id)+ " 예약이 삭제되었습니다");
+                "예약 번호: "+ reserveId + " 예약이 삭제되었습니다");
         }
         return true;
     }
 
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
-        log.info("target Staff name: " + reserveVisitorDto.getTargetStaffName());
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         Reserve reserve = reserveRepository.save(Reserve.builder()
                 .targetStaff(staff.getId())
@@ -155,18 +136,17 @@ public class ReserveService {
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
                 .build());
-        log.info("" + reserve);
+        log.info("Reserve Saved: {}", reserve);
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
-        log.info("" + visitors);
-        log.info("send msg(visitor): " + visitors);
+        log.info("Saved Visitors: {}", visitors);
         StaffDto staffReserveInfo = new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
             reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
             visitors);
         List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
-        log.info("send msg(staff): " + staff);
+        log.info("Send text message to visitors and staff");
         socketService.sendMessageToSubscriber("/visitor",
-            "새로운 예약이 신청됐습니다. 예약번호 :" + String.valueOf(reserve.getId()));
+            "새로운 예약이 신청됐습니다. 예약번호 :" + reserve.getId());
         return reserve;
     }
 
@@ -178,15 +158,17 @@ public class ReserveService {
             .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", reserveModifyDto.getTargetStaffName()));
         reserve.update(reserveModifyDto.getPlace(), staff.getId(),
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
-        log.info("reserve update: " + reserve);
+        log.info("Updated reserve: {}", reserve);
         reserveRepository.save(reserve);
         reserveModifyDto.encrypt(seed);
         List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
+        log.info("Updated visitors: {}", visitors);
         StaffDto staffReserveInfo = new StaffDto(reserve.getId(), seed.decrypt(staff.getPhone()),
             reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
             reserveModifyDto.getDate(), visitors);
         List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
+        log.info("Send text messages to visitors and staff");
         socketService.sendMessageToSubscriber("/visitor",
             "예약이 수정되었습니다 예약번호: " + String.valueOf(reserve.getId()));
         return true;

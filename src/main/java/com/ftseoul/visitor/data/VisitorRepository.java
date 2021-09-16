@@ -13,8 +13,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     List<Visitor> findAllByNameAndPhone(String name, String phone);
-    Optional<Visitor> findByName(String name);
-    Optional<Visitor> findByPhone(String phone);
     Optional<Visitor> findByReserveIdAndPhone(Long reserveId, String phone);
     List<Visitor> findAllByName(String name);
     List<Visitor> findAllByPhone(String phone);
