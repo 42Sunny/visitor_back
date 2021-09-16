@@ -66,8 +66,8 @@ public class StaffService {
     }
 
     public boolean existByName(String name) {
-        log.info("Staff name: " + name);
         name = seed.encrypt(name);
+        log.info("Staff name is : {}", name);
         return staffRepository.existsStaffByName(name);
     }
 }

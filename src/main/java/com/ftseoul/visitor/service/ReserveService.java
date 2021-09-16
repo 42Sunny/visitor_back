@@ -69,7 +69,7 @@ public class ReserveService {
     }
 
     public List<ReserveListResponseDto> findReservesByNameAndPhone(ReserveRequestDto requestDto) {
-        log.info("Search reserve lists by name and phone: {}", requestDto);
+        log.info("Search reserve lists by name and phone\nname: {}, phone: {}", seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<ReserveListResponseDto> response = new ArrayList<>();
         for (int i = 0; i < visitorList.size(); i++) {

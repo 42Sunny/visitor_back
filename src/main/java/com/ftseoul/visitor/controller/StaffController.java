@@ -37,7 +37,6 @@ public class StaffController {
 
     @PostMapping("/staff")
     public ResponseEntity<?> checkStaffByName(@RequestBody StaffNameDto staffNameDto) {
-        log.info("To find staff name: {}", staffNameDto);
         boolean result = staffService.existByName(staffNameDto.getStaffName());
         if (!result) {
             throw new ResourceNotFoundException("Staff", "StaffName", staffNameDto.getStaffName());
