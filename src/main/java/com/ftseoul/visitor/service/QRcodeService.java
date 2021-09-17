@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.service;
 
+import com.ftseoul.visitor.data.DeviceRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,9 +30,9 @@ import java.util.Base64;
 public class QRcodeService {
 
     private final VisitorRepository visitorRepository;
+    private final DeviceRepository deviceRepository;
     private final WebSocketService socketService;
     private final Seed seed;
-    public final String[] allowedDeviceLists = {"b27d220f7b891725,"};
 
     public QRCheckResponseDto checkQRCode(String text) {
         Visitor visitor = visitorRepository.findById(Long.parseLong(text))
@@ -103,11 +105,10 @@ public class QRcodeService {
 
     public void checkAllowedDevice(String deviceId) {
         log.info("DeviceId is {},", deviceId);
-        for (String allowedDevice : allowedDeviceLists) {
-            if (allowedDevice.equals(deviceId)) {
-                return ;
-            }
+        if (!deviceRepository.existsById(deviceId)){
+            log.error("등록되지 않은 기기: {}", deviceId);
+            throw new InvalidDeviceException(deviceId);
         }
-        throw new InvalidDeviceException(deviceId);
+        log.info("Allowed Device");
     }
 }
