@@ -101,7 +101,11 @@ public class AWSMessageService implements SMSService {
         if (visitors != null && visitors.size() > 0) {
             long count = visitors.stream().count() - 1;
             String representor = seed.decrypt(visitors.get(0).getName());
-            message += representor + "님 외 " + count + "명";
+            if (visitors.size() == 1) {
+                message += representor + "님";
+            } else {
+                message += representor + "님 외 " + count + "명";
+            }
         }
         message += "\n상세 확인: " + shortUrl;
         SnsClient snsClient = credentialService.getSnsClient();
