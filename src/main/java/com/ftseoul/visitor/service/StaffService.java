@@ -25,14 +25,6 @@ public class StaffService {
     private final StaffRepository staffRepository;
     private final Seed seed;
 
-    public Staff findById(Long id) {
-        log.info("findById: " + id);
-        return staffRepository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", id))
-                .decrypt(seed);
-    }
-
     public Staff findByName(String name) {
         log.info("Staff name: " + name);
         return staffRepository
@@ -77,10 +69,12 @@ public class StaffService {
 
     public Response modifyStaff(StaffModifyDto staffModifyDto) {
         log.info("Modify Staff Called");
-        Optional<Staff> foundStaff = staffRepository.findById(staffModifyDto.getId());
+        Optional<Staff> foundStaff = staffRepository.findById(staffModifyDto.getStaffId());
+
         if (foundStaff.isEmpty()) {
             return new Response("4040", "해당 스태프가 존재하지 않습니다");
         }
+
         Staff staff = foundStaff.get();
         log.info("Before Modify- Staff Name is {} and phone is {}", staff.getName(), staff.getPhone());
         staff.update(staffModifyDto.getName(), staffModifyDto.getPhone());

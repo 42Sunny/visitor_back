@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class StaffModifyDto implements Serializable {
     @NotNull(message = "Staff id를 입력 해주세요")
-    private Long id;
+    private Long staffId;
     @NotNull(message = "수정할 이름을 입력 해주세요")
     private String name;
     @NotNull(message = "수정할 전화번호를 입력해주세요")
