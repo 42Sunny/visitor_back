@@ -2,16 +2,19 @@ package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.dto.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.StaffDecryptDto;
+import com.ftseoul.visitor.dto.StaffModifyDto;
 import com.ftseoul.visitor.dto.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +36,18 @@ public class StaffController {
     @GetMapping("/admin/staff")
     public List<StaffDecryptDto> staffListAll() {
         return staffService.findAllStaff();
+    }
+
+    @PutMapping("/admin/staff")
+    public ResponseEntity<Response> modifyStaff(@RequestBody StaffModifyDto staffModifyDto) {
+        Response response = staffService.modifyStaff(staffModifyDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/staff")
+    public ResponseEntity<Response> deleteStaff(@RequestBody Long staffId) {
+        Response response = staffService.deleteStaff(staffId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/staff")

@@ -4,8 +4,11 @@ import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.dto.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.StaffDecryptDto;
+import com.ftseoul.visitor.dto.StaffModifyDto;
+import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,7 @@ public class StaffService {
     }
 
     public List<StaffDecryptDto> findAllStaff() {
+        log.info("Find All Staffs");
         List<StaffDecryptDto> staffList = staffRepository.findAll().stream()
                 .map(staff ->
                         StaffDecryptDto.builder().id(staff.getId())
@@ -69,5 +73,26 @@ public class StaffService {
         name = seed.encrypt(name);
         log.info("Staff name is : {}", name);
         return staffRepository.existsStaffByName(name);
+    }
+
+    public Response modifyStaff(StaffModifyDto staffModifyDto) {
+        log.info("Modify Staff Called");
+        Optional<Staff> foundStaff = staffRepository.findById(staffModifyDto.getId());
+        if (foundStaff.isEmpty()) {
+            return new Response("4040", "해당 스태프가 존재하지 않습니다");
+        }
+        Staff staff = foundStaff.get();
+        log.info("Before Modify- Staff Name is {} and phone is {}", staff.getName(), staff.getPhone());
+        staff.update(staffModifyDto.getName(), staffModifyDto.getPhone());
+        staff.encrypt(seed);
+        staffRepository.save(staff);
+        log.info("After Modify- Staff Name is {} and phone is {}", staff.getName(), staff.getPhone());
+        return new Response("2000", "스태프정보를 수정했습니다");
+    }
+
+    public Response deleteStaff(Long staffId) {
+        log.info("Delete Staff Id: {}", staffId);
+        staffRepository.deleteById(staffId);
+        return new Response("2000", "해당 스태프를 삭제했습니다");
     }
 }
