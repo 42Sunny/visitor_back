@@ -86,7 +86,12 @@ public class StaffService {
 
     public Response deleteStaff(Long staffId) {
         log.info("Delete Staff Id: {}", staffId);
-        staffRepository.deleteById(staffId);
+        try{
+            staffRepository.deleteById(staffId);
+        } catch (RuntimeException ex) {
+            log.info(ex.getMessage());
+            return new Response("4040", "해당 스태프가 존재하지 않습니다");
+        }
         return new Response("2000", "해당 스태프를 삭제했습니다");
     }
 }
