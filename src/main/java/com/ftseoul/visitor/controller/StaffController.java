@@ -2,6 +2,7 @@ package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.dto.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.StaffDecryptDto;
+import com.ftseoul.visitor.dto.StaffDeleteDto;
 import com.ftseoul.visitor.dto.StaffModifyDto;
 import com.ftseoul.visitor.dto.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
@@ -45,8 +46,8 @@ public class StaffController {
     }
 
     @DeleteMapping("/admin/staff")
-    public ResponseEntity<Response> deleteStaff(@RequestBody Long staffId) {
-        Response response = staffService.deleteStaff(staffId);
+    public ResponseEntity<Response> deleteStaff(@RequestBody StaffDeleteDto dto) {
+        Response response = staffService.deleteStaff(dto.getStaffId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
