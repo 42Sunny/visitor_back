@@ -5,6 +5,7 @@ import com.ftseoul.visitor.dto.*;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ReserveService;
+import com.ftseoul.visitor.websocket.WebSocketService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ReserveController {
 
     private final ReserveService reserveService;
+    private final WebSocketService socketService;
     private final Seed seed;
 
     @GetMapping("/reserve/{id}")
@@ -31,6 +33,7 @@ public class ReserveController {
     @DeleteMapping("/reserve/{id}")
     public Response deleteById(@PathVariable Long id) {
         log.info("DELETE /reserve/" + id.toString());
+        socketService.sendMessageToSubscriber("/visitor", "예약번호: " + id.toString() + "예약이 삭제되었습니다");
         return reserveService.deleteById(id);
     }
 

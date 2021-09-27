@@ -112,7 +112,7 @@ public class ReserveService {
                     && (visitor.getPhone().equals(seed.encrypt(requestDto.getPhone()))))
                 .findAny();
             if (toDeleteVisitor.isEmpty()) {
-                log.error("입력한 정보와 일치하는 방문자가 해 예약에 존재하지 않습니다");
+                log.error("입력한 정보와 일치하는 방문자가 해당예약에 존재하지 않습니다");
                 return false;
             }
             visitorRepository.delete(toDeleteVisitor.get());
