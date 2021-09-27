@@ -3,6 +3,7 @@ package com.ftseoul.visitor.service;
 import com.ftseoul.visitor.data.ReserveRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
+import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.dto.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.VisitorDecryptWithIdDto;
@@ -11,6 +12,8 @@ import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -61,9 +64,18 @@ public class InfoService {
         if (visitor.getStatus() == dto.getVisitor().getStatus()) {
             return null;
         }
-        visitor.updateStatus(dto.getVisitor().getStatus());
-        Visitor savedVisitor = visitorRepository.save(visitor);
+        Visitor savedVisitor = visitorRepository.save(updateStatusAndDate(visitor, dto.getVisitor().getStatus()));
         return new VisitorStatusInfo(savedVisitor.getId(), savedVisitor.getStatus());
     }
 
+    private Visitor updateStatusAndDate(Visitor visitor, VisitorStatus status) {
+        visitor.updateStatus(status);
+        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        if (status == VisitorStatus.입실) {
+            visitor.updateCheckInTime(now);
+        } else if (status == VisitorStatus.퇴실) {
+            visitor.updateCheckOutTime(now);
+        }
+        return visitor;
+    }
 }
