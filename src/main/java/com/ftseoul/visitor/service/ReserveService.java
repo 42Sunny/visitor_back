@@ -97,8 +97,21 @@ public class ReserveService {
         return response;
     }
 
+    private boolean deleteVisitorInList(List<Visitor> list, ReserveRequestDto requestDto) {
+        Optional<Visitor> toDeleteVisitor = list.stream().filter((visitor) ->
+                (visitor.getName().equals(seed.encrypt(requestDto.getName())))
+                    && (visitor.getPhone().equals(seed.encrypt(requestDto.getPhone()))))
+            .findAny();
+        if (toDeleteVisitor.isEmpty()) {
+            log.error("입력한 정보와 일치하는 방문자가 해당예약에 존재하지 않습니다");
+            return false;
+        }
+        visitorRepository.delete(toDeleteVisitor.get());
+        log.info("Visitor delete: " + toDeleteVisitor.get());
+        return true;
+    }
 
-    public boolean reserveDelete(Long reserveId, ReserveRequestDto requestDto) {
+    public boolean visitorReserveDelete(Long reserveId, ReserveRequestDto requestDto) {
         log.info("Delete Reserve Id: {}", reserveId);
         log.info("Delete Visitors: {}", requestDto);
         List<Visitor> list = visitorRepository.findAllByReserveId(reserveId);
@@ -106,25 +119,17 @@ public class ReserveService {
             log.error("예약번호 {}에 해당하는 방문자가 존재하지 않습니다", reserveId.toString());
             return false;
         }
-        else {
-            Optional<Visitor> toDeleteVisitor = list.stream().filter((visitor) ->
-                (visitor.getName().equals(seed.encrypt(requestDto.getName())))
-                    && (visitor.getPhone().equals(seed.encrypt(requestDto.getPhone()))))
-                .findAny();
-            if (toDeleteVisitor.isEmpty()) {
-                log.error("입력한 정보와 일치하는 방문자가 해당예약에 존재하지 않습니다");
-                return false;
-            }
-            visitorRepository.delete(toDeleteVisitor.get());
-            log.info("Visitor delete: " + toDeleteVisitor.get());
-        }
+        boolean result = deleteVisitorInList(list, requestDto);
+
         if (list.size() == 1) {
             log.info("Reserve delete: " + reserveId);
             reserveRepository.delete(reserveRepository.findById(reserveId).get());
             socketService.sendMessageToSubscriber("/visitor",
-                "예약 번호: "+ reserveId + " 예약이 삭제되었습니다");
+                "예약 번호: "+ reserveId + " 예약및 방문자가 삭제되었습니다");
+        } else {
+            socketService.sendMessageToSubscriber("/visitor", "예약 번호: "+ reserveId + " 에 해당하는 방문자를 삭제했습니다");
         }
-        return true;
+        return result;
     }
 
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto){
@@ -145,8 +150,6 @@ public class ReserveService {
         List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
         log.info("Send text message to visitors and staff");
-        socketService.sendMessageToSubscriber("/visitor",
-            "새로운 예약이 신청됐습니다. 예약번호 :" + reserve.getId());
         return reserve;
     }
 
@@ -169,14 +172,11 @@ public class ReserveService {
         List<ShortUrlDto> shortUrlDtoList = shortUrlService.createShortUrlDtoList(visitors, staffReserveInfo);
         smsService.sendMessages(shortUrlDtoList, staffReserveInfo);
         log.info("Send text messages to visitors and staff");
-        socketService.sendMessageToSubscriber("/visitor",
-            "예약이 수정되었습니다 예약번호: " + String.valueOf(reserve.getId()));
         return true;
     }
 
     public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {
         log.info("Check phone Duplication");
-        boolean result = false;
         Set<String> phones = new HashSet<>();
         List<VisitorDto> collected = visitorDto
             .stream()
@@ -196,4 +196,5 @@ public class ReserveService {
         visitorRepository.deleteAllByReserveId(id);
         return new Response("2000", "예약이 삭제되었습니다");
     }
+
 }

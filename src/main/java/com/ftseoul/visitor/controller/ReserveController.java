@@ -43,18 +43,23 @@ public class ReserveController {
     }
 
     @DeleteMapping("/reserve")
-    public boolean reserveDelete(Long reserve_id, @Valid @RequestBody ReserveRequestDto deleteRequestDto) {
-        return reserveService.reserveDelete(reserve_id, deleteRequestDto);
+    public boolean reserveVisitorDelete(Long reserve_id, @Valid @RequestBody ReserveRequestDto deleteRequestDto) {
+        return reserveService.visitorReserveDelete(reserve_id, deleteRequestDto);
     }
 
     @PutMapping("/reserve")
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
-        return reserveService.updateReserve(reserveModifyDto);
+        boolean result = reserveService.updateReserve(reserveModifyDto);
+        socketService.sendMessageToSubscriber("/visitor",
+            "예약이 수정되었습니다 예약번호: " + String.valueOf(reserveModifyDto.getReserveId()));
+        return result;
     }
 
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
+        socketService.sendMessageToSubscriber("/visitor",
+            "새로운 예약이 신청됐습니다. 예약번호 :" + reserve.getId());
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }
 }
