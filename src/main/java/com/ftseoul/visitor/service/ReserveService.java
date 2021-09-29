@@ -197,4 +197,15 @@ public class ReserveService {
         return new Response("2000", "예약이 삭제되었습니다");
     }
 
+    public void deleteAllByStaffId(Long id) {
+        log.info("스태프 id: {}에 해당하는 예약 및 방문객 정보들을 삭제합니다", id);
+        List<Reserve> reserveList = reserveRepository.findAllByTargetStaff(id);
+        if (reserveList != null && reserveList.size() > 0) {
+            reserveList.forEach(reserve -> {
+                long reserveId = reserve.getId();
+                visitorRepository.deleteAllByReserveId(reserveId);
+                reserveRepository.delete(reserve);
+            });
+        }
+    }
 }

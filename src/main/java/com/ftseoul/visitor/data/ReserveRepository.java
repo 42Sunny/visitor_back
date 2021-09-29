@@ -13,4 +13,5 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
         + "WHERE r.date BETWEEN :from AND :to")
     List<DateFoundResponseDto> findAllReserveWithStaffByDate(LocalDateTime from, LocalDateTime to);
 
+    List<Reserve> findAllByTargetStaff(Long targetStaff);
 }

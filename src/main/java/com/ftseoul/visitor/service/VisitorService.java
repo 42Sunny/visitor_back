@@ -23,16 +23,6 @@ import org.springframework.stereotype.Service;
 public class VisitorService {
 
     private final VisitorRepository visitorRepository;
-    private final Seed seed;
-
-    public VisitorDecryptDto decryptDto(Visitor visitor) {
-        return VisitorDecryptDto.builder()
-                .reserveId(visitor.getReserveId())
-                .name(seed.decrypt(visitor.getName()))
-                .phone(seed.decrypt(visitor.getPhone()))
-                .organization(visitor.getOrganization())
-                .build();
-    }
 
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         log.info("Reserve Id is {}", reserveId);

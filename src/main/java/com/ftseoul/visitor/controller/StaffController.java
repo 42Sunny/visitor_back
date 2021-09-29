@@ -7,7 +7,9 @@ import com.ftseoul.visitor.dto.StaffModifyDto;
 import com.ftseoul.visitor.dto.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.StaffService;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +28,7 @@ import java.util.List;
 @Slf4j
 public class StaffController {
     private final StaffService staffService;
+    private final ReserveService reserveService;
 
     @PostMapping("/admin/staff/save")
     public boolean add_staff(@RequestBody AddStaffRequestDto requestDto) {
@@ -46,8 +49,10 @@ public class StaffController {
     }
 
     @DeleteMapping("/admin/staff")
+    @Transactional
     public ResponseEntity<Response> deleteStaff(@RequestBody StaffDeleteDto dto) {
         Response response = staffService.deleteStaff(dto.getStaffId());
+        reserveService.deleteAllByStaffId(dto.getStaffId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

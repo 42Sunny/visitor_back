@@ -1,16 +1,11 @@
 package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.*;
-import com.ftseoul.visitor.dto.ReserveResponseDto;
-import com.ftseoul.visitor.dto.SearchReserveRequestDto;
 import org.junit.After;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
