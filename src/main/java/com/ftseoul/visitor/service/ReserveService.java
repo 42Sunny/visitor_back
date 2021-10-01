@@ -51,11 +51,11 @@ public class ReserveService {
         Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
         List<VisitorDecryptDto> visitor = visitorRepository.findAllByReserveId(id)
-                .stream().map(visitor1 -> VisitorDecryptDto.builder()
-                .reserveId(visitor1.getReserveId())
-                .phone(visitor1.getPhone())
-                .name(visitor1.getName())
-                .organization(visitor1.getOrganization())
+                .stream().map(v -> VisitorDecryptDto.builder()
+                .reserveId(v.getReserveId())
+                .phone(v.getPhone())
+                .name(v.getName())
+                .organization(v.getOrganization())
                 .build().decryptDto(seed)).collect(Collectors.toList());
         return ReserveListResponseDto.builder()
                 .staff(staffService.decrypt(staffRepository.findById(reserve.getTargetStaff())
@@ -125,7 +125,7 @@ public class ReserveService {
             log.info("Reserve delete: " + reserveId);
             reserveRepository.delete(reserveRepository.findById(reserveId).get());
             socketService.sendMessageToSubscriber("/visitor",
-                "예약 번호: "+ reserveId + " 예약및 방문자가 삭제되었습니다");
+                "예약 번호: "+ reserveId + " 예약 및 방문자가 삭제되었습니다");
         } else {
             socketService.sendMessageToSubscriber("/visitor", "예약 번호: "+ reserveId + " 에 해당하는 방문자를 삭제했습니다");
         }

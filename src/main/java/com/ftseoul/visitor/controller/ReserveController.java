@@ -33,7 +33,7 @@ public class ReserveController {
     @DeleteMapping("/reserve/{id}")
     public Response deleteById(@PathVariable Long id) {
         log.info("DELETE /reserve/" + id.toString());
-        socketService.sendMessageToSubscriber("/visitor", "예약번호: " + id.toString() + "예약이 삭제되었습니다");
+        socketService.sendMessageToSubscriber("/visitor", "예약번호: " + id + "예약이 삭제되었습니다");
         return reserveService.deleteById(id);
     }
 
@@ -51,7 +51,7 @@ public class ReserveController {
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
         boolean result = reserveService.updateReserve(reserveModifyDto);
         socketService.sendMessageToSubscriber("/visitor",
-            "예약이 수정되었습니다 예약번호: " + String.valueOf(reserveModifyDto.getReserveId()));
+            "예약번호: " + reserveModifyDto.getReserveId() + " 예약이 수정되었습니다");
         return result;
     }
 
@@ -59,7 +59,7 @@ public class ReserveController {
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
         Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
         socketService.sendMessageToSubscriber("/visitor",
-            "새로운 예약이 신청됐습니다. 예약번호 :" + reserve.getId());
+            "예약번호 :" + reserve.getId() + " 새로운 예약이 신청됐습니다");
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }
 }
