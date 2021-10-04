@@ -100,25 +100,25 @@ public class StaffService {
     }
 
     public String createSaveSMSMessage(List<Visitor> visitors, LocalDateTime dateTime, String shortUrl) {
-        String message = "[방문신청]\n"
-            + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append("[방문신청]\n"
+            + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n");
         if (visitors != null && visitors.size() > 0) {
             long count = visitors.stream().count() - 1;
             String representor = seed.decrypt(visitors.get(0).getName());
             if (visitors.size() == 1) {
-                message += representor + "님";
+                sb.append(representor + "님");
             } else {
-                message += representor + "님 외 " + count + "명";
+                sb.append(representor + "님 외 " + count + "명");
             }
         }
-        message += "\n상세 확인: " + domain + "/" + shortUrl;
-        return message;
+        sb.append("\n상세 확인: " + domain + "/" + shortUrl);
+        return sb.toString();
     }
-    public String createModifySMSMessage(long reserveId, LocalDateTime dateTime, String shortUrl) {
+    public String createModifySMSMessage(String shortUrl) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[예약수정]\n"
-            + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n");
-        sb.append("예약번호: " + reserveId);
+        sb.append("[예약수정]\n");
+        sb.append("예약이 수정되었습니다");
         sb.append("\n상세 확인: "+ domain + "/"  + shortUrl);
         return sb.toString();
     }

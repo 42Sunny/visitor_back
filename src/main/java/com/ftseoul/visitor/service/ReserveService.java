@@ -166,8 +166,7 @@ public class ReserveService {
         ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
 
         visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(
-            reserve.getId(), reserve.getDate(), staffShortUrl.getValue()));
+        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(staffShortUrl.getValue()));
         log.info("Send text messages to visitors and staff");
         return true;
     }
