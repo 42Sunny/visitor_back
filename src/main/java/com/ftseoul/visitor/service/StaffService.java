@@ -2,9 +2,9 @@ package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
-import com.ftseoul.visitor.dto.AddStaffRequestDto;
-import com.ftseoul.visitor.dto.StaffDecryptDto;
-import com.ftseoul.visitor.dto.StaffModifyDto;
+import com.ftseoul.visitor.dto.staff.AddStaffRequestDto;
+import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
+import com.ftseoul.visitor.dto.staff.StaffModifyDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
@@ -53,7 +53,7 @@ public class StaffService {
         return staffList;
     }
 
-    public StaffDecryptDto decrypt(Staff staff) {
+    public StaffDecryptDto decryptStaff(Staff staff) {
         return StaffDecryptDto.builder()
                 .id(staff.getId())
                 .name(staff.getName())

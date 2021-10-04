@@ -4,24 +4,18 @@ import com.ftseoul.visitor.data.DeviceRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
-import com.ftseoul.visitor.dto.QRCheckResponseDto;
+import com.ftseoul.visitor.dto.qrcode.QRCheckResponseDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.InvalidDeviceException;
 import com.ftseoul.visitor.exception.InvalidQRCodeException;
-import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.websocket.WebSocketService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.SerializationUtils;
-
-import java.util.Base64;
 
 @Service
 @Slf4j

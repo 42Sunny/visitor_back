@@ -2,12 +2,9 @@ package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
-import com.ftseoul.visitor.dto.ReserveModifyDto;
-import com.ftseoul.visitor.dto.VisitorDecryptDto;
-import com.ftseoul.visitor.dto.VisitorDto;
-import com.ftseoul.visitor.dto.VisitorModifyDto;
-import com.ftseoul.visitor.encrypt.Seed;
-import com.ftseoul.visitor.service.sns.SMSService;
+import com.ftseoul.visitor.dto.reserve.ReserveModifyDto;
+import com.ftseoul.visitor.dto.visitor.VisitorDto;
+import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

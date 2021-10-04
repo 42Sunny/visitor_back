@@ -1,6 +1,6 @@
 package com.ftseoul.visitor.exception;
 
-import com.ftseoul.visitor.dto.ErrorValidationDto;
+import com.ftseoul.visitor.dto.error.ErrorValidationDto;
 import com.ftseoul.visitor.dto.payload.ValidationErrorResponse;
 import java.util.List;
 import java.util.stream.Collectors;

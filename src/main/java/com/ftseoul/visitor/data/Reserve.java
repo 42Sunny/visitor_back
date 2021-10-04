@@ -3,7 +3,6 @@ package com.ftseoul.visitor.data;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
-import com.ftseoul.visitor.dto.ReserveUpdateDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,14 +41,6 @@ public class Reserve {
         this.targetStaff = targetStaff;
         this.purpose = purpose;
         this.date = date;
-        return this;
-    }
-
-    public Reserve update(ReserveUpdateDto reserveUpdateDto) {
-        this.place = reserveUpdateDto.getPlace();
-        this.targetStaff = reserveUpdateDto.getTargetStaff();
-        this.purpose = reserveUpdateDto.getPurpose();
-        this.date = reserveUpdateDto.getDate();
         return this;
     }
 

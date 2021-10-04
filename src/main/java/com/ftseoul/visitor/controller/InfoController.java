@@ -1,10 +1,10 @@
 package com.ftseoul.visitor.controller;
 
-import com.ftseoul.visitor.dto.DateFoundResponseDto;
-import com.ftseoul.visitor.dto.DateRequestDto;
-import com.ftseoul.visitor.dto.ErrorResponseDto;
-import com.ftseoul.visitor.dto.UpdateStatusResponseDto;
-import com.ftseoul.visitor.dto.UpdateVisitorStatusDto;
+import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
+import com.ftseoul.visitor.dto.reserve.DateRequestDto;
+import com.ftseoul.visitor.dto.error.ErrorResponseDto;
+import com.ftseoul.visitor.dto.visitor.UpdateStatusResponseDto;
+import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.service.InfoService;

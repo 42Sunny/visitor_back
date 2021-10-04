@@ -1,6 +1,6 @@
 package com.ftseoul.visitor.controller;
 
-import com.ftseoul.visitor.dto.QRCheckResponseDto;
+import com.ftseoul.visitor.dto.qrcode.QRCheckResponseDto;
 import com.ftseoul.visitor.service.QRcodeService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,12 +1,12 @@
 package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.Visitor;
-import com.ftseoul.visitor.dto.ShortUrlCreateDto;
-import com.ftseoul.visitor.dto.ShortUrlCreateListDto;
-import com.ftseoul.visitor.dto.ShortUrlDto;
-import com.ftseoul.visitor.dto.ShortUrlResponseDto;
-import com.ftseoul.visitor.dto.ShortUrlResponseListDto;
-import com.ftseoul.visitor.dto.StaffDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlCreateDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlRequestDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlResponse;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
+import com.ftseoul.visitor.dto.staff.StaffDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,21 +32,22 @@ public class ShortUrlService {
         this.seed = seed;
     }
 
-    public List<ShortUrlResponseDto> createUrls(List<ShortUrlDto> shortUrlDtoList) {
+    public List<ShortUrlResponseDto> createUrls(List<ShortUrlDto> shortUrls) {
         log.info("Create Short Urls");
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-API-KEY", apiKey);
-        ShortUrlCreateListDto urlRequestObj = createUrlRequestJson(shortUrlDtoList);
-        HttpEntity<ShortUrlCreateListDto> request = new HttpEntity<>(urlRequestObj, headers);
-        ShortUrlResponseListDto shortUrlResponseListDto = restTemplate.postForObject(
-            domain + "/urls", request, ShortUrlResponseListDto.class);
-        return shortUrlResponseListDto.getUrlResponseList();
+        ShortUrlRequestDto urlRequestObj = createJsonRequest(shortUrls);
+        HttpEntity<ShortUrlRequestDto> request = new HttpEntity<>(urlRequestObj, headers);
+        ShortUrlResponse shortUrlResponse = restTemplate.postForObject(
+            domain + "/urls", request, ShortUrlResponse.class);
+        assert shortUrlResponse != null;
+        return shortUrlResponse.getUrlResponseList();
     }
 
-    public ShortUrlCreateListDto createUrlRequestJson(List<ShortUrlDto> shortUrlDtoList) {
-        ShortUrlCreateListDto result = new ShortUrlCreateListDto();
-        for (ShortUrlDto shortUrlDto : shortUrlDtoList) {
+    public ShortUrlRequestDto createJsonRequest(List<ShortUrlDto> shortUrls) {
+        ShortUrlRequestDto result = new ShortUrlRequestDto();
+        for (ShortUrlDto shortUrlDto : shortUrls) {
             if (!shortUrlDto.isStaff()) {
                 result.addUrl(new ShortUrlCreateDto(shortUrlDto.getPhone(),
                     qrPath + shortUrlDto.getId()));
@@ -57,7 +58,7 @@ public class ShortUrlService {
         return result;
     }
 
-    public List<ShortUrlDto> createShortUrlDtoList(List<Visitor> visitors, StaffDto staffReserveInfo) {
+    public List<ShortUrlDto> createShortUrlDtos(List<Visitor> visitors, StaffDto staffReserveInfo) {
         List<ShortUrlDto> shortUrlDtos = visitors
             .stream()
             .map(v -> new ShortUrlDto(seed.encryptUrl(v.getId().toString())
@@ -65,8 +66,10 @@ public class ShortUrlService {
                 , false
             ))
             .collect(Collectors.toList());
-        shortUrlDtos.add(new ShortUrlDto(staffReserveInfo.getReserveId().toString(),
-            staffReserveInfo.getPhone(), true));
+        //add staff info
+        ShortUrlDto staffShortUrlDto = new ShortUrlDto(staffReserveInfo.getReserveId().toString(),
+            staffReserveInfo.getPhone(), true);
+        shortUrlDtos.add(staffShortUrlDto);
         return shortUrlDtos;
     }
 }

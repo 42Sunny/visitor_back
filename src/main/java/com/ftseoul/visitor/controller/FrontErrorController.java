@@ -1,7 +1,7 @@
 package com.ftseoul.visitor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ftseoul.visitor.dto.FrontErrorResponseDto;
+import com.ftseoul.visitor.dto.error.FrontErrorResponseDto;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

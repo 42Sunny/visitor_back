@@ -1,6 +1,5 @@
 package com.ftseoul.visitor.data;
 
-import com.ftseoul.visitor.dto.VisitorModifyDto;
 import java.util.Collection;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

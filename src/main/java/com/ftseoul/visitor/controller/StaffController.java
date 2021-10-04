@@ -1,10 +1,10 @@
 package com.ftseoul.visitor.controller;
 
-import com.ftseoul.visitor.dto.AddStaffRequestDto;
-import com.ftseoul.visitor.dto.StaffDecryptDto;
-import com.ftseoul.visitor.dto.StaffDeleteDto;
-import com.ftseoul.visitor.dto.StaffModifyDto;
-import com.ftseoul.visitor.dto.StaffNameDto;
+import com.ftseoul.visitor.dto.staff.AddStaffRequestDto;
+import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
+import com.ftseoul.visitor.dto.staff.StaffDeleteDto;
+import com.ftseoul.visitor.dto.staff.StaffModifyDto;
+import com.ftseoul.visitor.dto.staff.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import com.ftseoul.visitor.service.ReserveService;

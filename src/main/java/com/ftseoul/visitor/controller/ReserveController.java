@@ -1,10 +1,17 @@
 package com.ftseoul.visitor.controller;
 
 import com.ftseoul.visitor.data.Reserve;
-import com.ftseoul.visitor.dto.*;
+import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.dto.payload.Response;
+import com.ftseoul.visitor.dto.reserve.ReserveIdDto;
+import com.ftseoul.visitor.dto.reserve.ReserveListResponseDto;
+import com.ftseoul.visitor.dto.reserve.ReserveModifyDto;
+import com.ftseoul.visitor.dto.reserve.ReserveRequestDto;
+import com.ftseoul.visitor.dto.reserve.ReserveVisitorDto;
+import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ReserveService;
+import com.ftseoul.visitor.service.StaffService;
 import com.ftseoul.visitor.websocket.WebSocketService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +28,7 @@ import java.util.List;
 public class ReserveController {
 
     private final ReserveService reserveService;
+    private final StaffService staffService;
     private final WebSocketService socketService;
     private final Seed seed;
 
@@ -57,7 +65,11 @@ public class ReserveController {
 
     @PostMapping(value = "/reserve/create")
     public ResponseEntity<ReserveIdDto> enrollReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
-        Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed));
+        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
+        log.info("staff found: {}", staff);
+        StaffDecryptDto decryptStaff = new StaffDecryptDto(staff.getId(), staff.getName(), staff.getPhone());
+        Reserve reserve = reserveService.saveReserve(reserveVisitorDto.encryptDto(seed)
+            , decryptStaff.decryptDto(seed));
         socketService.sendMessageToSubscriber("/visitor",
             "예약번호 :" + reserve.getId() + " 새로운 예약이 신청됐습니다");
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);

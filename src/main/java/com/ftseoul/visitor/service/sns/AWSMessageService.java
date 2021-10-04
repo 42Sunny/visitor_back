@@ -1,13 +1,11 @@
 package com.ftseoul.visitor.service.sns;
 
 import com.ftseoul.visitor.data.Visitor;
-import com.ftseoul.visitor.dto.ShortUrlDto;
-import com.ftseoul.visitor.dto.ShortUrlResponseDto;
-import com.ftseoul.visitor.dto.ShortUrlResponseListDto;
-import com.ftseoul.visitor.dto.StaffDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
+import com.ftseoul.visitor.dto.staff.StaffDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ShortUrlService;
-import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -120,9 +118,9 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessages(List<ShortUrlDto> shortUrlDtoList, StaffDto staffDto) {
+    public void sendMessages(List<ShortUrlDto> shortUrls, StaffDto staffDto) {
 
-        List<ShortUrlResponseDto> shortUrlLists = shortUrlService.createUrls(shortUrlDtoList);
+        List<ShortUrlResponseDto> shortUrlLists = shortUrlService.createUrls(shortUrls);
 
         List<ShortUrlResponseDto> visitorShortUrls = shortUrlLists
             .stream()

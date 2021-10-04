@@ -1,6 +1,6 @@
 package com.ftseoul.visitor.exception;
 
-import com.ftseoul.visitor.dto.ErrorResponseDto;
+import com.ftseoul.visitor.dto.error.ErrorResponseDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

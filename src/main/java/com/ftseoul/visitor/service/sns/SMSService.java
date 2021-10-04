@@ -1,7 +1,7 @@
 package com.ftseoul.visitor.service.sns;
 
-import com.ftseoul.visitor.dto.ShortUrlDto;
-import com.ftseoul.visitor.dto.StaffDto;
+import com.ftseoul.visitor.dto.shorturl.ShortUrlDto;
+import com.ftseoul.visitor.dto.staff.StaffDto;
 import java.util.List;
 
 public interface SMSService {

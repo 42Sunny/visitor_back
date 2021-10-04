@@ -17,7 +17,7 @@ public class LogbackMDCFilter implements Filter {
     public void init(FilterConfig filterConfig) {
 
     }
-//  TODO:  종합 에러
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
