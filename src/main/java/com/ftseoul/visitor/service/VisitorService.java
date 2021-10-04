@@ -21,12 +21,15 @@ public class VisitorService {
 
     private final VisitorRepository visitorRepository;
 
+    private final String domain = "https://dev.vstr.kr";
+
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         log.info("Reserve Id is {}", reserveId);
         List<Visitor> visitors = visitorDto
             .stream()
             .map(v -> new Visitor(reserveId, v.getName(), v.getPhone(), v.getOrganization()))
             .collect(Collectors.toList());
+        log.info("Saved Visitors: {}", visitors);
         return visitorRepository.saveAll(visitors);
     }
 
@@ -65,5 +68,12 @@ public class VisitorService {
                    newVisitor.getPhone());
            duplicatedVisitor.ifPresent(visitorRepository::delete);
        }
+   }
+
+   public String createSMSMessage(String value) {
+       String message = "[이노베이션아카데미]\n"
+           +"아래 링크 QR을 출입시 제시해주세요\n"
+           +domain + "/" + value;
+       return message;
    }
 }

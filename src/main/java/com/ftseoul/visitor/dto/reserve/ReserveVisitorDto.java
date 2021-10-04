@@ -50,11 +50,5 @@ public class ReserveVisitorDto implements Serializable {
         visitor = visitor.stream().map(visitorDto -> visitorDto.encryptDto(seed)).collect(Collectors.toList());
         return this;
     }
-
-    public ReserveVisitorDto decryptDto(Seed seed) {
-        this.targetStaffName = seed.decrypt(this.targetStaffName);
-        visitor = visitor.stream().map(visitorDto -> visitorDto.decryptDto(seed)).collect(Collectors.toList());
-        return this;
-    }
 }
 

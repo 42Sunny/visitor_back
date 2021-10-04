@@ -6,7 +6,7 @@ import com.ftseoul.visitor.dto.shorturl.ShortUrlRequestDto;
 import com.ftseoul.visitor.dto.shorturl.ShortUrlDto;
 import com.ftseoul.visitor.dto.shorturl.ShortUrlResponse;
 import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
-import com.ftseoul.visitor.dto.staff.StaffDto;
+import com.ftseoul.visitor.dto.staff.StaffReserveDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +58,7 @@ public class ShortUrlService {
         return result;
     }
 
-    public List<ShortUrlDto> createShortUrlDtos(List<Visitor> visitors, StaffDto staffReserveInfo) {
+    public List<ShortUrlResponseDto> createShortUrls(List<Visitor> visitors, StaffReserveDto staffReserveInfo) {
         List<ShortUrlDto> shortUrlDtos = visitors
             .stream()
             .map(v -> new ShortUrlDto(seed.encryptUrl(v.getId().toString())
@@ -70,6 +70,25 @@ public class ShortUrlService {
         ShortUrlDto staffShortUrlDto = new ShortUrlDto(staffReserveInfo.getReserveId().toString(),
             staffReserveInfo.getPhone(), true);
         shortUrlDtos.add(staffShortUrlDto);
-        return shortUrlDtos;
+        return createUrls(shortUrlDtos);
+    }
+    public List<ShortUrlResponseDto> filterVisitorShortUrls(List<ShortUrlResponseDto> list) {
+        return list
+            .stream()
+            .filter(url -> !url.getId().equals("staff"))
+            .collect(Collectors.toList());
+    }
+
+    public ShortUrlResponseDto filterStaffShortUrls(List<ShortUrlResponseDto> list) {
+        List<ShortUrlResponseDto> staffShortUrl = list
+            .stream()
+            .filter(url -> url.getId().equals("staff"))
+            .collect(Collectors.toList());
+        if (staffShortUrl.isEmpty()) {
+            log.error("스테프 단축 URL을 만드는데 실패했습니다");
+            return null;
+        } else {
+            return staffShortUrl.get(0);
+        }
     }
 }

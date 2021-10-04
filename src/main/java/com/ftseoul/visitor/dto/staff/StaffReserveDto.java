@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StaffDto {
+public class StaffReserveDto {
     private Long reserveId;
 
     private String phone;

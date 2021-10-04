@@ -1,15 +1,5 @@
 package com.ftseoul.visitor.service.sns;
 
-import com.ftseoul.visitor.data.Visitor;
-import com.ftseoul.visitor.dto.shorturl.ShortUrlDto;
-import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
-import com.ftseoul.visitor.dto.staff.StaffDto;
-import com.ftseoul.visitor.encrypt.Seed;
-import com.ftseoul.visitor.service.ShortUrlService;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,20 +23,9 @@ public class AWSMessageService implements SMSService {
     @Value("${aws.region}")
     private String awsRegion;
 
-    private final Seed seed;
-
     public CredentialService credentialService;
 
     private final String prefix = "+82";
-
-    private final String domain = "https://dev.vstr.kr";
-
-    private final ShortUrlService shortUrlService;
-
-    public AWSMessageService(Seed seed, ShortUrlService shortUrlService) {
-        this.seed = seed;
-        this.shortUrlService = shortUrlService;
-    }
 
     public static class CredentialService {
 
@@ -76,10 +55,7 @@ public class AWSMessageService implements SMSService {
     }
 
     @Override
-    public void sendMessage(String phoneNumber, String value) {
-        String message = "[이노베이션아카데미]\n"
-            +"아래 링크 QR을 출입시 제시해주세요\n"
-            +domain + "/" + value;
+    public void sendMessage(String phoneNumber, String message) {
         SnsClient snsClient = credentialService.getSnsClient();
         PublishRequest publishRequest = PublishRequest.builder()
             .phoneNumber(prefix.concat(phoneNumber))
@@ -89,51 +65,6 @@ public class AWSMessageService implements SMSService {
         log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
         snsClient.close();
         log.info("Sent message Id is {}", publishResponse.messageId());
-    }
-
-    @Override
-    public void sendMessage(StaffDto staffDto, String shortUrl) {
-        String message = "[방문신청]\n"
-            + staffDto.getDate().format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n";
-        List<Visitor> visitors = staffDto.getVisitors();
-        if (visitors != null && visitors.size() > 0) {
-            long count = visitors.stream().count() - 1;
-            String representor = seed.decrypt(visitors.get(0).getName());
-            if (visitors.size() == 1) {
-                message += representor + "님";
-            } else {
-                message += representor + "님 외 " + count + "명";
-            }
-        }
-        message += "\n상세 확인: " + shortUrl;
-        SnsClient snsClient = credentialService.getSnsClient();
-        PublishRequest publishRequest = PublishRequest.builder()
-            .phoneNumber(prefix.concat(staffDto.getPhone()))
-            .message(message)
-            .build();
-        PublishResponse publishResponse = snsClient.publish(publishRequest);
-        log.info("message status: " + publishResponse.sdkHttpResponse().statusCode());
-        snsClient.close();
-        log.info("Sent message Id is {}", publishResponse.messageId());
-    }
-
-    @Override
-    public void sendMessages(List<ShortUrlDto> shortUrls, StaffDto staffDto) {
-
-        List<ShortUrlResponseDto> shortUrlLists = shortUrlService.createUrls(shortUrls);
-
-        List<ShortUrlResponseDto> visitorShortUrls = shortUrlLists
-            .stream()
-            .filter(url -> !url.getId().equals("staff"))
-            .collect(Collectors.toList());
-        List<ShortUrlResponseDto> staffShortUrl = shortUrlLists
-            .stream()
-            .filter(url -> url.getId().equals("staff"))
-            .collect(Collectors.toList());
-
-        visitorShortUrls.forEach(shorUrl ->
-            sendMessage(shorUrl.getId(), shorUrl.getValue()));
-        sendMessage(staffDto, domain + "/" + staffShortUrl.get(0).getValue());
     }
 
     @PostConstruct

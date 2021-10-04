@@ -2,12 +2,15 @@ package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
+import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.dto.staff.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
 import com.ftseoul.visitor.dto.staff.StaffModifyDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class StaffService {
     private final StaffRepository staffRepository;
     private final Seed seed;
+    private final String domain = "https://dev.vstr.kr";
 
     public Staff findByName(String name) {
         log.info("Staff name: " + name);
@@ -93,5 +97,29 @@ public class StaffService {
             return new Response("4040", "해당 스태프가 존재하지 않습니다");
         }
         return new Response("2000", "해당 스태프를 삭제했습니다");
+    }
+
+    public String createSaveSMSMessage(List<Visitor> visitors, LocalDateTime dateTime, String shortUrl) {
+        String message = "[방문신청]\n"
+            + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n";
+        if (visitors != null && visitors.size() > 0) {
+            long count = visitors.stream().count() - 1;
+            String representor = seed.decrypt(visitors.get(0).getName());
+            if (visitors.size() == 1) {
+                message += representor + "님";
+            } else {
+                message += representor + "님 외 " + count + "명";
+            }
+        }
+        message += "\n상세 확인: " + domain + "/" + shortUrl;
+        return message;
+    }
+    public String createModifySMSMessage(long reserveId, LocalDateTime dateTime, String shortUrl) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[예약수정]\n"
+            + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n");
+        sb.append("예약번호: " + reserveId);
+        sb.append("\n상세 확인: "+ domain + "/"  + shortUrl);
+        return sb.toString();
     }
 }
