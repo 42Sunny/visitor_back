@@ -133,10 +133,10 @@ public class ReserveService {
         return result;
     }
 
-    public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto, StaffDecryptDto staff){
+    public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto, long staffId){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
         Reserve reserve = reserveRepository.save(Reserve.builder()
-                .targetStaff(staff.getId())
+                .targetStaff(staffId)
                 .place(reserveVisitorDto.getPlace())
                 .purpose(reserveVisitorDto.getPurpose())
                 .date(reserveVisitorDto.getDate())
@@ -145,30 +145,15 @@ public class ReserveService {
         return reserve;
     }
 
-    public boolean updateReserve(ReserveModifyDto reserveModifyDto) {
+    public Reserve updateReserve(ReserveModifyDto reserveModifyDto, long staffId) {
         Reserve reserve = reserveRepository
             .findById(reserveModifyDto.getReserveId())
             .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", reserveModifyDto.getReserveId()));
-        Staff staff = staffRepository.findByName(seed.encrypt(reserveModifyDto.getTargetStaffName()))
-            .orElseThrow(() -> new ResourceNotFoundException("Staff", "name", reserveModifyDto.getTargetStaffName()));
-        reserve.update(reserveModifyDto.getPlace(), staff.getId(),
+        reserve.update(reserveModifyDto.getPlace(), staffId,
             reserveModifyDto.getPurpose(), reserveModifyDto.getDate());
         log.info("Updated reserve: {}", reserve);
         reserveRepository.save(reserve);
-        reserveModifyDto.encrypt(seed);
-        List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
-        log.info("Updated visitors: {}", visitors);
-        StaffReserveDto staffReserveInfo = new StaffReserveDto(reserve.getId(), seed.decrypt(staff.getPhone()),
-            reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
-            reserveModifyDto.getDate(), visitors);
-        List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
-        List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
-        ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
-
-        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(staffShortUrl.getValue()));
-        log.info("Send text messages to visitors and staff");
-        return true;
+        return reserve;
     }
 
     public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {

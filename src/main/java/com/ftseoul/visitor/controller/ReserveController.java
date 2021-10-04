@@ -67,11 +67,29 @@ public class ReserveController {
 
     @PutMapping("/reserve")
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
-        boolean result = reserveService.updateReserve(reserveModifyDto);
+        Staff staff = staffService.findByName(seed.encrypt(reserveModifyDto.getTargetStaffName()));
+        log.info("staff found: {}", staff);
+        Reserve reserve = reserveService.updateReserve(reserveModifyDto, staff.getId());
+
+        reserveModifyDto.encrypt(seed);
+        List<Visitor> visitors = visitorService.updateVisitors(reserveModifyDto);
+        log.info("Updated visitors: {}", visitors);
+
+        StaffReserveDto staffReserveInfo = new StaffReserveDto(reserve.getId(), seed.decrypt(staff.getPhone()),
+            reserveModifyDto.getPurpose(), reserveModifyDto.getPlace(),
+            reserveModifyDto.getDate(), visitors);
+
+        List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
+        List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
+        ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
+
+        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
+        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(staffShortUrl.getValue()));
+        log.info("Send text messages to visitors and staff");
 
         socketService.sendMessageToSubscriber("/visitor",
             "예약번호: " + reserveModifyDto.getReserveId() + " 예약이 수정되었습니다");
-        return result;
+        return true;
     }
 
     @PostMapping(value = "/reserve/create")
@@ -80,10 +98,7 @@ public class ReserveController {
         reserveVisitorDto = reserveVisitorDto.encryptDto(seed);
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         log.info("staff found: {}", staff);
-        StaffDecryptDto decryptStaff = new StaffDecryptDto(staff.getId(), staff.getName(), staff.getPhone());
-
-        Reserve reserve = reserveService.saveReserve(reserveVisitorDto, decryptStaff);
-
+        Reserve reserve = reserveService.saveReserve(reserveVisitorDto, staff.getId());
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
 
         StaffReserveDto staffReserveInfo = new StaffReserveDto(reserve.getId(), staff.getPhone(),
