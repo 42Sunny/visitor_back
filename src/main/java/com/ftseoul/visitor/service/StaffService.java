@@ -118,7 +118,6 @@ public class StaffService {
     public String createModifySMSMessage(String shortUrl) {
         StringBuilder sb = new StringBuilder();
         sb.append("[예약수정]\n");
-        sb.append("예약이 수정되었습니다");
         sb.append("\n상세 확인: "+ domain + "/"  + shortUrl);
         return sb.toString();
     }
