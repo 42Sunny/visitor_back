@@ -33,9 +33,4 @@ public class VisitorDto implements Serializable {
         return this;
     }
 
-    public VisitorDto decryptDto(Seed seed) {
-        this.name = seed.decrypt(this.name);
-        this.phone = seed.decrypt(this.phone);
-        return this;
-    }
 }

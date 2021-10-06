@@ -3,6 +3,7 @@ package com.ftseoul.visitor.data;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,4 +15,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     List<DateFoundResponseDto> findAllReserveWithStaffByDate(LocalDateTime from, LocalDateTime to);
 
     List<Reserve> findAllByTargetStaff(Long targetStaff);
+
+    @Transactional
+    void deleteAllById(long id);
 }

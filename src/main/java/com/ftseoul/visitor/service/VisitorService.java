@@ -38,7 +38,6 @@ public class VisitorService {
         List<VisitorModifyDto> visitorList = modifyDto.getVisitor();
         updateDeletedVisitors(visitorList, reserveId);
         List<Visitor> newVisitors = updateNewVisitors(visitorList, reserveId);
-        log.info("send message to: " + newVisitors);
         return newVisitors;
     }
 
@@ -47,7 +46,7 @@ public class VisitorService {
            .stream()
            .map(VisitorModifyDto::getPhone)
            .collect(Collectors.toList());
-       log.info("id: " + reserveId + "\nvisitor update: " + visitors);
+       log.info("reserve Id: " + reserveId + "\nvisitor update: " + visitors);
        visitorRepository.updateDeletedVisitors(phoneLists, reserveId);
    }
 

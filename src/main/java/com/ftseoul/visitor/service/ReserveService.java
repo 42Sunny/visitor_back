@@ -42,9 +42,6 @@ public class ReserveService {
     private final VisitorRepository visitorRepository;
     private final StaffService staffService;
     private final StaffRepository staffRepository;
-    private final VisitorService visitorService;
-    private final SMSService smsService;
-    private final ShortUrlService shortUrlService;
     private final Seed seed;
     private final WebSocketService socketService;
 
@@ -179,6 +176,7 @@ public class ReserveService {
     }
 
     public void deleteAllByStaffId(Long id) {
+        assert(id != null);
         log.info("스태프 id: {}에 해당하는 예약 및 방문객 정보들을 삭제합니다", id);
         List<Reserve> reserveList = reserveRepository.findAllByTargetStaff(id);
         if (reserveList != null && reserveList.size() > 0) {

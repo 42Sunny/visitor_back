@@ -1,7 +1,7 @@
 package com.ftseoul.visitor.encrypt;
 
-import com.ftseoul.visitor.config.EncryptConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.charset.StandardCharsets;
@@ -15,8 +15,8 @@ public class KISA_SEED_CBCTest {
     private final byte[] pbszUserKey = "testCrypt2021!@#".getBytes(StandardCharsets.UTF_8);
     private final byte[] pbszIV = "1234567890123456".getBytes(StandardCharsets.UTF_8);
 
-    private EncryptConfig config;
-    private Seed seed = new Seed(config);
+    @Autowired
+    private Seed seed;
 
     @Test
     public void 암복호화_테스트() {
@@ -36,21 +36,4 @@ public class KISA_SEED_CBCTest {
         assertThat(rawMsg).isEqualTo(new String(decryptedMsg));
         assertThat(rawMsg).isNotEqualTo(new String(encryptedMsg));
     }
-
-//    @Test
-//    public void seed_test() {
-//        String rawphone = "01012345678";
-//        String rawname = "홍길동";
-//
-//        String encryptedPhone = seed.encrypt(rawphone);
-//        String encryptedName = seed.encrypt(rawname);
-//        System.out.println("암호화된 데이터1 => " + encryptedPhone);
-//        System.out.println("암호화된 데이터2 => " + encryptedName);
-//
-//        System.out.println("복호화된 데이터1 => " + seed.decrypt(encryptedPhone));
-//        System.out.println("복호화된 데이터1 => " + seed.decrypt(encryptedName));
-//
-//        assertThat(rawphone).isEqualTo(seed.decrypt(encryptedPhone));
-//        assertThat(rawname).isEqualTo(seed.decrypt(encryptedName));
-//    }
 }

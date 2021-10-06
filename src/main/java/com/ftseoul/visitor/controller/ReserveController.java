@@ -66,6 +66,7 @@ public class ReserveController {
     }
 
     @PutMapping("/reserve")
+    @Transactional
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
         Staff staff = staffService.findByName(seed.encrypt(reserveModifyDto.getTargetStaffName()));
         log.info("staff found: {}", staff);
