@@ -2,10 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.ftseoul'
-version = '0.1.30'
+version = '0.1.31'
 sourceCompatibility = '11'
 
 configurations {
@@ -48,4 +49,35 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+	finalizedBy 'jacocoTestReport'
+}
+
+jacoco {
+	toolVersion = "0.8.5"
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		csv.enabled true
+		xml.enabled false
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+			// includes = []
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.60
+			}
+
+			excludes = []
+		}
+	}
 }

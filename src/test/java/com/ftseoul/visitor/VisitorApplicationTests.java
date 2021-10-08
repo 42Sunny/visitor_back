@@ -6,12 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class VisitorApplicationTests {
 
-//	@Test
-//	void contextLoads() {
-//	}
 	@Test
-	void test() {
-
+	void contextLoads() {
 	}
-
 }

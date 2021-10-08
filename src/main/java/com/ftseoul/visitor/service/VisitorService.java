@@ -37,8 +37,7 @@ public class VisitorService {
         Long reserveId = modifyDto.getReserveId();
         List<VisitorModifyDto> visitorList = modifyDto.getVisitor();
         updateDeletedVisitors(visitorList, reserveId);
-        List<Visitor> newVisitors = updateNewVisitors(visitorList, reserveId);
-        return newVisitors;
+        return updateNewVisitors(visitorList, reserveId);
     }
 
     private void updateDeletedVisitors(List<VisitorModifyDto> visitors, Long reserveId) {
@@ -70,9 +69,15 @@ public class VisitorService {
    }
 
    public String createSMSMessage(String value) {
-       String message = "[이노베이션아카데미]\n"
-           +"아래 링크 QR을 출입시 제시해주세요\n"
-           +domain + "/" + value;
-       return message;
+
+        StringBuilder result = new StringBuilder();
+
+        result.append("[이노베이션아카데미]\n");
+        result.append("아래 링크 QR을 출입시 제시해주세요\n");
+        result.append(domain);
+        result.append("/");
+        result.append(value);
+
+       return result.toString();
    }
 }

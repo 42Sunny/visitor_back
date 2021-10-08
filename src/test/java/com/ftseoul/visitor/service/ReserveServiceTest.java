@@ -63,16 +63,16 @@ class ReserveServiceTest {
     Visitor savedVisitor;
 
     @BeforeAll
-    public void setup() {
+    void setup() {
         init();
     }
 
     @AfterAll
-    public void cleanup() {
+    void cleanup() {
         finish();
     }
 
-    public void init() {
+    void init() {
         Staff staff = Staff
             .builder()
             .name(seed.encrypt(seed.encrypt("abcde")))
@@ -99,21 +99,21 @@ class ReserveServiceTest {
         savedVisitor = visitorRepository.save(visitor);
     }
 
-    public void finish() {
+    void finish() {
         reserveRepository.delete(savedReserve);
         visitorRepository.delete(savedVisitor);
         staffRepository.delete(savedStaff);
     }
 
     @Test
-    public void 예약아이디_조회() {
+    void 예약아이디_조회() {
         long id = savedReserve.getId();
         ReserveListResponseDto result = reserveService.findById(id);
         assertEquals(result.getId(), id);
     }
 
     @Test
-    public void 핸드폰번호_중복처리() {
+    void 핸드폰번호_중복처리() {
         List<VisitorDto> visitors = new ArrayList<>();
         String phoneNumber = "01012345678";
         VisitorDto v1 = new VisitorDto("방문자1", phoneNumber, "42");
@@ -133,7 +133,7 @@ class ReserveServiceTest {
     }
 
     @Test
-    public void 예약수정() {
+    void 예약수정() {
         List<VisitorModifyDto> visitors = new ArrayList<>();
         visitors.add(new VisitorModifyDto());
         String place = "서초";
@@ -147,7 +147,7 @@ class ReserveServiceTest {
     }
 
     @Test
-    public void 방문자_성함_핸드폰번호_예약조회() {
+    void 방문자_성함_핸드폰번호_예약조회() {
         ReserveRequestDto reserveRequestDto = new ReserveRequestDto("01011112222", "홍길동님");
         List<ReserveListResponseDto> reservesByNameAndPhone = reserveService.findReservesByNameAndPhone(reserveRequestDto);
         if (reservesByNameAndPhone.isEmpty()) {
@@ -157,7 +157,7 @@ class ReserveServiceTest {
     }
 
     @Test
-    public void 예약삭제() {
+    void 예약삭제() {
         Reserve temp = Reserve
             .builder()
             .targetStaff(savedStaff.getId())
@@ -177,7 +177,7 @@ class ReserveServiceTest {
     }
 
     @Test
-    public void 예약신청() {
+    void 예약신청() {
         List<VisitorDto> mockVisitors = new ArrayList<>();
         mockVisitors.add(new VisitorDto());
         ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), mockVisitors);
@@ -187,7 +187,7 @@ class ReserveServiceTest {
     }
 
     @Test
-    public void 스테프아이디로_예약삭제() {
+    void 스테프아이디로_예약삭제() {
 
         Staff staff = Staff
             .builder()
@@ -215,7 +215,7 @@ class ReserveServiceTest {
     }
 
     @Test
-    public void 예약에서방문자삭제() {
+    void 예약에서방문자삭제() {
 
         Reserve reserve = Reserve
             .builder()
