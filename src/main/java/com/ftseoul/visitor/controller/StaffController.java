@@ -51,7 +51,7 @@ public class StaffController {
     @DeleteMapping("/admin/staff")
     @Transactional
     public ResponseEntity<Response> deleteStaff(@RequestBody StaffDeleteDto dto) {
-        Response response = staffService.deleteStaff(dto.getStaffId());
+        Response response = staffService.deleteStaffById(dto.getStaffId());
         reserveService.deleteAllByStaffId(dto.getStaffId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -2,7 +2,6 @@ package com.ftseoul.visitor.appender;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
-import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import com.ftseoul.visitor.config.LogConfig;
 import com.ftseoul.visitor.dto.payload.ErrorLog;
@@ -32,11 +31,6 @@ public class CustomLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
                 sendToSlack(errorLog);
             }
         }
-    }
-
-    @Override
-    public void doAppend(ILoggingEvent eventObject) {
-        super.doAppend(eventObject);
     }
 
     private void sendToSlack(ErrorLog errorLog) {

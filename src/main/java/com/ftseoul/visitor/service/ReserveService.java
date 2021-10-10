@@ -96,7 +96,7 @@ public class ReserveService {
     }
 
     private boolean deleteVisitorInList(List<Visitor> list, ReserveRequestDto requestDto) {
-        Optional<Visitor> toDeleteVisitor = list.stream().filter((visitor) ->
+        Optional<Visitor> toDeleteVisitor = list.stream().filter( visitor ->
                 (visitor.getName().equals(seed.encrypt(requestDto.getName())))
                     && (visitor.getPhone().equals(seed.encrypt(requestDto.getPhone()))))
             .findAny();

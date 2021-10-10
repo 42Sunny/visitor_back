@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Slf4j
 public class InvalidQRCodeException extends RuntimeException{
-    private String code;
-    private Object value;
+    private final String code;
+    private final Object value;
 
     public InvalidQRCodeException(String code, Object value) {
         super(String.format("유효하지 않은 QRCode %s : '%s'", code,

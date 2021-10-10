@@ -75,8 +75,8 @@ class ReserveServiceTest {
     void init() {
         Staff staff = Staff
             .builder()
-            .name(seed.encrypt(seed.encrypt("abcde")))
-            .phone(seed.encrypt(seed.encrypt("01012345678")))
+            .name(seed.encrypt("abcde"))
+            .phone(seed.encrypt("01012345678"))
             .build();
         savedStaff = staffRepository.save(staff);
 

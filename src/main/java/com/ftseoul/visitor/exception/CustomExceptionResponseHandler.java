@@ -140,12 +140,6 @@ public class CustomExceptionResponseHandler extends ResponseEntityExceptionHandl
         return this.handleExceptionInternal(ex, response, headers, status, webRequest);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,
-        HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return super.handleExceptionInternal(ex, body, headers, status, request);
-    }
-
     private Map<String, String> makeResponsePayload(Exception ex, HttpStatus status) {
         Map<String,String> response = new HashMap<>();
         response.put("status", String.valueOf(status.value()));

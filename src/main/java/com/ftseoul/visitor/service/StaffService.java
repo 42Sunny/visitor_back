@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class StaffService {
     private final StaffRepository staffRepository;
     private final Seed seed;
-    private final String domain = "https://dev.vstr.kr";
+    private String domain = "https://dev.vstr.kr";
 
     public Staff findByName(String name) {
         log.info("Staff name: " + name);
@@ -46,7 +46,9 @@ public class StaffService {
 
     public List<StaffDecryptDto> findAllStaff() {
         log.info("Find All Staffs");
-        List<StaffDecryptDto> staffList = staffRepository.findAll().stream()
+        List<StaffDecryptDto> staffList = staffRepository
+            .findAll()
+            .stream()
                 .map(staff ->
                         StaffDecryptDto.builder().id(staff.getId())
                                 .phone(staff.getPhone())
@@ -88,7 +90,7 @@ public class StaffService {
         return new Response("2000", "스태프정보를 수정했습니다");
     }
 
-    public Response deleteStaff(Long staffId) {
+    public Response deleteStaffById(Long staffId) {
         log.info("Delete Staff Id: {}", staffId);
         try{
             staffRepository.deleteById(staffId);
@@ -118,7 +120,7 @@ public class StaffService {
     public String createModifySMSMessage(String shortUrl) {
         StringBuilder sb = new StringBuilder();
         sb.append("[예약수정]\n");
-        sb.append("\n상세 확인: "+ domain + "/"  + shortUrl);
+        sb.append("상세 확인: "+ domain + "/"  + shortUrl);
         return sb.toString();
     }
 }

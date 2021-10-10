@@ -3,9 +3,7 @@ package com.ftseoul.visitor.encrypt;
 import com.ftseoul.visitor.config.EncryptConfig;
 import org.springframework.beans.factory.annotation.Value;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.SerializationUtils;
 
@@ -21,13 +19,11 @@ public class Seed {
     @Value("${encrypt.seed.init}")
     private String IV;
 
-    private final EncryptConfig encryptConfig;
 
     private byte[] pbszUserKey;
     private byte[] pbszIV;
 
     public Seed(EncryptConfig encryptConfig) {
-        this.encryptConfig = encryptConfig;
         pbszUserKey = encryptConfig.getKey().getBytes(StandardCharsets.UTF_8);
         pbszIV = encryptConfig.getIV().getBytes(StandardCharsets.UTF_8);
     }

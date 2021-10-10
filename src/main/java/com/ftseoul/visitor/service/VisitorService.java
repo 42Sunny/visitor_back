@@ -21,7 +21,7 @@ public class VisitorService {
 
     private final VisitorRepository visitorRepository;
 
-    private final String domain = "https://dev.vstr.kr";
+    private String domain = "https://dev.vstr.kr";
 
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         log.info("Reserve Id is {}", reserveId);

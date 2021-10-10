@@ -1,6 +1,5 @@
 package com.ftseoul.visitor.dto.shorturl;
 
-import com.ftseoul.visitor.dto.shorturl.ShortUrlCreateDto;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

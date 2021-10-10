@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Slf4j
 public class InvalidDeviceException extends RuntimeException{
-    private String deviceId;
+    private final String deviceId;
 
     public InvalidDeviceException(String deviceId) {
         super(String.format("허용되지 않은 디바이스 : %s", deviceId));
