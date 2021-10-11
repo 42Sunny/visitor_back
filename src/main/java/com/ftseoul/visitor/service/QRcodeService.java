@@ -28,14 +28,8 @@ public class QRcodeService {
     private final WebSocketService socketService;
     private final Seed seed;
 
-    public QRCheckResponseDto checkQRCode(String text) {
-        Visitor visitor = visitorRepository.findById(Long.parseLong(text))
-            .orElseThrow(() -> new InvalidQRCodeException("code", text));
-        return checkQRCodeStatus(visitor);
-    }
-
     public String decodeQRText(String text) {
-        String result = null;
+        String result;
         try {
             result = seed.decryptUrl(text);
         } catch (IllegalArgumentException ex) {
@@ -44,7 +38,13 @@ public class QRcodeService {
         return result;
     }
 
-    public QRCheckResponseDto checkQRCodeStatus(Visitor visitor) {
+    public QRCheckResponseDto checkQRCode(String text) {
+        Visitor visitor = visitorRepository.findById(Long.parseLong(text))
+            .orElseThrow(() -> new InvalidQRCodeException("code", text));
+        return checkQRCodeStatus(visitor);
+    }
+
+    private QRCheckResponseDto checkQRCodeStatus(Visitor visitor) {
         QRCheckResponseDto result = null;
         String message;
         String visitorName = seed.decrypt(visitor.getName());
