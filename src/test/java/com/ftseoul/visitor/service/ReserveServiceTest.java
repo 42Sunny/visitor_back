@@ -34,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @Rollback(value = true)
 class ReserveServiceTest {
 
@@ -105,7 +104,9 @@ class ReserveServiceTest {
         staffRepository.delete(savedStaff);
     }
 
+
     @Test
+    @Transactional
     void 예약아이디_조회() {
         long id = savedReserve.getId();
         ReserveListResponseDto result = reserveService.findById(id);
@@ -113,6 +114,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 핸드폰번호_중복처리() {
         List<VisitorDto> visitors = new ArrayList<>();
         String phoneNumber = "01012345678";
@@ -133,6 +135,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 예약수정() {
         List<VisitorModifyDto> visitors = new ArrayList<>();
         visitors.add(new VisitorModifyDto());
@@ -147,6 +150,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 방문자_성함_핸드폰번호_예약조회() {
         ReserveRequestDto reserveRequestDto = new ReserveRequestDto("01011112222", "홍길동님");
         List<ReserveListResponseDto> reservesByNameAndPhone = reserveService.findReservesByNameAndPhone(reserveRequestDto);
@@ -157,6 +161,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 예약삭제() {
         Reserve temp = Reserve
             .builder()
@@ -177,6 +182,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 예약신청() {
         List<VisitorDto> mockVisitors = new ArrayList<>();
         mockVisitors.add(new VisitorDto());
@@ -187,6 +193,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 스테프아이디로_예약삭제() {
 
         Staff staff = Staff
@@ -215,6 +222,7 @@ class ReserveServiceTest {
     }
 
     @Test
+    @Transactional
     void 예약에서방문자삭제() {
 
         Reserve reserve = Reserve

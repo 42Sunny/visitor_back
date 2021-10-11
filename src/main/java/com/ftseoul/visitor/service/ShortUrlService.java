@@ -42,7 +42,6 @@ public class ShortUrlService {
         ShortUrlResponse shortUrlResponse = restTemplate.postForObject(
             domain + "/urls", request, ShortUrlResponse.class);
         log.info("Short Url Lists: {}", shortUrlResponse);
-        assert shortUrlResponse != null;
         return shortUrlResponse.getUrlResponseList();
     }
 

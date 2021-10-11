@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @Rollback(value = true)
 class StaffServiceTest {
     @Autowired
@@ -60,6 +59,7 @@ class StaffServiceTest {
         finish();
     }
 
+
     void init() {
         Staff staff = Staff
             .builder()
@@ -80,15 +80,19 @@ class StaffServiceTest {
 
     void finish() {
         staffRepository.delete(savedStaff);
+        reserveRepository.delete(savedReserve);
     }
 
+
     @Test
+    @Transactional
     void 스태프이름조회() {
         Staff staff = staffService.findByName(seed.encrypt(NAME));
         assertEquals(staff.getId(), savedStaff.getId());
     }
 
     @Test
+    @Transactional
     void 스태프저장() {
         final String toCheck = "staff42";
         AddStaffRequestDto toSave = new AddStaffRequestDto(toCheck, "01011111111");
@@ -99,6 +103,7 @@ class StaffServiceTest {
     }
 
     @Test
+    @Transactional
     void 스태프수정() {
         final String expected = "수정된 이름";
         StaffModifyDto request = new StaffModifyDto(savedStaff.getId(), expected, "01011112222");
@@ -117,6 +122,7 @@ class StaffServiceTest {
     }
 
     @Test
+    @Transactional
     void 전체스태프조회() {
         List<StaffDecryptDto> result = staffService.findAllStaff();
         assertNotNull(result);
@@ -132,6 +138,7 @@ class StaffServiceTest {
     }
 
     @Test
+    @Transactional
     void 스태프삭제() {
         Staff staff1 = Staff
             .builder()
@@ -147,6 +154,7 @@ class StaffServiceTest {
     }
 
     @Test
+    @Transactional
     void 문자메세지형식() {
         final String domain = "https://dev.vstr.kr";
         final String shortUrl = "aAb1";

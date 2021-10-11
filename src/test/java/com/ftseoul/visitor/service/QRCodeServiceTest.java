@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @Rollback(value = true)
 class QRCodeServiceTest {
     @Autowired
@@ -98,6 +97,7 @@ class QRCodeServiceTest {
     }
 
     @Test
+    @Transactional
     void QR내용확인() {
         String original = savedVisitor.getId().toString();
         String qRText = seed.encryptUrl(original);
@@ -110,6 +110,7 @@ class QRCodeServiceTest {
     }
 
     @Test
+    @Transactional
     void 방문자상태체크() {
         String original = savedVisitor.getId().toString();
         QRCheckResponseDto response1 = qRcodeService.checkQRCode(original);
@@ -127,6 +128,7 @@ class QRCodeServiceTest {
     }
 
     @Test
+    @Transactional
     void 디바이스체크() {
         String tempDeviceId = "0000";
         deviceRepository.save(new Device(tempDeviceId));

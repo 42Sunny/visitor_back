@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @Rollback(value = true)
 class VisitorServiceTest {
     @Autowired
@@ -58,6 +57,7 @@ class VisitorServiceTest {
         finish();
     }
 
+
     void init() {
         Staff staff = Staff
             .builder()
@@ -82,6 +82,7 @@ class VisitorServiceTest {
     }
 
     @Test
+    @Transactional
     void 방문자생성() {
         List<VisitorDto> toSave = new ArrayList<>();
         VisitorDto v1 = new VisitorDto(seed.encrypt("김수한무1"),
@@ -96,6 +97,7 @@ class VisitorServiceTest {
     }
 
     @Test
+    @Transactional
     void 방문자수정() {
         List<VisitorModifyDto> visitors = new ArrayList<>();
 
@@ -132,6 +134,7 @@ class VisitorServiceTest {
     }
 
     @Test
+    @Transactional
     void 메세지생성() {
         String value = "a";
         String result = visitorService.createSMSMessage(value);

@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @Rollback(value = true)
 class InfoServiceTest {
     @Autowired
@@ -94,6 +93,7 @@ class InfoServiceTest {
     }
 
     @Test
+    @Transactional
     void 날짜별조회() {
         List<DateFoundResponseDto> list = infoService.findAllByDate(
             LocalDateTime.now().toLocalDate());
@@ -101,6 +101,7 @@ class InfoServiceTest {
     }
 
     @Test
+    @Transactional
     void 방문자상태변경() {
         UpdateVisitorStatusDto dto = new UpdateVisitorStatusDto
             (new VisitorStatusInfo(savedVisitor.getId(),
