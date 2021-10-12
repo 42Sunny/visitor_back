@@ -113,15 +113,17 @@ public class ReserveService {
         log.info("Delete Reserve Id: {}", reserveId);
         log.info("Delete Visitors: {}", requestDto);
         List<Visitor> list = visitorRepository.findAllByReserveId(reserveId);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             log.error("예약번호 {}에 해당하는 방문자가 존재하지 않습니다", reserveId.toString());
             return false;
         }
+
         boolean result = deleteVisitorInList(list, requestDto);
 
         if (list.size() == 1) {
             log.info("Reserve delete: " + reserveId);
-            reserveRepository.delete(reserveRepository.findById(reserveId).get());
+            reserveRepository.delete(reserveRepository.findById(reserveId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserve", "reserveId", reserveId)));
             socketService.sendMessageToSubscriber("/visitor",
                 "예약 번호: "+ reserveId + " 예약 및 방문자가 삭제되었습니다");
         } else {
@@ -160,7 +162,7 @@ public class ReserveService {
             .stream()
             .filter(visitor -> !phones.add(visitor.getPhone()))
             .collect(Collectors.toList());
-        if (collected.size() > 0) {
+        if (!collected.isEmpty()) {
             throw new PhoneDuplicatedException("전화번호 중복");
         }
     }
@@ -170,16 +172,16 @@ public class ReserveService {
         if (reserve.isEmpty()) {
             return new Response("4000", "예약정보가 존재하지 않습니다");
         }
+        log.info("id: {} 에 해당하는 예약을 삭제합니다", id);
         reserveRepository.deleteById(id);
         visitorRepository.deleteAllByReserveId(id);
         return new Response("2000", "예약이 삭제되었습니다");
     }
 
     public void deleteAllByStaffId(Long id) {
-        assert(id != null);
         log.info("스태프 id: {}에 해당하는 예약 및 방문객 정보들을 삭제합니다", id);
         List<Reserve> reserveList = reserveRepository.findAllByTargetStaff(id);
-        if (reserveList != null && reserveList.size() > 0) {
+        if (reserveList != null && !reserveList.isEmpty()) {
             reserveList.forEach(reserve -> {
                 long reserveId = reserve.getId();
                 visitorRepository.deleteAllByReserveId(reserveId);

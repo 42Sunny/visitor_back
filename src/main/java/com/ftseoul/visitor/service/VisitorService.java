@@ -5,6 +5,7 @@ import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.reserve.ReserveModifyDto;
 import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
+import com.ftseoul.visitor.util.Constants;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,8 +21,6 @@ import org.springframework.stereotype.Service;
 public class VisitorService {
 
     private final VisitorRepository visitorRepository;
-
-    private String domain = "https://dev.vstr.kr";
 
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         log.info("Reserve Id is {}", reserveId);
@@ -74,7 +73,7 @@ public class VisitorService {
 
         result.append("[이노베이션아카데미]\n");
         result.append("아래 링크 QR을 출입시 제시해주세요\n");
-        result.append(domain);
+        result.append(Constants.DOMAIN);
         result.append("/");
         result.append(value);
 

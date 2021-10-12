@@ -10,7 +10,6 @@ import com.ftseoul.visitor.dto.reserve.ReserveModifyDto;
 import com.ftseoul.visitor.dto.reserve.ReserveRequestDto;
 import com.ftseoul.visitor.dto.reserve.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
-import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
 import com.ftseoul.visitor.dto.staff.StaffReserveDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.ReserveService;

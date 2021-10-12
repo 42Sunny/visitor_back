@@ -64,7 +64,4 @@ public class RequestWrapper {
         return request.getRequestURI();
     }
 
-    public String getIPAddress() {
-        return request.getRemoteAddr();
-    }
 }

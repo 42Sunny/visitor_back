@@ -8,6 +8,7 @@ import com.ftseoul.visitor.dto.shorturl.ShortUrlResponse;
 import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
 import com.ftseoul.visitor.dto.staff.StaffReserveDto;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.util.Constants;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;;
@@ -20,9 +21,6 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Slf4j
 public class ShortUrlService {
-    private final String domain = "Https://dev.vstr.kr";
-    private final String qrPath = "https://visitor.dev.42seoul.io/qr/";
-    private final String lookUpPath = "https://visitor.dev.42seoul.io/reserve-info/";
     private final Seed seed;
 
     @Value("${api-key}")
@@ -40,7 +38,7 @@ public class ShortUrlService {
         ShortUrlRequestDto urlRequestObj = createJsonRequest(shortUrls);
         HttpEntity<ShortUrlRequestDto> request = new HttpEntity<>(urlRequestObj, headers);
         ShortUrlResponse shortUrlResponse = restTemplate.postForObject(
-            domain + "/urls", request, ShortUrlResponse.class);
+            Constants.DOMAIN + "/urls", request, ShortUrlResponse.class);
         log.info("Short Url Lists: {}", shortUrlResponse);
         return shortUrlResponse.getUrlResponseList();
     }
@@ -50,9 +48,9 @@ public class ShortUrlService {
         for (ShortUrlDto shortUrlDto : shortUrls) {
             if (!shortUrlDto.isStaff()) {
                 result.addUrl(new ShortUrlCreateDto(shortUrlDto.getPhone(),
-                    qrPath + shortUrlDto.getId()));
+                    Constants.QRPATH + shortUrlDto.getId()));
             } else {
-                result.addUrl(new ShortUrlCreateDto("staff", lookUpPath + shortUrlDto.getId()));
+                result.addUrl(new ShortUrlCreateDto("staff", Constants.LOOKUPPATH + shortUrlDto.getId()));
             }
         }
         return result;

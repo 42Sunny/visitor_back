@@ -9,6 +9,7 @@ import com.ftseoul.visitor.dto.staff.StaffModifyDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.util.Constants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 public class StaffService {
     private final StaffRepository staffRepository;
     private final Seed seed;
-    private String domain = "https://dev.vstr.kr";
 
     public Staff findByName(String name) {
         log.info("Staff name: " + name);
@@ -46,7 +46,7 @@ public class StaffService {
 
     public List<StaffDecryptDto> findAllStaff() {
         log.info("Find All Staffs");
-        List<StaffDecryptDto> staffList = staffRepository
+        return staffRepository
             .findAll()
             .stream()
                 .map(staff ->
@@ -56,7 +56,6 @@ public class StaffService {
                                 .build())
                 .map(staffDecryptDto -> staffDecryptDto.decryptDto(seed))
                 .collect(Collectors.toList());
-        return staffList;
     }
 
     public StaffDecryptDto decryptStaff(Staff staff) {
@@ -105,7 +104,7 @@ public class StaffService {
         StringBuilder sb = new StringBuilder();
         sb.append("[방문신청]\n"
             + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n");
-        if (visitors != null && visitors.size() > 0) {
+        if (visitors != null && !visitors.isEmpty()) {
             long count = visitors.stream().count() - 1;
             String representor = seed.decrypt(visitors.get(0).getName());
             if (visitors.size() == 1) {
@@ -114,13 +113,13 @@ public class StaffService {
                 sb.append(representor + "님 외 " + count + "명");
             }
         }
-        sb.append("\n상세 확인: " + domain + "/" + shortUrl);
+        sb.append("\n상세 확인: " + Constants.DOMAIN + "/" + shortUrl);
         return sb.toString();
     }
     public String createModifySMSMessage(String shortUrl) {
         StringBuilder sb = new StringBuilder();
         sb.append("[예약수정]\n");
-        sb.append("상세 확인: "+ domain + "/"  + shortUrl);
+        sb.append("상세 확인: "+ Constants.DOMAIN + "/"  + shortUrl);
         return sb.toString();
     }
 }
