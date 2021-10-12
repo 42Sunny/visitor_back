@@ -224,7 +224,6 @@ class ReserveServiceTest {
     @Test
     @Transactional
     void 예약에서방문자삭제() {
-
         Reserve reserve = Reserve
             .builder()
             .targetStaff(savedStaff.getId())
@@ -254,7 +253,6 @@ class ReserveServiceTest {
 
         assertThrows(NoSuchElementException.class, () -> r2.get());
         assertThrows(NoSuchElementException.class, () -> v2.get());
-
     }
 
 }

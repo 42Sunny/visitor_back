@@ -1,4 +1,6 @@
 application-seed.properties
+application-dev.prgoperties
+application-prod.properties
 # Compiled class file
 *.class
 
