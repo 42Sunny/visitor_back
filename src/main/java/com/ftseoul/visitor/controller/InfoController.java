@@ -35,9 +35,9 @@ public class InfoController {
         log.info("/info/visitor/status\n parameter: {}", dto);
         VisitorStatusInfo result = infoService.changeVisitorStatus(dto);
         if (result == null) {
-            return new ResponseEntity<ErrorResponseDto>(new ErrorResponseDto(new Response("4090",
+            return new ResponseEntity<>(new ErrorResponseDto(new Response("4090",
                 "다른 상태 값을 입력해주세요")), HttpStatus.OK);
         }
-        return new ResponseEntity<UpdateStatusResponseDto>(new UpdateStatusResponseDto("2000", result), HttpStatus.OK);
+        return new ResponseEntity<>(new UpdateStatusResponseDto("2000", result), HttpStatus.OK);
     }
 }
