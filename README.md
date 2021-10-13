@@ -2,19 +2,14 @@
 #### 스웨거 문서 주소: http://localhost:8080/swagger-ui.html
 
 ### AWS SMS 기능 사용 시 설정
-#### ~/.aws/credentials
-```
-[default]
-aws_access_key_id=
-aws_secret_access_key=
-```
+
 
 #### ./src/main/resources/application-local.properties
 ```
 cloud.aws.region.static= 선택 region
 cloud.aws.stack.auto=false
-aws.accessKey=
-aws.secretKey=
+aws.accessKey= 발급받은 KEY
+aws.secretKey= 발급받은 KEY
 aws.region= 해당 region
 ```
 
@@ -55,27 +50,20 @@ encrypt.seed.init=abcdefghij123456
 ```
 api-key=apikey
 ```
-해당 서비스는 별도의 단축 URL 서비스를 구축해서 사용하고 있습니다.
+해당 서비스는 별도의 단축 URL 서비스를 구축해서 사용하고 있으며,
+해당 서비스에서 사용하는 키 정보입니다.
+문자메세지를 통해서
 단축 URL 서비스를 사용하지 않으시려면
 ShortUrlService의 파일을 삭제하거나 Bean 등록을 하지않고
 ReserveController 파일에서
-saveReserve 메서드의 다음부분을 제거하시고
+saveReserve 메서드와 updateReserve 메서드에서 단축 URL 서비스 사용부분
+
 ```java
 List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
-        List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
-        ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
-
-        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createSaveSMSMessage(visitors, reserve.getDate(), staffShortUrl.getValue()));
-        log.info("Send message to Staff and Visitors");
+    ...
+log.info("Send message to Staff and Visitors");
 ```
-updateReserve 메서드의 다음부분을 제거하시고 사용하시면 됩니다.
-```java
- List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
-        List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
-        ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
+을 제거하시고 사용하시면 됩니다.
 
-        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(staffShortUrl.getValue()));
-        log.info("Send text messages to visitors and staff");
-```
+혹은 단축 URL을 직접 구현하시거나 다른 플랫폼을 사용하셔서
+ShortenerService를 관련해서 수정해주시면 됩니다.
