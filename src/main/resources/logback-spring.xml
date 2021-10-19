@@ -3,7 +3,9 @@
     <springProfile name="dev">
         <property resource="logback-dev.properties"/>
     </springProfile>
-
+    <springProfile name="prod">
+        <property resource="logback-prod.properties"/>
+    </springProfile>
     <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
     <!-- log file path -->
     <property name="LOG_PATH" value="${log.config.path}"/>
