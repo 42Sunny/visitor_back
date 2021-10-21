@@ -8,6 +8,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    private final String[] allowedOrigins = {
+        "http://localhost:3000",
+        "https://visitor.dev.42seoul.io",
+        "https://admin.dev.42seoul.io",
+        "https://visitor.42seoul.io",
+        "https://admin.42seoul.io"
+    };
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -15,8 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "OPTIONS", "POST", "HEAD", "DELETE", "PUT", "PATCH")
                 .maxAge(3600)
                 .allowCredentials(true)
-                .allowedOrigins("http://localhost:3000", "https://visitor.dev.42seoul.io", "http://visitor.dev.42seoul.io", "https://api.visitor.dev.42seoul.io",
-                    "http://admin.dev.42seoul.io", "https://admin.dev.42seoul.io");
+                .allowedOrigins(allowedOrigins);
     }
 
     @Override

@@ -10,9 +10,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final String[] allowedOrigins = {"http://localhost:3000",
-        "https://visitor.dev.42seoul.io", "http://visitor.dev.42seoul.io",
-        "http://admin.dev.42seoul.io", "https://admin.dev.42seoul.io"};
+    private final String[] allowedOrigins = {
+        "http://localhost:3000",
+        "https://visitor.dev.42seoul.io",
+        "https://admin.dev.42seoul.io",
+        "https://visitor.42seoul.io",
+        "https://admin.42seoul.io"
+    };
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
