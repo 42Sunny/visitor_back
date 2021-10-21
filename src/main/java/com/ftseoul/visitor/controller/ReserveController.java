@@ -31,6 +31,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/v1")
 public class ReserveController {
 
     private final ReserveService reserveService;
