@@ -1,6 +1,6 @@
 package com.ftseoul.visitor.data;
 
-import com.ftseoul.visitor.dto.visitor.CheckInVisitorDto;
+import com.ftseoul.visitor.dto.visitor.CheckInVisitor;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.transaction.Transactional;
@@ -35,11 +35,11 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
             + "v.check_in_time AS checkIn, "
             + "v.name AS name, "
             + "v.phone AS phone, "
-            + "SUM(v.id) AS sum "
+            + "COUNT(v.id) AS count "
             + "FROM visitor v "
             + "WHERE v.check_in_time IS NOT NULL "
             + "AND v.check_in_time BETWEEN :start AND :end "
-            + "GROUP BY checkInDate "
+            + "GROUP BY checkInDate, v.id "
             + "ORDER BY checkInDate, checkIn DESC")
-    List<CheckInVisitorDto> findCheckInBetweenDate(@Param(value = "start") LocalDateTime start, @Param(value = "end") LocalDateTime end);
+    List<CheckInVisitor> findCheckInBetweenDate(@Param(value = "start") LocalDateTime start, @Param(value = "end") LocalDateTime end);
 }
