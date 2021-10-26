@@ -7,6 +7,7 @@ import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.reserve.ReserveModifyDto;
+import com.ftseoul.visitor.dto.visitor.CheckInVisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
 import com.ftseoul.visitor.encrypt.Seed;
@@ -147,4 +148,13 @@ class VisitorServiceTest {
         assertEquals(result, message);
     }
 
+    @Test
+    @Transactional(readOnly = true)
+    void 쿼리테스트() {
+        List<CheckInVisitorDto> checkInBetweenDate = visitorRepository.findCheckInBetweenDate(
+            LocalDateTime.now().minusDays(1), LocalDateTime.now());
+        for (CheckInVisitorDto checkInVisitorDto : checkInBetweenDate) {
+            System.out.println(checkInVisitorDto);
+        }
+    }
 }

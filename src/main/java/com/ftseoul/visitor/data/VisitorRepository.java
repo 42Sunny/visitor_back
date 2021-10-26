@@ -1,5 +1,7 @@
 package com.ftseoul.visitor.data;
 
+import com.ftseoul.visitor.dto.visitor.CheckInVisitorDto;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +29,17 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
         + "WHERE current_date > (SELECT DISTINCT r.date FROM Reserve r WHERE r.id = v.reserveId) "
         + "AND v.status = '대기'")
     int updateExpiredVisitors();
+
+    @Query(nativeQuery = true,
+        value = "SELECT DATE_FORMAT(v.check_in_time, '%Y-%m-%d') AS checkInDate, "
+            + "v.check_in_time AS checkIn, "
+            + "v.name AS name, "
+            + "v.phone AS phone, "
+            + "SUM(v.id) AS sum "
+            + "FROM visitor v "
+            + "WHERE v.check_in_time IS NOT NULL "
+            + "AND v.check_in_time BETWEEN :start AND :end "
+            + "GROUP BY checkInDate "
+            + "ORDER BY checkInDate, checkIn DESC")
+    List<CheckInVisitorDto> findCheckInBetweenDate(@Param(value = "start") LocalDateTime start, @Param(value = "end") LocalDateTime end);
 }
