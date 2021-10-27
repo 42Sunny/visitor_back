@@ -7,7 +7,6 @@ import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.dto.reserve.ReserveModifyDto;
-import com.ftseoul.visitor.dto.visitor.CheckInVisitor;
 import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
 import com.ftseoul.visitor.encrypt.Seed;

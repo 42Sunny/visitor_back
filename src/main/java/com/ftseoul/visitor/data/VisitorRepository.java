@@ -1,9 +1,12 @@
 package com.ftseoul.visitor.data;
 
-import com.ftseoul.visitor.dto.visitor.CheckInVisitor;
+import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitor;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,7 +18,7 @@ import org.springframework.data.repository.query.Param;
 public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     List<Visitor> findAllByNameAndPhone(String name, String phone);
     Optional<Visitor> findByReserveIdAndPhone(Long reserveId, String phone);
-    List<Visitor> findAllByReserveId(Long reserve_id);
+    List<Visitor> findAllByReserveId(Long reserveId);
     void deleteAllByReserveId(Long reserveId);
 
     @Modifying
@@ -34,12 +37,15 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
         value = "SELECT DATE_FORMAT(v.check_in_time, '%Y-%m-%d') AS checkInDate, "
             + "v.check_in_time AS checkIn, "
             + "v.name AS name, "
-            + "v.phone AS phone, "
-            + "COUNT(v.id) AS count "
+            + "v.phone AS phone "
             + "FROM visitor v "
             + "WHERE v.check_in_time IS NOT NULL "
             + "AND v.check_in_time BETWEEN :start AND :end "
-            + "GROUP BY checkInDate, v.id "
-            + "ORDER BY checkInDate, checkIn DESC")
-    List<CheckInVisitor> findCheckInBetweenDate(@Param(value = "start") LocalDateTime start, @Param(value = "end") LocalDateTime end);
+            + "GROUP BY checkInDate "
+            + "ORDER BY checkInDate, checkIn DESC",
+        countQuery = "SELECT COUNT(*) FROM visitor v "
+            + "WHERE v.check_in_time IS NOT NULL "
+            + "AND v.check_in_time BETWEEN :start AND :end")
+    Page<CheckInVisitor> findCheckInBetweenDate(@Param(value = "start") LocalDate start,
+        @Param(value = "end") LocalDate end, Pageable pageable);
 }

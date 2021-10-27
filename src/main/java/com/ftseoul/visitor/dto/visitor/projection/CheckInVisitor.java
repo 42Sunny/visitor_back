@@ -1,4 +1,4 @@
-package com.ftseoul.visitor.dto.visitor;
+package com.ftseoul.visitor.dto.visitor.projection;
 
 import java.time.LocalDateTime;
 
@@ -7,5 +7,4 @@ public interface CheckInVisitor {
     LocalDateTime getCheckIn();
     String getName();
     String getPhone();
-    int getCount();
 }
