@@ -1,6 +1,5 @@
 package com.ftseoul.visitor.util;
 
-import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.InvalidDateException;
 import com.ftseoul.visitor.exception.InvalidQRCodeException;
 import java.time.LocalDateTime;
