@@ -96,18 +96,6 @@ class QRCodeServiceTest {
         staffRepository.delete(savedStaff);
     }
 
-    @Test
-    @Transactional
-    void QR내용확인() {
-        String original = savedVisitor.getId().toString();
-        String qRText = seed.encryptUrl(original);
-        String decodeQRText = qRcodeService.decodeQRText(qRText);
-
-        assertEquals(original, decodeQRText);
-
-        String invalidText = String.valueOf(Integer.MAX_VALUE);
-        assertThrows(InvalidQRCodeException.class , () -> qRcodeService.decodeQRText(invalidText));
-    }
 
     @Test
     @Transactional
@@ -115,16 +103,6 @@ class QRCodeServiceTest {
         String original = savedVisitor.getId().toString();
         QRCheckResponseDto response1 = qRcodeService.checkQRCode(original);
         assertEquals(response1.getStatus(), "입실");
-
-        savedVisitor.updateStatus(VisitorStatus.퇴실);
-        visitorRepository.save(savedVisitor);
-        QRCheckResponseDto response2 = qRcodeService.checkQRCode(original);
-        assertEquals(response2.getStatus(), "퇴실");
-
-        savedVisitor.updateStatus(VisitorStatus.만료);
-        visitorRepository.save(savedVisitor);
-        QRCheckResponseDto response3 = qRcodeService.checkQRCode(original);
-        assertEquals(response3.getStatus(), "만료");
     }
 
     @Test

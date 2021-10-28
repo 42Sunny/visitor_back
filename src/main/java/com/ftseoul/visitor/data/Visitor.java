@@ -3,6 +3,8 @@ package com.ftseoul.visitor.data;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.encrypt.Seed;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,8 +66,12 @@ public class Visitor {
         this.status = status;
     }
 
-    public void updateCheckInTime(LocalDateTime checkInTime) {
-        this.checkInTime = checkInTime;
+    public void checkIn() {
+        this.checkInTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+    }
+
+    public void checkOut() {
+        this.checkOutTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     }
 
     public void updateCheckOutTime(LocalDateTime checkOutTime) {
