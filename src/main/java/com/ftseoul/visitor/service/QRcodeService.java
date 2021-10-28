@@ -33,9 +33,6 @@ public class QRcodeService {
         String result;
         try {
             result = seed.decryptUrl(text);
-            if (!QRUtil.validFormat(text)) {
-                throw new IllegalArgumentException("잘못된 QR 형식");
-            }
         } catch (IllegalArgumentException ex) {
             throw new InvalidQRCodeException("code", text);
         }

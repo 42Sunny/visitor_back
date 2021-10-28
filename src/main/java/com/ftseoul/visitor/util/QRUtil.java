@@ -1,6 +1,8 @@
 package com.ftseoul.visitor.util;
 
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.InvalidDateException;
+import com.ftseoul.visitor.exception.InvalidQRCodeException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -17,21 +19,19 @@ public class QRUtil {
         return seed.encryptUrl(qrText.toString());
     }
 
-    public static boolean withinToday(LocalDateTime timestamp) {
+    public static void withinToday(LocalDateTime timestamp) {
         LocalDateTime today = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
             .toLocalDateTime()
             .with(LocalTime.MIN);
         LocalDateTime tomorrow = today.plusDays(1);
-        return (timestamp.isBefore(tomorrow) && timestamp.isAfter(today));
-
+        if (timestamp.isBefore(tomorrow) && timestamp.isAfter(today)) {
+            throw new InvalidDateException(timestamp.toString());
+        }
     }
 
-    public static boolean validFormat(String text) {
-        if (text == null || text.isEmpty()) {
-            return false;
+    public static void validateFormat(String text) {
+        if (text == null || !text.contains(SEPARATOR)) {
+            throw new InvalidQRCodeException("text", text);
         }
-        // 구분자가 없는 경우
-        int result = text.indexOf(SEPARATOR);
-        return (result != -1);
     }
 }
