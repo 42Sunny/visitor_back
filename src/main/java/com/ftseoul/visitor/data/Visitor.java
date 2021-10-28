@@ -39,9 +39,6 @@ public class Visitor {
     @Column
     private LocalDateTime checkInTime;
 
-    @Column
-    private LocalDateTime checkOutTime;
-
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
         this.reserveId = reserve_id;
@@ -50,32 +47,12 @@ public class Visitor {
         this.organization = organization;
     }
 
-    public Visitor encrypt(Seed seed) {
-        this.name = seed.encrypt(this.name);
-        this.phone = seed.encrypt(this.phone);
-        return this;
-    }
-
-    public Visitor decrypt(Seed seed) {
-        this.name = seed.decrypt(this.name);
-        this.phone = seed.decrypt(this.phone);
-        return this;
-    }
-
     public void updateStatus(VisitorStatus status) {
         this.status = status;
     }
 
     public void checkIn() {
         this.checkInTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
-    }
-
-    public void checkOut() {
-        this.checkOutTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
-    }
-
-    public void updateCheckOutTime(LocalDateTime checkOutTime) {
-        this.checkOutTime = checkOutTime;
     }
 
     @Override

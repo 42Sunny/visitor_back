@@ -30,12 +30,4 @@ public class VisitorDecryptWithIdDto implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime checkInTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime checkOutTime;
-
-    public VisitorDecryptWithIdDto decryptDto(Seed seed) {
-        this.name = seed.decrypt(this.name);
-        this.phone = seed.decrypt(this.phone);
-        return this;
-    }
 }
