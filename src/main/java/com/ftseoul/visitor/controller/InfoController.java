@@ -1,8 +1,10 @@
 package com.ftseoul.visitor.controller;
 
+import com.ftseoul.visitor.dto.payload.DateRange;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.reserve.DateRequestDto;
 import com.ftseoul.visitor.dto.error.ErrorResponseDto;
+import com.ftseoul.visitor.dto.visitor.CheckInLogDto;
 import com.ftseoul.visitor.dto.visitor.UpdateStatusResponseDto;
 import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.payload.Response;
@@ -42,4 +44,11 @@ public class InfoController {
         }
         return new ResponseEntity<>(new UpdateStatusResponseDto("2000", result), HttpStatus.OK);
     }
+
+    @PostMapping("/info/log/date")
+    public CheckInLogDto getVisitorLogBetweenDate(@RequestBody DateRange dateRange) {
+        log.info("Find visitor logs between {} and {}", dateRange.getStart(), dateRange.getEnd());
+        return infoService.getCheckInLogBetweenDate(dateRange);
+    }
+
 }

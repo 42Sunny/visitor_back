@@ -146,5 +146,4 @@ class VisitorServiceTest {
 
         assertEquals(result, message);
     }
-
 }

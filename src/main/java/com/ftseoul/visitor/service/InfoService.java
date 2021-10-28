@@ -4,10 +4,13 @@ import com.ftseoul.visitor.data.ReserveRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
+import com.ftseoul.visitor.dto.payload.DateRange;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
+import com.ftseoul.visitor.dto.visitor.CheckInLogDto;
 import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.visitor.VisitorDecryptWithIdDto;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
+import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitor;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.time.LocalDate;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,5 +81,12 @@ public class InfoService {
             visitor.updateCheckOutTime(now);
         }
         return visitor;
+    }
+
+    public CheckInLogDto getCheckInLogBetweenDate(DateRange dateRange) {
+        Page<CheckInVisitor> result = visitorRepository.findCheckInBetweenDate(dateRange.getStart(),
+            dateRange.includeEnd(),
+            dateRange.getPage());
+        return new CheckInLogDto(result.getContent(), result.getTotalPages()).decrypt(seed);
     }
 }
