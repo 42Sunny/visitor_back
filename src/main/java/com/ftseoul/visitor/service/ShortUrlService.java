@@ -63,7 +63,7 @@ public class ShortUrlService {
 
         List<ShortUrlDto> shortUrlDtos = visitors
             .stream()
-            .map(v -> new ShortUrlDto(QRUtil.make(v.getId().toString(), reserveDate, seed)
+            .map(v -> new ShortUrlDto(seed.encryptUrl(QRUtil.make(v.getId().toString(), reserveDate))
                 , seed.decrypt(v.getPhone())
                 , false
             ))

@@ -12,11 +12,11 @@ public class QRUtil {
 
     public static final String SEPARATOR = ".";
 
-    public static String make(String text, LocalDateTime timestamp, Seed seed) {
+    public static String make(String text, LocalDateTime timestamp) {
         StringBuilder qrText = new StringBuilder(text);
         qrText.append(SEPARATOR);
         qrText.append(timestamp.toString());
-        return seed.encryptUrl(qrText.toString());
+        return qrText.toString();
     }
 
     public static void withinToday(LocalDateTime timestamp) {
@@ -24,7 +24,7 @@ public class QRUtil {
             .toLocalDateTime()
             .with(LocalTime.MIN);
         LocalDateTime tomorrow = today.plusDays(1);
-        if (timestamp.isBefore(tomorrow) && timestamp.isAfter(today)) {
+        if (!(timestamp.isBefore(tomorrow) && timestamp.isAfter(today))) {
             throw new InvalidDateException(timestamp.toString());
         }
     }
