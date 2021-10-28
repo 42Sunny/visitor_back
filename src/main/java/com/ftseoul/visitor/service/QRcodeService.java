@@ -8,6 +8,7 @@ import com.ftseoul.visitor.dto.qrcode.QRCheckResponseDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.InvalidDeviceException;
 import com.ftseoul.visitor.exception.InvalidQRCodeException;
+import com.ftseoul.visitor.util.QRUtil;
 import com.ftseoul.visitor.websocket.WebSocketService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,6 +33,9 @@ public class QRcodeService {
         String result;
         try {
             result = seed.decryptUrl(text);
+            if (!QRUtil.validFormat(text)) {
+                throw new IllegalArgumentException("잘못된 QR 형식");
+            }
         } catch (IllegalArgumentException ex) {
             throw new InvalidQRCodeException("code", text);
         }
