@@ -9,6 +9,8 @@ import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
 import com.ftseoul.visitor.dto.staff.StaffReserveDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.util.Constants;
+import com.ftseoul.visitor.util.QRUtil;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;;
@@ -57,9 +59,11 @@ public class ShortUrlService {
     }
 
     public List<ShortUrlResponseDto> createShortUrls(List<Visitor> visitors, StaffReserveDto staffReserveInfo) {
+        LocalDateTime reserveDate = staffReserveInfo.getDate();
+
         List<ShortUrlDto> shortUrlDtos = visitors
             .stream()
-            .map(v -> new ShortUrlDto(seed.encryptUrl(v.getId().toString())
+            .map(v -> new ShortUrlDto(seed.encryptUrl(QRUtil.make(v.getId().toString(), reserveDate))
                 , seed.decrypt(v.getPhone())
                 , false
             ))
@@ -70,6 +74,7 @@ public class ShortUrlService {
         shortUrlDtos.add(staffShortUrlDto);
         return createUrls(shortUrlDtos);
     }
+
     public List<ShortUrlResponseDto> filterVisitorShortUrls(List<ShortUrlResponseDto> list) {
         return list
             .stream()

@@ -41,43 +41,27 @@ public class QRcodeService {
     public QRCheckResponseDto checkQRCode(String text) {
         Visitor visitor = visitorRepository.findById(Long.parseLong(text))
             .orElseThrow(() -> new InvalidQRCodeException("code", text));
-        return checkQRCodeStatus(visitor);
+        return checkStatus(visitor);
     }
 
-    private QRCheckResponseDto checkQRCodeStatus(Visitor visitor) {
+    private QRCheckResponseDto checkStatus(Visitor visitor) {
         QRCheckResponseDto result = null;
-        String message;
         String visitorName = seed.decrypt(visitor.getName());
-        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        String message = visitorName + "님이 입실하셨습니다";
 
         if (visitor.getStatus() == VisitorStatus.대기) {
             visitor.updateStatus(VisitorStatus.입실);
-            visitor.updateCheckInTime(now);
-            log.info("{}님이 입실 하셨습니다", visitorName);
-            message = visitorName + "님이 입실하셨습니다";
+            visitor.checkIn();
+            log.info(message);
             socketService.sendMessageToSubscriber("/visitor", message);
             visitorRepository.save(visitor);
-            result = new QRCheckResponseDto("2000", "입실처리완료", "입실");
+            result = new QRCheckResponseDto("2000", "인증된방문자", "입실");
         }
-        else if (visitor.getStatus() == VisitorStatus.퇴실)
+        else if (visitor.getStatus() == VisitorStatus.입실)
         {
-            log.info("이미 퇴실 처리된 방문자 입니다");
-            message = visitorName + "님은 이미 퇴실 하셨습니다";
+            log.info(message);
             socketService.sendMessageToSubscriber("/visitor", message);
-            result = new QRCheckResponseDto("4090", "이미 퇴실 처리된 방문자", "퇴실");
-        }
-        else if (visitor.getStatus() == VisitorStatus.만료)
-        {
-            log.info("QRCode의 기간이 만료되었습니다");
-            message = visitorName + "님의 방문신청 기간이 이미 만료되었습니다";
-            socketService.sendMessageToSubscriber("/visitor", message);
-            result = new QRCheckResponseDto("4090", "기간만료 QR코드", "만료");
-        }
-        else
-        {
-            message = "방문자 상태정보가 존재하지 않습니다";
-            log.error("방문자 상태정보가 존재하지 않습니다");
-            socketService.sendMessageToSubscriber("/visitor", message);
+            result = new QRCheckResponseDto("2000", "인증된방문자", "입실");
         }
         return result;
     }

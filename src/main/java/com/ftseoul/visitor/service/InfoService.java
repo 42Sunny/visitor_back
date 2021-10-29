@@ -57,8 +57,7 @@ public class InfoService {
             .stream()
             .map(v -> new VisitorDecryptWithIdDto(v.getId(), v.getReserveId(), v.getName(),
                 v.getPhone(), v.getOrganization(),
-                v.getStatus(), v.getCheckInTime(),
-                v.getCheckOutTime()).decryptDto(seed))
+                v.getStatus(), v.getCheckInTime()))
             .collect(Collectors.toList());
     }
 
@@ -74,11 +73,8 @@ public class InfoService {
 
     private Visitor updateStatusAndDate(Visitor visitor, VisitorStatus status) {
         visitor.updateStatus(status);
-        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         if (status == VisitorStatus.입실) {
-            visitor.updateCheckInTime(now);
-        } else if (status == VisitorStatus.퇴실) {
-            visitor.updateCheckOutTime(now);
+            visitor.checkIn();
         }
         return visitor;
     }
