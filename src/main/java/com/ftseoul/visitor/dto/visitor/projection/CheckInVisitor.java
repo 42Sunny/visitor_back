@@ -7,4 +7,8 @@ public interface CheckInVisitor {
     LocalDateTime getCheckIn();
     String getName();
     String getPhone();
+    String getStaffName();
+    String getStaffPhone();
+    String getPurpose();
+    String getPlace();
 }

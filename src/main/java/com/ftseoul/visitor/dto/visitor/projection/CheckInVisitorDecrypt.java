@@ -9,6 +9,10 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     private LocalDateTime checkIn;
     private String name;
     private String phone;
+    private String staffName;
+    private String staffPhone;
+    private String purpose;
+    private String place;
 
 
     @Override
@@ -29,6 +33,26 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     @Override
     public String getPhone() {
         return this.phone;
+    }
+
+    @Override
+    public String getStaffName() {
+        return this.staffName;
+    }
+
+    @Override
+    public String getStaffPhone() {
+        return this.staffPhone;
+    }
+
+    @Override
+    public String getPurpose() {
+        return this.purpose;
+    }
+
+    @Override
+    public String getPlace() {
+        return this.place;
     }
 
 }
