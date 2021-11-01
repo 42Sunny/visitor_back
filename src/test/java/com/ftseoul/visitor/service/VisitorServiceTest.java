@@ -63,6 +63,7 @@ class VisitorServiceTest {
             .builder()
             .name(seed.encrypt("abcde"))
             .phone(seed.encrypt("01012345678"))
+            .department("시설관리")
             .build();
         savedStaff = staffRepository.save(staff);
 

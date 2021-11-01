@@ -21,15 +21,20 @@ public class Staff {
     @Column(length = 200, nullable = false)
     private String phone;
 
+    @Column(length = 50)
+    private String department;
+
     @Builder
-    public Staff(String name, String phone) {
+    public Staff(String name, String phone, String department) {
         this.name = name;
         this.phone = phone;
+        this.department = department;
     }
 
-    public void update(String name, String phone) {
+    public void update(String name, String phone, String department) {
         this.name = name;
         this.phone = phone;
+        this.department = department;
     }
 
     public Staff encrypt(Seed seed) {
@@ -50,6 +55,7 @@ public class Staff {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
+                ", department='" + department + '\'' +
                 '}';
     }
 }
