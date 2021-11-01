@@ -6,6 +6,7 @@ import com.ftseoul.visitor.encrypt.Seed;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,7 +15,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class VisitorDecryptWithIdDto implements Serializable {
+@Builder
+public class VisitorInfoDecryptDto implements Serializable {
     private Long visitorId;
 
     private Long reserveId;

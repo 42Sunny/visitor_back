@@ -1,7 +1,7 @@
 package com.ftseoul.visitor.dto.reserve;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ftseoul.visitor.dto.visitor.VisitorDecryptWithIdDto;
+import com.ftseoul.visitor.dto.visitor.VisitorInfoDecryptDto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +27,7 @@ public class DateFoundResponseDto implements Serializable {
 
     private String purpose;
 
-    private List<VisitorDecryptWithIdDto> visitors;
+    private List<VisitorInfoDecryptDto> visitors;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime date;

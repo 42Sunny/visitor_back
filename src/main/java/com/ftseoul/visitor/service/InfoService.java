@@ -8,15 +8,14 @@ import com.ftseoul.visitor.dto.payload.DateRange;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.visitor.CheckInLogDto;
 import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
-import com.ftseoul.visitor.dto.visitor.VisitorDecryptWithIdDto;
+import com.ftseoul.visitor.dto.visitor.VisitorDecryptDto;
+import com.ftseoul.visitor.dto.visitor.VisitorInfoDecryptDto;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitor;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,12 +51,19 @@ public class InfoService {
         return result;
     }
 
-    private List<VisitorDecryptWithIdDto> decryptVisitorList(List<Visitor> visitorList) {
+    private List<VisitorInfoDecryptDto> decryptVisitorList(List<Visitor> visitorList) {
         return visitorList
             .stream()
-            .map(v -> new VisitorDecryptWithIdDto(v.getId(), v.getReserveId(), v.getName(),
-                v.getPhone(), v.getOrganization(),
-                v.getStatus(), v.getCheckInTime()))
+            .map(v -> VisitorInfoDecryptDto
+                .builder()
+                .visitorId(v.getId())
+                .reserveId(v.getReserveId())
+                .name(seed.decrypt(v.getName()))
+                .phone(seed.decrypt(v.getPhone()))
+                .organization(v.getOrganization())
+                .status(v.getStatus())
+                .checkInTime(v.getCheckInTime())
+                .build())
             .collect(Collectors.toList());
     }
 
