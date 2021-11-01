@@ -25,6 +25,8 @@ public class DateFoundResponseDto implements Serializable {
 
     private String staffPhone;
 
+    private String staffDepartment;
+
     private String purpose;
 
     private List<VisitorInfoDecryptDto> visitors;
@@ -33,12 +35,13 @@ public class DateFoundResponseDto implements Serializable {
     private LocalDateTime date;
 
     public DateFoundResponseDto(Long id, String place, Long staffId, String staffName,
-        String staffPhone, String purpose, LocalDateTime date) {
+        String staffPhone, String staffDepartment, String purpose, LocalDateTime date) {
         this.id = id;
         this.place = place;
         this.staffId = staffId;
         this.staffName = staffName;
         this.staffPhone = staffPhone;
+        this.staffDepartment = staffDepartment;
         this.purpose = purpose;
         this.date = date;
     }

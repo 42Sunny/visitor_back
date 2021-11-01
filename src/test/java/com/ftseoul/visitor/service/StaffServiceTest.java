@@ -95,7 +95,7 @@ class StaffServiceTest {
     @Transactional
     void 스태프저장() {
         final String toCheck = "staff42";
-        AddStaffRequestDto toSave = new AddStaffRequestDto(toCheck, "01011111111");
+        AddStaffRequestDto toSave = new AddStaffRequestDto(toCheck, "01011111111", "시설관리팀");
         staffService.saveStaff(toSave);
         Optional<Staff> findStaff = staffRepository.findByName(seed.encrypt(toCheck));
         assertDoesNotThrow(() -> findStaff.get());
@@ -106,7 +106,7 @@ class StaffServiceTest {
     @Transactional
     void 스태프수정() {
         final String expected = "수정된 이름";
-        StaffModifyDto request = new StaffModifyDto(savedStaff.getId(), expected, "01011112222");
+        StaffModifyDto request = new StaffModifyDto(savedStaff.getId(), expected, "01011112222", "시설관리");
         staffService.modifyStaff(request);
 
         Optional<Staff> findStaff = staffRepository.findById(savedStaff.getId());
@@ -115,7 +115,7 @@ class StaffServiceTest {
         assertEquals(expected, toCheck);
 
         //staff id 가 조회 안되는 경우
-        StaffModifyDto request2 = new StaffModifyDto(Long.valueOf(Integer.MAX_VALUE), expected, "01011112222");
+        StaffModifyDto request2 = new StaffModifyDto(Long.valueOf(Integer.MAX_VALUE), expected, "01011112222", "시설관리");
         Response failResponse = staffService.modifyStaff(request2);
         assertEquals("4040", failResponse.getCode());
 

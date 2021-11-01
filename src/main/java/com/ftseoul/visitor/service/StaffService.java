@@ -53,6 +53,7 @@ public class StaffService {
                         StaffDecryptDto.builder().id(staff.getId())
                                 .phone(staff.getPhone())
                                 .name(staff.getName())
+                                .department(staff.getDepartment())
                                 .build())
                 .map(staffDecryptDto -> staffDecryptDto.decryptDto(seed))
                 .collect(Collectors.toList());
@@ -63,6 +64,7 @@ public class StaffService {
                 .id(staff.getId())
                 .name(staff.getName())
                 .phone(staff.getPhone())
+                .department(staff.getDepartment())
                 .build().decryptDto(seed);
     }
 
@@ -82,10 +84,10 @@ public class StaffService {
 
         Staff staff = foundStaff.get();
         log.info("Before Modify- Staff Name is {} and phone is {}", staff.getName(), staff.getPhone());
-        staff.update(staffModifyDto.getName(), staffModifyDto.getPhone());
+        staff.update(staffModifyDto.getName(), staffModifyDto.getPhone(), staffModifyDto.getDepartment());
         staff.encrypt(seed);
         staffRepository.save(staff);
-        log.info("After Modify- Staff Name is {} and phone is {}", staff.getName(), staff.getPhone());
+        log.info("After Modify- Staff Name is {} and phone is {}", staff.getName(), staff.getPhone(), staff.getDepartment());
         return new Response("2000", "스태프정보를 수정했습니다");
     }
 
