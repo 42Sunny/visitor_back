@@ -40,6 +40,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
             + "v.phone AS phone, "
             + "s.name AS staffName, "
             + "s.phone AS staffPhone, "
+            + "s.department AS staffDepartment, "
             + "r.purpose AS purpose, "
             + "r.place AS place "
             + "FROM visitor v "

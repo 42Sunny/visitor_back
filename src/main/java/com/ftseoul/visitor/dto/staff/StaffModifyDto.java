@@ -18,4 +18,6 @@ public class StaffModifyDto implements Serializable {
     private String name;
     @NotNull(message = "수정할 전화번호를 입력해주세요")
     private String phone;
+    @NotNull(message = "소속을 입력해주세요")
+    private String department;
 }

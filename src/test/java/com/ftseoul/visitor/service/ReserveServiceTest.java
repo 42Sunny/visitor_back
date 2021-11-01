@@ -76,6 +76,7 @@ class ReserveServiceTest {
             .builder()
             .name(seed.encrypt("abcde"))
             .phone(seed.encrypt("01012345678"))
+            .department("시설관리")
             .build();
         savedStaff = staffRepository.save(staff);
 
@@ -200,6 +201,7 @@ class ReserveServiceTest {
             .builder()
             .name(seed.encrypt(seed.encrypt("abcde")))
             .phone(seed.encrypt(seed.encrypt("01012345678")))
+            .department("시설관리")
             .build();
         Staff staffData = staffRepository.save(staff);
 

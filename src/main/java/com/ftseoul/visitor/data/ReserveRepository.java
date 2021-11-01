@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
-    @Query("SELECT new com.ftseoul.visitor.dto.reserve.DateFoundResponseDto(r.id , r.place, s.id, s.name, s.phone, r.purpose , r.date) "
+    @Query("SELECT new com.ftseoul.visitor.dto.reserve.DateFoundResponseDto(r.id , r.place, s.id, s.name, s.phone, s.department, "
+        + "r.purpose , r.date) "
         + "FROM Reserve r INNER JOIN FETCH Staff s ON r.targetStaff = s.id "
         + "WHERE r.date BETWEEN :from AND :to")
     List<DateFoundResponseDto> findAllReserveWithStaffByDate(@Param(value = "from") LocalDateTime from,
