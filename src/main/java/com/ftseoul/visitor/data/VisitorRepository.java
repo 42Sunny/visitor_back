@@ -49,7 +49,6 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
             + "ON r.target_staff = s.id "
             + "WHERE v.check_in_time IS NOT NULL "
             + "AND v.check_in_time BETWEEN :start AND :end "
-            + "GROUP BY checkInDate "
             + "ORDER BY checkInDate, checkIn DESC",
         countQuery = "SELECT COUNT(*) FROM visitor v "
             + "WHERE v.check_in_time IS NOT NULL "
