@@ -8,7 +8,6 @@ import com.ftseoul.visitor.dto.payload.DateRange;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.visitor.CheckInLogDto;
 import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
-import com.ftseoul.visitor.dto.visitor.VisitorDecryptDto;
 import com.ftseoul.visitor.dto.visitor.VisitorInfoDecryptDto;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitor;

@@ -34,6 +34,7 @@ public class InfoController {
         log.info("/info/reserve/date\nparameter: {}", date);
         return infoService.findAllByDate(date.getDate());
     }
+
     @PutMapping("/info/visitor/status")
     public ResponseEntity<?> updateVisitorStatus(@RequestBody UpdateVisitorStatusDto dto) {
         log.info("/info/visitor/status\n parameter: {}", dto);
