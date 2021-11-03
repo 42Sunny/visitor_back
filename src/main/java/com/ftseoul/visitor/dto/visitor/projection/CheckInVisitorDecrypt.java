@@ -11,6 +11,7 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     private String phone;
     private String staffName;
     private String staffPhone;
+    private String staffDepartment;
     private String purpose;
     private String place;
 
@@ -43,6 +44,11 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     @Override
     public String getStaffPhone() {
         return this.staffPhone;
+    }
+
+    @Override
+    public String getStaffDepartment() {
+        return this.staffDepartment;
     }
 
     @Override
