@@ -12,6 +12,6 @@ public enum PlaceCode {
     }
 
     public String getName() {
-        return place;
+        return (place.equals("ALL")) ? null : place;
     }
 }

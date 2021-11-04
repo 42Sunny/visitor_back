@@ -6,6 +6,7 @@ import com.ftseoul.visitor.dto.visitor.projection.QCheckInVisitorDecrypt;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -13,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 public class QueryRepository {
@@ -38,8 +40,8 @@ public class QueryRepository {
             .from(visitor)
             .join(reserve).on(visitor.reserveId.eq(reserve.id))
             .join(staff).on(reserve.targetStaff.eq(staff.id))
-            .where(searchCriteria(criteria),
-                reserve.date.between(criteria.getStart().atStartOfDay(), criteria.includeEnd().atStartOfDay()))
+            .where(placeCondition(criteria.getPlaceCode().getName())
+                ,searchCriteria(criteria))
             .orderBy(reserve.date.desc())
             .offset(criteria.getPage().getOffset())
             .limit(criteria.getPage().getPageSize())
@@ -71,6 +73,14 @@ public class QueryRepository {
                 PathBuilder<String> column = entityPath.get(c.getCriteria().getKey(), String.class);
                 booleanBuilder.and(column.eq(c.getValue()));
             });
+        booleanBuilder.and(reserve.date.between(criteria.getStart().atStartOfDay(), criteria.includeEnd().atStartOfDay()));
         return booleanBuilder;
+    }
+
+    private BooleanExpression placeCondition(String name) {
+        if (!StringUtils.hasText(name)) {
+            return null;
+        }
+        return reserve.place.eq(name);
     }
 }
