@@ -56,6 +56,10 @@ public class VisitorSearchCriteria implements Serializable {
     }
 
     public void encrypt(Seed seed) {
+        if (searchCriteria == null) {
+            return ;
+        }
+
         for (SearchCriteriaDto searchCriterion : this.searchCriteria) {
             if (searchCriterion.getCriteria().isName() || searchCriterion.getCriteria().isPhone()) {
                 searchCriterion.encrypt(seed);

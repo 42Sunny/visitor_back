@@ -6,7 +6,6 @@ import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitorDecrypt;
 import com.ftseoul.visitor.dto.visitor.projection.QCheckInVisitorDecrypt;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -15,7 +14,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 @Repository
 public class QueryRepository {
@@ -52,6 +50,10 @@ public class QueryRepository {
     }
 
     public BooleanBuilder searchCriteria(VisitorSearchCriteria criteria) {
+
+        if (criteria.getSearchCriteria() == null) {
+            return null;
+        }
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
