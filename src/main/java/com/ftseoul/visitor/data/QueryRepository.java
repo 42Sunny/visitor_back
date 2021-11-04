@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
@@ -40,7 +41,8 @@ public class QueryRepository {
             .join(reserve).on(visitor.reserveId.eq(reserve.id))
             .join(staff).on(reserve.targetStaff.eq(staff.id))
             .where(placeCondition(criteria.getPlace())
-                ,searchCriteria(criteria))
+                ,searchCriteria(criteria),
+                reserveDateCondition(criteria.getStart().atStartOfDay(), criteria.includeEnd().atStartOfDay()))
             .orderBy(reserve.date.desc())
             .offset(criteria.getPage().getOffset())
             .limit(criteria.getPage().getPageSize())
@@ -76,7 +78,6 @@ public class QueryRepository {
                 PathBuilder<String> column = entityPath.get(c.getCriteria().getKey(), String.class);
                 booleanBuilder.and(column.eq(c.getValue()));
             });
-        booleanBuilder.and(reserve.date.between(criteria.getStart().atStartOfDay(), criteria.includeEnd().atStartOfDay()));
         return booleanBuilder;
     }
 
@@ -85,5 +86,9 @@ public class QueryRepository {
             return null;
         }
         return reserve.place.eq(place.toString());
+    }
+
+    private BooleanExpression reserveDateCondition(LocalDateTime start, LocalDateTime end) {
+        return reserve.date.between(start, end);
     }
 }
