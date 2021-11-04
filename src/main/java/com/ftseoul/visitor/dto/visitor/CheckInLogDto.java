@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CheckInLogDto implements Serializable {
-    private List<CheckInVisitor> checkInLogs;
+    private List<CheckInVisitorDecrypt> checkInLogs;
     private int lastPage;
 
     @JsonIgnore
     private boolean decrypted = false;
 
-    public CheckInLogDto(List<CheckInVisitor> checkInLogs, int lastPage) {
+    public CheckInLogDto(List<CheckInVisitorDecrypt> checkInLogs, int lastPage) {
         this.checkInLogs = checkInLogs;
         this.lastPage = lastPage;
     }
@@ -36,6 +36,7 @@ public class CheckInLogDto implements Serializable {
                         .phone(seed.decrypt(checkInVisitor.getPhone()))
                         .staffName(seed.decrypt(checkInVisitor.getStaffName()))
                         .staffPhone(seed.decrypt(checkInVisitor.getStaffPhone()))
+                        .staffDepartment(checkInVisitor.getStaffDepartment())
                         .purpose(checkInVisitor.getPurpose())
                         .place(checkInVisitor.getPlace())
                         .build())

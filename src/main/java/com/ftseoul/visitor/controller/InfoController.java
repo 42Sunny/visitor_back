@@ -1,6 +1,6 @@
 package com.ftseoul.visitor.controller;
 
-import com.ftseoul.visitor.dto.payload.DateRange;
+import com.ftseoul.visitor.dto.payload.VisitorSearchCriteria;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.reserve.DateRequestDto;
 import com.ftseoul.visitor.dto.error.ErrorResponseDto;
@@ -9,6 +9,7 @@ import com.ftseoul.visitor.dto.visitor.UpdateStatusResponseDto;
 import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
+import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.InfoService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class InfoController {
 
     private final InfoService infoService;
+    private final Seed seed;
 
     @PostMapping("/info/reserve/date")
     public List<DateFoundResponseDto> findByDate(@RequestBody DateRequestDto date) {
@@ -47,9 +49,9 @@ public class InfoController {
     }
 
     @PostMapping("/info/log/date")
-    public CheckInLogDto getVisitorLogBetweenDate(@RequestBody DateRange dateRange) {
-        log.info("Find visitor logs between {} and {}", dateRange.getStart(), dateRange.getEnd());
-        return infoService.getCheckInLogBetweenDate(dateRange);
+    public CheckInLogDto getVisitorLogBetweenDate(@RequestBody VisitorSearchCriteria vsc) {
+        log.info("Find visitor logs between {} and {}", vsc.getStart(), vsc.getEnd());
+        vsc.encrypt(seed);
+        return infoService.getCheckInLogBetweenDate(vsc);
     }
-
 }

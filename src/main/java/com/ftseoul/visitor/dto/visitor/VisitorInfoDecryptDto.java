@@ -2,7 +2,6 @@ package com.ftseoul.visitor.dto.visitor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
-import com.ftseoul.visitor.encrypt.Seed;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

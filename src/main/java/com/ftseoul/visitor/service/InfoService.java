@@ -1,16 +1,17 @@
 package com.ftseoul.visitor.service;
 
+import com.ftseoul.visitor.data.QueryRepository;
 import com.ftseoul.visitor.data.ReserveRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
-import com.ftseoul.visitor.dto.payload.DateRange;
+import com.ftseoul.visitor.dto.payload.VisitorSearchCriteria;
 import com.ftseoul.visitor.dto.reserve.DateFoundResponseDto;
 import com.ftseoul.visitor.dto.visitor.CheckInLogDto;
 import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.visitor.VisitorInfoDecryptDto;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
-import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitor;
+import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitorDecrypt;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InfoService {
     private final ReserveRepository reserveRepository;
     private final VisitorRepository visitorRepository;
+    private final QueryRepository queryRepository;
     private final Seed seed;
 
     public List<DateFoundResponseDto> findAllByDate(LocalDate date) {
@@ -84,10 +86,8 @@ public class InfoService {
         return visitor;
     }
 
-    public CheckInLogDto getCheckInLogBetweenDate(DateRange dateRange) {
-        Page<CheckInVisitor> result = visitorRepository.findCheckInBetweenDate(dateRange.getStart(),
-            dateRange.includeEnd(),
-            dateRange.getPage());
+    public CheckInLogDto getCheckInLogBetweenDate(VisitorSearchCriteria vsc) {
+        Page<CheckInVisitorDecrypt> result = queryRepository.findVisitorByCriteria(vsc);
         return new CheckInLogDto(result.getContent(), result.getTotalPages()).decrypt(seed);
     }
 }

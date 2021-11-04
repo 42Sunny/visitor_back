@@ -9,6 +9,7 @@ public interface CheckInVisitor {
     String getPhone();
     String getStaffName();
     String getStaffPhone();
+    String getStaffDepartment();
     String getPurpose();
     String getPlace();
 }
