@@ -1,9 +1,7 @@
 package com.ftseoul.visitor.dto.payload;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftseoul.visitor.data.SearchCriteriaDto;
-import com.ftseoul.visitor.data.visitor.PlaceCode;
-import com.ftseoul.visitor.data.visitor.SearchCriteria;
+import com.ftseoul.visitor.data.visitor.ReservePlace;
 import com.ftseoul.visitor.encrypt.Seed;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -21,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 @NoArgsConstructor
 @ToString
 public class VisitorSearchCriteria implements Serializable {
-    private PlaceCode placeCode;
+    private ReservePlace place;
     private List<SearchCriteriaDto> searchCriteria;
     private LocalDate start;
     private LocalDate end;

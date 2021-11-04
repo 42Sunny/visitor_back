@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.data;
 
+import com.ftseoul.visitor.data.visitor.ReservePlace;
 import com.ftseoul.visitor.dto.payload.VisitorSearchCriteria;
 import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitorDecrypt;
 import com.ftseoul.visitor.dto.visitor.projection.QCheckInVisitorDecrypt;
@@ -40,7 +41,7 @@ public class QueryRepository {
             .from(visitor)
             .join(reserve).on(visitor.reserveId.eq(reserve.id))
             .join(staff).on(reserve.targetStaff.eq(staff.id))
-            .where(placeCondition(criteria.getPlaceCode().getName())
+            .where(placeCondition(criteria.getPlace())
                 ,searchCriteria(criteria))
             .orderBy(reserve.date.desc())
             .offset(criteria.getPage().getOffset())
@@ -77,10 +78,10 @@ public class QueryRepository {
         return booleanBuilder;
     }
 
-    private BooleanExpression placeCondition(String name) {
-        if (!StringUtils.hasText(name)) {
+    private BooleanExpression placeCondition(ReservePlace place) {
+        if (place == null) {
             return null;
         }
-        return reserve.place.eq(name);
+        return reserve.place.eq(place.toString());
     }
 }
