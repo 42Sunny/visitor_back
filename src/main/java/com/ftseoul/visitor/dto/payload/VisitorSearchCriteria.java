@@ -1,21 +1,29 @@
 package com.ftseoul.visitor.dto.payload;
 
+import com.ftseoul.visitor.data.SearchCriteriaDto;
+import com.ftseoul.visitor.data.visitor.ReservePlace;
+import com.ftseoul.visitor.encrypt.Seed;
+import java.io.Serializable;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
-public class DateRange {
+@Setter
+@NoArgsConstructor
+@ToString
+public class VisitorSearchCriteria implements Serializable {
+    private ReservePlace place;
+    private List<SearchCriteriaDto> searchCriteria;
     private LocalDate start;
     private LocalDate end;
     private Pagination pagination;
+
 
     public LocalDate includeEnd() {
         return this.end.plusDays(1);
@@ -25,7 +33,7 @@ public class DateRange {
         return PageRequest.of(this.pagination.getPage(), this.pagination.getSize());
     }
 
-    public static class Pagination {
+    public static class Pagination implements Serializable {
         private int page;
         private int size;
 
@@ -44,6 +52,18 @@ public class DateRange {
 
         public int getSize() {
             return this.size;
+        }
+    }
+
+    public void encrypt(Seed seed) {
+        if (searchCriteria == null) {
+            return ;
+        }
+
+        for (SearchCriteriaDto searchCriterion : this.searchCriteria) {
+            if (searchCriterion.getCriteria().isName() || searchCriterion.getCriteria().isPhone()) {
+                searchCriterion.encrypt(seed);
+            }
         }
     }
 }

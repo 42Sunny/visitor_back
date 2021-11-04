@@ -55,13 +55,13 @@ public class QRcodeService {
             log.info(message);
             socketService.sendMessageToSubscriber("/visitor", message);
             visitorRepository.save(visitor);
-            result = new QRCheckResponseDto("2000", "인증된방문자", "입실");
+            result = new QRCheckResponseDto("2000", "인증된 방문자", "입실");
         }
         else if (visitor.getStatus() == VisitorStatus.입실)
         {
             log.info(message);
             socketService.sendMessageToSubscriber("/visitor", message);
-            result = new QRCheckResponseDto("2000", "인증된방문자", "입실");
+            result = new QRCheckResponseDto("2000", "인증된 방문자", "입실");
         }
         return result;
     }
