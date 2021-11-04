@@ -35,6 +35,7 @@ public class QueryRepository {
         QueryResults<CheckInVisitorDecrypt> results = jpaQueryFactory
             .select(new QCheckInVisitorDecrypt(formattedDate,
                 visitor.checkInTime, visitor.name, visitor.phone,
+                visitor.organization, visitor.status,
                 staff.name, staff.phone, staff.department,
                 reserve.purpose, reserve.place))
             .from(visitor)
@@ -43,7 +44,7 @@ public class QueryRepository {
             .where(placeCondition(criteria.getPlace())
                 ,searchCriteria(criteria),
                 reserveDateCondition(criteria.getStart().atStartOfDay(), criteria.includeEnd().atStartOfDay()))
-            .orderBy(reserve.date.desc())
+            .orderBy(formattedDate.desc(),reserve.date.desc())
             .offset(criteria.getPage().getOffset())
             .limit(criteria.getPage().getPageSize())
             .fetchResults();

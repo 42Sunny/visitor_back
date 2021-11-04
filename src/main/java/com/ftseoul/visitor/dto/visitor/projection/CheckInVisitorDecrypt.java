@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.dto.visitor.projection;
 
+import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,8 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     private LocalDateTime checkIn;
     private String name;
     private String phone;
+    private String organization;
+    private VisitorStatus status;
     private String staffName;
     private String staffPhone;
     private String staffDepartment;
@@ -23,12 +26,15 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
 
     @QueryProjection
     public CheckInVisitorDecrypt(String checkInDate, LocalDateTime checkIn, String name,
-        String phone, String staffName, String staffPhone, String staffDepartment,
+        String phone, String organization, VisitorStatus status,
+        String staffName, String staffPhone, String staffDepartment,
         String purpose, String place) {
         this.checkInDate = checkInDate;
         this.checkIn = checkIn;
         this.name = name;
         this.phone = phone;
+        this.organization = organization;
+        this.status = status;
         this.staffName = staffName;
         this.staffPhone = staffPhone;
         this.staffDepartment = staffDepartment;
@@ -57,6 +63,11 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     }
 
     @Override
+    public String getOrganization() {
+        return this.organization;
+    }
+
+    @Override
     public String getStaffName() {
         return this.staffName;
     }
@@ -64,6 +75,11 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     @Override
     public String getStaffPhone() {
         return this.staffPhone;
+    }
+
+    @Override
+    public VisitorStatus getStatus() {
+        return this.status;
     }
 
     @Override

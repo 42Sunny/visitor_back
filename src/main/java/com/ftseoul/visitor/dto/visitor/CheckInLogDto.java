@@ -34,6 +34,8 @@ public class CheckInLogDto implements Serializable {
                         .checkIn(checkInVisitor.getCheckIn())
                         .name(seed.decrypt(checkInVisitor.getName()))
                         .phone(seed.decrypt(checkInVisitor.getPhone()))
+                        .organization(checkInVisitor.getOrganization())
+                        .status(checkInVisitor.getStatus())
                         .staffName(seed.decrypt(checkInVisitor.getStaffName()))
                         .staffPhone(seed.decrypt(checkInVisitor.getStaffPhone()))
                         .staffDepartment(checkInVisitor.getStaffDepartment())

@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.dto.visitor.projection;
 
+import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import java.time.LocalDateTime;
 
 public interface CheckInVisitor {
@@ -7,6 +8,8 @@ public interface CheckInVisitor {
     LocalDateTime getCheckIn();
     String getName();
     String getPhone();
+    String getOrganization();
+    VisitorStatus getStatus();
     String getStaffName();
     String getStaffPhone();
     String getStaffDepartment();
