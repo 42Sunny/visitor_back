@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public interface CheckInVisitor {
     String getCheckInDate();
     LocalDateTime getCheckIn();
+    long getId();
     String getName();
     String getPhone();
     String getOrganization();

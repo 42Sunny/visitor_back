@@ -34,7 +34,7 @@ public class QueryRepository {
 
         QueryResults<CheckInVisitorDecrypt> results = jpaQueryFactory
             .select(new QCheckInVisitorDecrypt(formattedDate,
-                visitor.checkInTime, visitor.name, visitor.phone,
+                visitor.checkInTime, visitor.id, visitor.name, visitor.phone,
                 visitor.organization, visitor.status,
                 staff.name, staff.phone, staff.department,
                 reserve.purpose, reserve.place))

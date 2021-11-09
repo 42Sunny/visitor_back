@@ -14,6 +14,7 @@ import lombok.Setter;
 public class CheckInVisitorDecrypt implements CheckInVisitor{
     private String checkInDate;
     private LocalDateTime checkIn;
+    private long id;
     private String name;
     private String phone;
     private String organization;
@@ -25,12 +26,14 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
     private String place;
 
     @QueryProjection
-    public CheckInVisitorDecrypt(String checkInDate, LocalDateTime checkIn, String name,
+    public CheckInVisitorDecrypt(String checkInDate, LocalDateTime checkIn,
+        Long id, String name,
         String phone, String organization, VisitorStatus status,
         String staffName, String staffPhone, String staffDepartment,
         String purpose, String place) {
         this.checkInDate = checkInDate;
         this.checkIn = checkIn;
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.organization = organization;
@@ -40,6 +43,11 @@ public class CheckInVisitorDecrypt implements CheckInVisitor{
         this.staffDepartment = staffDepartment;
         this.purpose = purpose;
         this.place = place;
+    }
+
+    @Override
+    public long getId() {
+        return this.id;
     }
 
     @Override

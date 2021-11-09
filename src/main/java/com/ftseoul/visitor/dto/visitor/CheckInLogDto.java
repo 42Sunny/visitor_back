@@ -32,6 +32,7 @@ public class CheckInLogDto implements Serializable {
                     CheckInVisitorDecrypt.builder()
                         .checkInDate(checkInVisitor.getCheckInDate())
                         .checkIn(checkInVisitor.getCheckIn())
+                        .id(checkInVisitor.getId())
                         .name(seed.decrypt(checkInVisitor.getName()))
                         .phone(seed.decrypt(checkInVisitor.getPhone()))
                         .organization(checkInVisitor.getOrganization())
