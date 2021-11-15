@@ -33,11 +33,7 @@ public class QueryRepository {
         DateTemplate<String> formattedDate = Expressions.dateTemplate(String.class, "DATE_FORMAT({0}, {1})", reserve.date, "%Y-%m-%d");
 
         QueryResults<CheckInVisitorDecrypt> results = jpaQueryFactory
-            .select(new QCheckInVisitorDecrypt(formattedDate,
-                visitor.checkInTime, visitor.id, visitor.name, visitor.phone,
-                visitor.organization, visitor.status,
-                staff.name, staff.phone, staff.department,
-                reserve.purpose, reserve.place))
+            .select(checkInVisitorByDateColumns())
             .from(visitor)
             .join(reserve).on(visitor.reserveId.eq(reserve.id))
             .join(staff).on(reserve.targetStaff.eq(staff.id))
@@ -49,7 +45,6 @@ public class QueryRepository {
             .limit(criteria.getPage().getPageSize())
             .fetchResults();
         return new PageImpl<>(results.getResults(), criteria.getPage(), results.getTotal());
-
     }
 
     public BooleanBuilder searchCriteria(VisitorSearchCriteria criteria) {
@@ -91,5 +86,14 @@ public class QueryRepository {
 
     private BooleanExpression reserveDateCondition(LocalDateTime start, LocalDateTime end) {
         return reserve.date.between(start, end);
+    }
+
+    private QCheckInVisitorDecrypt checkInVisitorByDateColumns() {
+        DateTemplate<String> formattedDate = Expressions.dateTemplate(String.class, "DATE_FORMAT({0}, {1})", reserve.date, "%Y-%m-%d");
+        return new QCheckInVisitorDecrypt(formattedDate,
+            visitor.checkInTime, visitor.id, visitor.name, visitor.phone,
+            visitor.organization, visitor.status,
+            staff.name, staff.phone, staff.department,
+            reserve.purpose, reserve.place);
     }
 }

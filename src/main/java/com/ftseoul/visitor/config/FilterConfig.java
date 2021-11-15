@@ -1,6 +1,6 @@
 package com.ftseoul.visitor.config;
 
-import com.ftseoul.visitor.filter.LogbackMDCFilter;
+import com.ftseoul.visitor.filter.MDCFilter;
 import com.ftseoul.visitor.filter.MultiReadableHttpServletRequestFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -21,10 +21,9 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean logbackMDCFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        LogbackMDCFilter logbackMDCFilter = new LogbackMDCFilter();
-        registrationBean.setFilter(logbackMDCFilter);
+        MDCFilter MDCFilter = new MDCFilter();
+        registrationBean.setFilter(MDCFilter);
         registrationBean.setOrder(2);
         return registrationBean;
     }
-
 }

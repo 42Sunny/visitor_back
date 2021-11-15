@@ -12,13 +12,19 @@ public class MDCUtil {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 
+    public static final String ID = "REQUEST_ID";
+
     public static final String HEADER_MAP_MDC = "HEADER_MAP_MDC";
 
     public static final String BODY_CONTENT_MDC = "BODY_CONTENT_MDC";
 
     public static final String PARAMETER_MAP_MDC = "PARAMETER_MAP_MDC";
 
+    public static final String QUERY_STRING_MDC = "QUERY_STRING_MDC";
+
     public static final String REQUEST_URI_MDC = "REQUEST_URI_MDC";
+
+    public static final String COOKIE_MDC = "COOKIE_MDC";
 
     public static void set(String key, String value) {
         mdc.put(key, value);
@@ -32,7 +38,7 @@ public class MDCUtil {
                 mdc.put(key, json);
             }
         } catch (Exception e) {
-            log.info("Failed to convert Json : {}", e.getMessage());
+            log.warn("Failed to convert Json : {}", e.getMessage());
         }
     }
 
@@ -62,4 +68,22 @@ public class MDCUtil {
         return mdc.get(key);
     }
 
+    public static String generateRequestLog() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Request Info\n");
+        sb.append("UUID: " + MDCUtil.get(ID));
+        sb.append("\n");
+        sb.append("Headers : " + toPrettyJson(MDCUtil.get(HEADER_MAP_MDC)));
+        sb.append("\n");
+        sb.append("Body Content " + MDCUtil.get(BODY_CONTENT_MDC));
+        sb.append("\n");
+        sb.append("Parameters: " + MDCUtil.get(PARAMETER_MAP_MDC));
+        sb.append("\n");
+        sb.append("Query String: " + MDCUtil.get(QUERY_STRING_MDC));
+        sb.append("\n");
+        sb.append("Request URI: " + MDCUtil.get(REQUEST_URI_MDC));
+        sb.append("\n");
+        sb.append("Cookie: " + MDCUtil.get(COOKIE_MDC));
+        return sb.toString();
+    }
 }

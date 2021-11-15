@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
@@ -41,8 +42,7 @@ public class RequestWrapper {
     }
 
     public String getBodyContents() throws IOException {
-        String result = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
-        return result;
+        return IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
     }
 
     public Map<String, String> parameterMap() {
@@ -64,4 +64,18 @@ public class RequestWrapper {
         return request.getRequestURI();
     }
 
+    public Map<String, String> getCookies() {
+        Map<String, String> result = new HashMap<>();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                result.put(cookie.getName(), cookie.getValue());
+            }
+        }
+        return result;
+    }
+
+    public String getQueryString() {
+        return request.getQueryString();
+    }
 }
