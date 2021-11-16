@@ -29,9 +29,10 @@ public class MDCFilter implements Filter {
 
         MDCUtil.setJsonValue(MDCUtil.COOKIE_MDC, requestWrapper.getCookies());
 
+        MDCUtil.setJsonValue(MDCUtil.BODY_CONTENT_MDC, requestWrapper.getBodyContents());
+
         MDCUtil.set(MDCUtil.REQUEST_URI_MDC, requestWrapper.getRequestUri());
 
-        MDCUtil.set(MDCUtil.BODY_CONTENT_MDC, requestWrapper.getBodyContents());
 
         MDCUtil.set(MDCUtil.QUERY_STRING_MDC, requestWrapper.getQueryString());
 

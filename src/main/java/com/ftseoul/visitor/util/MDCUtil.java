@@ -70,20 +70,14 @@ public class MDCUtil {
 
     public static String generateRequestLog() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Request Info\n");
-        sb.append("UUID: " + MDCUtil.get(ID));
-        sb.append("\n");
-        sb.append("Headers : " + toPrettyJson(MDCUtil.get(HEADER_MAP_MDC)));
-        sb.append("\n");
-        sb.append("Body Content " + MDCUtil.get(BODY_CONTENT_MDC));
-        sb.append("\n");
-        sb.append("Parameters: " + MDCUtil.get(PARAMETER_MAP_MDC));
-        sb.append("\n");
-        sb.append("Query String: " + MDCUtil.get(QUERY_STRING_MDC));
-        sb.append("\n");
-        sb.append("Request URI: " + MDCUtil.get(REQUEST_URI_MDC));
-        sb.append("\n");
-        sb.append("Cookie: " + MDCUtil.get(COOKIE_MDC));
+        sb.append("Request Info");
+        sb.append(" UUID: " + MDCUtil.get(ID));
+        sb.append(" Headers : " + MDCUtil.get(HEADER_MAP_MDC));
+        sb.append(" Body Content " + MDCUtil.get(BODY_CONTENT_MDC));
+        sb.append(" Parameters: " + MDCUtil.get(PARAMETER_MAP_MDC));
+        sb.append(" Query String: " + MDCUtil.get(QUERY_STRING_MDC));
+        sb.append(" Request URI: " + MDCUtil.get(REQUEST_URI_MDC));
+        sb.append(" Cookie: " + MDCUtil.get(COOKIE_MDC));
         return sb.toString();
     }
 }
