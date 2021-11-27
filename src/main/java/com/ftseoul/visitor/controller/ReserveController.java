@@ -52,6 +52,12 @@ public class ReserveController {
     public Response deleteById(@PathVariable Long id) {
         log.info("DELETE /reserve/" + id.toString());
         socketService.sendMessageToSubscriber("/visitor", "예약번호: " + id + "예약이 삭제되었습니다");
+
+        List<Visitor> visitors = visitorService.findAllByReserveId(id);
+        Staff staff = staffService.findById(reserveService.findStaffByReserveId(id));
+
+        log.info("Staff name : {} ", staff.getName());
+        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createDeleteSMSMessage(visitors));
         return reserveService.deleteById(id);
     }
 
@@ -85,7 +91,7 @@ public class ReserveController {
         ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
 
         visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(staffShortUrl.getValue()));
+        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(visitors, staffShortUrl.getValue()));
         log.info("Send text messages to visitors and staff");
 
         socketService.sendMessageToSubscriber("/visitor",
