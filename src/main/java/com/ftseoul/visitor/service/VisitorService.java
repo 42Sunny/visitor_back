@@ -22,6 +22,11 @@ public class VisitorService {
 
     private final VisitorRepository visitorRepository;
 
+    public List<Visitor> findAllByReserveId(Long reserveId) {
+        log.info("Reserve Id : {}", reserveId);
+        return visitorRepository.findAllByReserveId(reserveId);
+    }
+
     public List<Visitor> saveVisitors(Long reserveId, List<VisitorDto> visitorDto) {
         log.info("Reserve Id is {}", reserveId);
         List<Visitor> visitors = visitorDto
