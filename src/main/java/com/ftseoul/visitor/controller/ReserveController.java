@@ -55,9 +55,10 @@ public class ReserveController {
 
         List<Visitor> visitors = visitorService.findAllByReserveId(id);
         Staff staff = staffService.findById(reserveService.findStaffByReserveId(id));
+        ReserveListResponseDto reserve = reserveService.findById(id);
 
         log.info("Staff name : {} ", staff.getName());
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createDeleteSMSMessage(visitors));
+        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createDeleteSMSMessage(visitors,reserve.getDate()));
         return reserveService.deleteById(id);
     }
 
