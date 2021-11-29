@@ -140,9 +140,10 @@ public class StaffService {
         return sb.toString();
     }
 
-    public String createDeleteSMSMessage(List<Visitor> visitors) {
+    public String createDeleteSMSMessage(List<Visitor> visitors, LocalDateTime dateTime) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[예약취소]\n");
+        sb.append("[예약취소]\n"
+                + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n");
         if (visitors != null && !visitors.isEmpty()) {
             long count = visitors.stream().count() - 1;
             String representor = seed.decrypt(visitors.get(0).getName());
