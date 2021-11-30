@@ -160,7 +160,7 @@ class StaffServiceTest {
         final String shortUrl = "aAb1";
 
         String modifyTemplate = "[예약수정]\n" + "상세 확인: "+ domain + "/"  + shortUrl;
-        assertEquals(modifyTemplate, staffService.createModifySMSMessage(shortUrl));
+        assertEquals(modifyTemplate, staffService.createModifySMSMessage(null, shortUrl));
 
         List<Visitor> visitors = new ArrayList<>();
         visitors.add(Visitor

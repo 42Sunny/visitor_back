@@ -189,4 +189,9 @@ public class ReserveService {
             });
         }
     }
+
+    public Long findStaffByReserveId(Long reserveId) {
+        Optional<Reserve> reserve = reserveRepository.findById(reserveId);
+        return reserve.get().getTargetStaff();
+    }
 }

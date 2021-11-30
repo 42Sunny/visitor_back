@@ -29,6 +29,11 @@ public class StaffService {
     private final StaffRepository staffRepository;
     private final Seed seed;
 
+    public Staff findById(Long id) {
+        log.info("Staff Id: " + id);
+        return staffRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Staff", "id", id));
+    }
+
     public Staff findByName(String name) {
         log.info("Staff name: " + name);
         return staffRepository
@@ -118,10 +123,36 @@ public class StaffService {
         sb.append("\n상세 확인: " + Constants.DOMAIN + "/" + shortUrl);
         return sb.toString();
     }
-    public String createModifySMSMessage(String shortUrl) {
+
+    public String createModifySMSMessage(List<Visitor> visitors, String shortUrl) {
         StringBuilder sb = new StringBuilder();
         sb.append("[예약수정]\n");
+        if (visitors != null && !visitors.isEmpty()) {
+            long count = visitors.stream().count() - 1;
+            String representor = seed.decrypt(visitors.get(0).getName());
+            if (visitors.size() == 1) {
+                sb.append(representor + "님");
+            } else {
+                sb.append(representor + "님 외 " + count + "명");
+            }
+        }
         sb.append("상세 확인: "+ Constants.DOMAIN + "/"  + shortUrl);
+        return sb.toString();
+    }
+
+    public String createDeleteSMSMessage(List<Visitor> visitors, LocalDateTime dateTime) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[예약취소]\n"
+                + dateTime.format(DateTimeFormatter.ofPattern("MM/dd HH:mm")) + "\n");
+        if (visitors != null && !visitors.isEmpty()) {
+            long count = visitors.stream().count() - 1;
+            String representor = seed.decrypt(visitors.get(0).getName());
+            if (visitors.size() == 1) {
+                sb.append(representor + "님");
+            } else {
+                sb.append(representor + "님 외 " + count + "명");
+            }
+        }
         return sb.toString();
     }
 }
