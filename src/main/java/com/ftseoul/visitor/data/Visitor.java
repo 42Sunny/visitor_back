@@ -39,6 +39,9 @@ public class Visitor {
     @Column
     private LocalDateTime checkInTime;
 
+    @Column
+    private LocalDateTime checkOutTime;
+
     @Builder
     public Visitor(Long reserve_id, String name, String phone, String organization) {
         this.reserveId = reserve_id;
@@ -53,6 +56,10 @@ public class Visitor {
 
     public void checkIn() {
         this.checkInTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+    }
+
+    public void checkOut() {
+        this.checkOutTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     }
 
     @Override
