@@ -82,6 +82,8 @@ public class InfoService {
         visitor.updateStatus(status);
         if (status == VisitorStatus.입실) {
             visitor.checkIn();
+        } else if (status == VisitorStatus.퇴실) {
+            visitor.checkOut();
         }
         return visitor;
     }
