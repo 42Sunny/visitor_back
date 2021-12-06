@@ -10,6 +10,7 @@ import com.ftseoul.visitor.dto.visitor.UpdateVisitorStatusDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.filter.WAuthFilter;
 import com.ftseoul.visitor.service.InfoService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -30,15 +33,24 @@ public class InfoController {
 
     private final InfoService infoService;
     private final Seed seed;
+    private final WAuthFilter wAuthFilter;
 
     @PostMapping("/info/reserve/date")
-    public List<DateFoundResponseDto> findByDate(@RequestBody DateRequestDto date) {
+    public List<DateFoundResponseDto> findByDate(@RequestBody DateRequestDto date,
+                                                 HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest))
+            return null;
         log.info("/info/reserve/date\nparameter: {}", date);
         return infoService.findAllByDate(date.getDate());
     }
 
     @PutMapping("/info/visitor/status")
-    public ResponseEntity<?> updateVisitorStatus(@RequestBody UpdateVisitorStatusDto dto) {
+    public ResponseEntity<?> updateVisitorStatus(@RequestBody UpdateVisitorStatusDto dto,
+                                                 HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
+                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+        }
         log.info("/info/visitor/status\n parameter: {}", dto);
         VisitorStatusInfo result = infoService.changeVisitorStatus(dto);
         if (result == null) {
@@ -49,7 +61,11 @@ public class InfoController {
     }
 
     @PostMapping("/info/log/date")
-    public CheckInLogDto getVisitorLogBetweenDate(@RequestBody VisitorSearchCriteria vsc) {
+    public CheckInLogDto getVisitorLogBetweenDate(@RequestBody VisitorSearchCriteria vsc,
+                                                  HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return null;
+        }
         log.info("Find visitor logs between {} and {}", vsc.getStart(), vsc.getEnd());
         vsc.encrypt(seed);
         return infoService.getCheckInLogBetweenDate(vsc);

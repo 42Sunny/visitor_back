@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.controller;
 
+import com.ftseoul.visitor.dto.error.ErrorResponseDto;
 import com.ftseoul.visitor.dto.staff.AddStaffRequestDto;
 import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
 import com.ftseoul.visitor.dto.staff.StaffDeleteDto;
@@ -7,8 +8,11 @@ import com.ftseoul.visitor.dto.staff.StaffModifyDto;
 import com.ftseoul.visitor.dto.staff.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.filter.WAuthFilter;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.StaffService;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,35 +35,59 @@ import java.util.List;
 public class StaffController {
     private final StaffService staffService;
     private final ReserveService reserveService;
+    private final WAuthFilter wAuthFilter;
 
     @PostMapping("/admin/staff/save")
-    public boolean addStaff(@RequestBody AddStaffRequestDto requestDto) {
+    public boolean addStaff(@RequestBody AddStaffRequestDto requestDto,
+                            HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return false;
+        }
         log.info("Add Staff: " + requestDto);
         staffService.saveStaff(requestDto);
         return true;
     }
 
     @GetMapping("/admin/staff")
-    public List<StaffDecryptDto> getAllStaff() {
-        return staffService.findAllStaff();
+    public ResponseEntity<?> getAllStaff(HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
+                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+        }
+        return ResponseEntity.ok(staffService.findAllStaff());
     }
 
     @PutMapping("/admin/staff")
-    public ResponseEntity<Response> updateStaff(@RequestBody StaffModifyDto staffModifyDto) {
+    public ResponseEntity<?> updateStaff(@RequestBody StaffModifyDto staffModifyDto,
+                                         HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
+                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+        }
         Response response = staffService.modifyStaff(staffModifyDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/staff")
     @Transactional
-    public ResponseEntity<Response> deleteStaff(@RequestBody StaffDeleteDto dto) {
+    public ResponseEntity<?> deleteStaff(@RequestBody StaffDeleteDto dto,
+                                         HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
+                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+        }
         Response response = staffService.deleteStaffById(dto.getStaffId());
         reserveService.deleteAllByStaffId(dto.getStaffId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/staff")
-    public ResponseEntity<?> checkStaffExistByName(@RequestBody StaffNameDto staffNameDto) {
+    public ResponseEntity<?> checkStaffExistByName(@RequestBody StaffNameDto staffNameDto,
+                                                   HttpServletRequest httpServletRequest) {
+        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
+            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
+                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+        }
         boolean result = staffService.existByName(staffNameDto.getStaffName());
         if (!result) {
             throw new ResourceNotFoundException("Staff", "StaffName", staffNameDto.getStaffName());
