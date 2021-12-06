@@ -84,10 +84,6 @@ public class StaffController {
     @PostMapping("/staff")
     public ResponseEntity<?> checkStaffExistByName(@RequestBody StaffNameDto staffNameDto,
                                                    HttpServletRequest httpServletRequest) {
-        if (!wAuthFilter.isAuthorized(httpServletRequest)) {
-            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
-                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
-        }
         boolean result = staffService.existByName(staffNameDto.getStaffName());
         if (!result) {
             throw new ResourceNotFoundException("Staff", "StaffName", staffNameDto.getStaffName());
