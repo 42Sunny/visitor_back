@@ -30,8 +30,6 @@ public class QueryRepository {
 
     public Page<CheckInVisitorDecrypt> findVisitorByCriteria(VisitorSearchCriteria criteria) {
 
-        DateTemplate<String> formattedDate = Expressions.dateTemplate(String.class, "DATE_FORMAT({0}, {1})", reserve.date, "%Y-%m-%d");
-
         QueryResults<CheckInVisitorDecrypt> results = jpaQueryFactory
             .select(checkInVisitorByDateColumns())
             .from(visitor)
@@ -40,7 +38,7 @@ public class QueryRepository {
             .where(placeCondition(criteria.getPlace())
                 ,searchCriteria(criteria),
                 reserveDateCondition(criteria.getStart().atStartOfDay(), criteria.includeEnd().atStartOfDay()))
-            .orderBy(formattedDate.desc(),reserve.date.desc())
+            .orderBy(reserve.date.desc())
             .offset(criteria.getPage().getOffset())
             .limit(criteria.getPage().getPageSize())
             .fetchResults();
@@ -90,8 +88,8 @@ public class QueryRepository {
 
     private QCheckInVisitorDecrypt checkInVisitorByDateColumns() {
         DateTemplate<String> formattedDate = Expressions.dateTemplate(String.class, "DATE_FORMAT({0}, {1})", reserve.date, "%Y-%m-%d");
-        return new QCheckInVisitorDecrypt(formattedDate,
-            visitor.checkInTime, visitor.id, visitor.name, visitor.phone,
+        return new QCheckInVisitorDecrypt(reserve.date, visitor.checkInTime,
+            visitor.checkOutTime, visitor.id, visitor.name, visitor.phone,
             visitor.organization, visitor.status,
             staff.name, staff.phone, staff.department,
             reserve.purpose, reserve.place);
