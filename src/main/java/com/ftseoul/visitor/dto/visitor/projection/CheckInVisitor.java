@@ -4,8 +4,9 @@ import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import java.time.LocalDateTime;
 
 public interface CheckInVisitor {
-    String getCheckInDate();
+    LocalDateTime getReserveDate();
     LocalDateTime getCheckIn();
+    LocalDateTime getCheckOut();
     long getId();
     String getName();
     String getPhone();
