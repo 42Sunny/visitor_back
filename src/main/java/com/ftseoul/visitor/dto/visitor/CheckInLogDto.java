@@ -30,8 +30,9 @@ public class CheckInLogDto implements Serializable {
                 .stream()
                 .map(checkInVisitor ->
                     CheckInVisitorDecrypt.builder()
-                        .checkInDate(checkInVisitor.getCheckInDate())
+                        .reserveDate(checkInVisitor.getReserveDate())
                         .checkIn(checkInVisitor.getCheckIn())
+                            .checkOut(checkInVisitor.getCheckOut())
                         .id(checkInVisitor.getId())
                         .name(seed.decrypt(checkInVisitor.getName()))
                         .phone(seed.decrypt(checkInVisitor.getPhone()))
