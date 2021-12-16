@@ -50,7 +50,7 @@ dependencies {
 
 //spring-cloud-config
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.cloud:spring-cloud-starter-config:2.1.0.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config:3.1.0'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.0'
 
 
