@@ -1,9 +1,11 @@
 package com.ftseoul.visitor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ftseoul.visitor.dto.error.FrontErrorResponseDto;
+import java.util.ArrayList;
 import java.util.Map;
-import javax.annotation.PostConstruct;
+
+import com.ftseoul.visitor.exception.ErrorResponse;
+import com.ftseoul.visitor.exception.error.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class FrontErrorController {
 
     @PostMapping("/front-err")
-    public ResponseEntity<FrontErrorResponseDto> logFrontError
-        (@RequestBody Map<String, Object> frontError) throws Exception{
+    public ResponseEntity<ErrorResponse> logFrontError(@RequestBody Map<String, Object> frontError) throws Exception{
         ObjectMapper objectMapper = new ObjectMapper();
         log.info("Front error: {}", objectMapper.writeValueAsString(frontError));
-        return new ResponseEntity<>(new FrontErrorResponseDto("2000", "성공"), HttpStatus.OK);
+        ErrorResponse response = ErrorResponse.of(ErrorCode.FRONT_ERRLOG_RECIEVE,new ArrayList<>());
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

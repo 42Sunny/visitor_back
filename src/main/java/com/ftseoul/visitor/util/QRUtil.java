@@ -1,7 +1,7 @@
 package com.ftseoul.visitor.util;
 
-import com.ftseoul.visitor.exception.InvalidDateException;
-import com.ftseoul.visitor.exception.InvalidQRCodeException;
+import com.ftseoul.visitor.exception.error.InvalidDateException;
+import com.ftseoul.visitor.exception.error.InvalidQRCodeException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;

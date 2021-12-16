@@ -14,7 +14,7 @@ import com.ftseoul.visitor.dto.reserve.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
 import com.ftseoul.visitor.encrypt.Seed;
-import com.ftseoul.visitor.exception.PhoneDuplicatedException;
+import com.ftseoul.visitor.exception.error.PhoneDuplicatedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

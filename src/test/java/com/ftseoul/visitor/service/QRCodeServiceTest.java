@@ -8,10 +8,9 @@ import com.ftseoul.visitor.data.Staff;
 import com.ftseoul.visitor.data.StaffRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
-import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.dto.qrcode.QRCheckResponseDto;
 import com.ftseoul.visitor.encrypt.Seed;
-import com.ftseoul.visitor.exception.InvalidQRCodeException;
+
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

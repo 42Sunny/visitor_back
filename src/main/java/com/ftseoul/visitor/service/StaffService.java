@@ -8,7 +8,7 @@ import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
 import com.ftseoul.visitor.dto.staff.StaffModifyDto;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
-import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
 import com.ftseoul.visitor.util.Constants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

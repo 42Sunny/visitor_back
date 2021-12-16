@@ -1,6 +1,5 @@
-package com.ftseoul.visitor.exception;
+package com.ftseoul.visitor.exception.error;
 
-import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.util.MDCUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;

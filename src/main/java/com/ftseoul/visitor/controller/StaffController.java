@@ -1,13 +1,12 @@
 package com.ftseoul.visitor.controller;
 
-import com.ftseoul.visitor.dto.error.ErrorResponseDto;
 import com.ftseoul.visitor.dto.staff.AddStaffRequestDto;
-import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
 import com.ftseoul.visitor.dto.staff.StaffDeleteDto;
 import com.ftseoul.visitor.dto.staff.StaffModifyDto;
 import com.ftseoul.visitor.dto.staff.StaffNameDto;
 import com.ftseoul.visitor.dto.payload.Response;
-import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
+import com.ftseoul.visitor.exception.error.WAuthUnAuthorizedException;
 import com.ftseoul.visitor.filter.WAuthFilter;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.StaffService;
@@ -26,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -41,7 +38,7 @@ public class StaffController {
     public boolean addStaff(@RequestBody AddStaffRequestDto requestDto,
                             HttpServletRequest httpServletRequest) {
         if (!wAuthFilter.isAuthorized(httpServletRequest)) {
-            return false;
+            throw new WAuthUnAuthorizedException();
         }
         log.info("Add Staff: " + requestDto);
         staffService.saveStaff(requestDto);
@@ -51,8 +48,7 @@ public class StaffController {
     @GetMapping("/admin/staff")
     public ResponseEntity<?> getAllStaff(HttpServletRequest httpServletRequest) {
         if (!wAuthFilter.isAuthorized(httpServletRequest)) {
-            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
-                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+            throw new WAuthUnAuthorizedException();
         }
         return ResponseEntity.ok(staffService.findAllStaff());
     }
@@ -61,8 +57,7 @@ public class StaffController {
     public ResponseEntity<?> updateStaff(@RequestBody StaffModifyDto staffModifyDto,
                                          HttpServletRequest httpServletRequest) {
         if (!wAuthFilter.isAuthorized(httpServletRequest)) {
-            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
-                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+            throw new WAuthUnAuthorizedException();
         }
         Response response = staffService.modifyStaff(staffModifyDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -73,8 +68,7 @@ public class StaffController {
     public ResponseEntity<?> deleteStaff(@RequestBody StaffDeleteDto dto,
                                          HttpServletRequest httpServletRequest) {
         if (!wAuthFilter.isAuthorized(httpServletRequest)) {
-            return new ResponseEntity<>(new ErrorResponseDto(new Response("4040",
-                    "허가되지 않은 요청입니다.")), HttpStatus.OK);
+            throw new WAuthUnAuthorizedException();
         }
         Response response = staffService.deleteStaffById(dto.getStaffId());
         reserveService.deleteAllByStaffId(dto.getStaffId());

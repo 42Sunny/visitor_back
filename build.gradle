@@ -1,17 +1,17 @@
 buildscript {
 	ext {
-		queryDslVersion = "4.4.0"
+		queryDslVersion = "5.0.0"
 	}
 }
 
 plugins {
-	id 'org.springframework.boot' version '2.4.4'
+	id 'org.springframework.boot' version '2.6.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
 
 group = 'com.ftseoul'
-version = '1.0.0'
+version = '1.1.0'
 sourceCompatibility = '11'
 
 configurations {
@@ -45,10 +45,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testCompileOnly 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
-	implementation 'io.springfox:springfox-swagger2:3.0.0'
 
 	implementation group: 'net.gpedro.integrations.slack', name: 'slack-webhook', version: '1.4.0'
+
+//spring-cloud-config
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config:2.1.0.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.0'
+
 
 //	QueryDSL
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"

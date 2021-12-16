@@ -13,7 +13,7 @@ import com.ftseoul.visitor.dto.visitor.VisitorInfoDecryptDto;
 import com.ftseoul.visitor.dto.payload.VisitorStatusInfo;
 import com.ftseoul.visitor.dto.visitor.projection.CheckInVisitorDecrypt;
 import com.ftseoul.visitor.encrypt.Seed;
-import com.ftseoul.visitor.exception.ResourceNotFoundException;
+import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
