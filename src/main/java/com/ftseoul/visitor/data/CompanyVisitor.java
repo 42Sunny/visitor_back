@@ -30,7 +30,7 @@ public class CompanyVisitor {
     @Column(length = 4, nullable = false)
     private String place;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT (CURRENT_TIMESTAMP())")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP()")
     private LocalDateTime checkInTime;
 
     @Column
