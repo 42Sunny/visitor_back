@@ -3,6 +3,7 @@ package com.ftseoul.visitor.service.sns;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.sns.model.PublishResponse;
 
 @Slf4j
 @Service
+@RefreshScope
 public class AWSMessageService implements SMSService {
     @Value("${aws.accessKey}")
     private String awsAccessKey;

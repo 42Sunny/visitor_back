@@ -3,6 +3,7 @@ package com.ftseoul.visitor.filter;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
+@RefreshScope
 public class WAuthFilter {
 
     RestTemplate restTemplate = new RestTemplate();

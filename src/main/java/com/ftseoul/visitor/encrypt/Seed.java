@@ -3,6 +3,7 @@ package com.ftseoul.visitor.encrypt;
 import com.ftseoul.visitor.config.EncryptConfig;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.SerializationUtils;
@@ -11,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Component
+@RefreshScope
 public class Seed {
 
     @Value("${encrypt.seed}")
