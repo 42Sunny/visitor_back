@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.data;
 
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
+import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,5 +52,16 @@ public class CompanyVisitor {
         this.status = VisitorStatus.퇴실;
         this.checkOutTime = LocalDateTime.now();
         return this;
+    }
+
+    public CompanyVisitorResponseDto companyVisitorResponseDto(String companyName) {
+        return CompanyVisitorResponseDto.builder()
+                .id(this.id)
+                .companyName(companyName)
+                .name(this.name)
+                .place(this.place)
+                .checkIn(this.checkInTime)
+                .checkOut(this.checkOutTime)
+                .build();
     }
 }
