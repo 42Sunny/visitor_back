@@ -6,6 +6,7 @@ import com.ftseoul.visitor.data.CompanyVisitor;
 import com.ftseoul.visitor.data.CompanyVisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorRequestDto;
+import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorResponseDto;
 import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorSearchDto;
 import com.ftseoul.visitor.exception.error.CompanyNotFoundException;
 import com.ftseoul.visitor.exception.error.CompanyVisitorNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,12 +26,19 @@ public class CompanyVisitorService {
     private final CompanyVisitorRepository companyVisitorRepository;
     private final CompanyRepository companyRepository;
 
-    public List<CompanyVisitor> findAllVisitorByDate(CompanyVisitorSearchDto companyVisitorSearchDto) {
+    public List<CompanyVisitorResponseDto> findAllVisitorByDate(CompanyVisitorSearchDto companyVisitorSearchDto) {
         return companyVisitorRepository.findAllByCheckInTimeBetween(
                 companyVisitorSearchDto.getStart().atStartOfDay(),
                 companyVisitorSearchDto.getEnd().atTime(23, 59, 59),
                 companyVisitorSearchDto.getPage()
-        ).getContent();
+        ).getContent()
+                .stream().map(
+                        companyVisitor -> {
+                            Company company = companyRepository.findById(companyVisitor.getCompanyId())
+                                    .orElseThrow(CompanyNotFoundException::new);
+                            return companyVisitor.companyVisitorResponseDto(company.getName());
+                        }
+                ).collect(Collectors.toList());
     }
 
     public CompanyVisitor saveCompanyVisitor(CompanyVisitorRequestDto companyVisitorRequestDto) {
