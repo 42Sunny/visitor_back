@@ -46,4 +46,10 @@ public class CompanyVisitor {
         this.checkInTime = checkInTime;
         this.checkOutTime = checkOutTime;
     }
+
+    public CompanyVisitor checkOut() {
+        this.status = VisitorStatus.퇴실;
+        this.checkOutTime = LocalDateTime.now();
+        return this;
+    }
 }

@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.data;
 
+import com.ftseoul.visitor.dto.company.CompanyResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +22,13 @@ public class Company {
     @Column(length = 200, nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
     private Boolean isDeleted = false;
+
+    public Company LogicalDelete() {
+        this.isDeleted = true;
+        return this;
+    }
 
     @Builder
     public Company(Long id, String name, String phone, Boolean isDeleted) {
@@ -30,5 +36,13 @@ public class Company {
         this.name = name;
         this.phone = phone;
         this.isDeleted = isDeleted;
+    }
+
+    public CompanyResponseDto companyResponseDto() {
+        return CompanyResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .phone(this.phone)
+                .build();
     }
 }
