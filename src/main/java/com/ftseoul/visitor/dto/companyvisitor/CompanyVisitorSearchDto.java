@@ -6,14 +6,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
 public class CompanyVisitorSearchDto implements Serializable{
 
+    @NotNull(message = "검색 시작 일자를 입력해주세요.")
     private LocalDate start;
+    @NotNull(message = "검색 종료 일자를 입력해주세요")
     private LocalDate end;
+    @NotNull(message = "페이징을 입력해주세요")
     private Pagination pagination;
 
     public Pageable getPage() {
