@@ -30,6 +30,11 @@ public class Company {
         return this;
     }
 
+    public Company LogicalSave() {
+        this.isDeleted = false;
+        return this;
+    }
+
     @Builder
     public Company(Long id, String name, String phone, Boolean isDeleted) {
         this.id = id;
