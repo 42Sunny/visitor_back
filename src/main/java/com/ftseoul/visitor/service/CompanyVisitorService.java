@@ -8,8 +8,7 @@ import com.ftseoul.visitor.data.visitor.VisitorStatus;
 import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorRequestDto;
 import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorResponseDto;
 import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorSearchDto;
-import com.ftseoul.visitor.exception.error.CompanyNotFoundException;
-import com.ftseoul.visitor.exception.error.CompanyVisitorNotFoundException;
+import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class CompanyVisitorService {
                 .stream().map(
                         companyVisitor -> {
                             Company company = companyRepository.findById(companyVisitor.getCompanyId())
-                                    .orElseThrow(CompanyNotFoundException::new);
+                                    .orElseThrow(() -> new ResourceNotFoundException("Company", "id", companyVisitor.getCompanyId()));
                             return companyVisitor.companyVisitorResponseDto(company.getName());
                         }
                 ).collect(Collectors.toList());
@@ -43,7 +42,7 @@ public class CompanyVisitorService {
 
     public CompanyVisitor saveCompanyVisitor(CompanyVisitorRequestDto companyVisitorRequestDto) {
         Company company = companyRepository.findById(companyVisitorRequestDto.getCompanyId())
-                .orElseThrow(CompanyNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException("Company", "id", companyVisitorRequestDto.getCompanyId()));
         return companyVisitorRepository.save(
                 CompanyVisitor.builder()
                         .companyId(companyVisitorRequestDto.getCompanyId())
@@ -58,7 +57,7 @@ public class CompanyVisitorService {
     public Void checkOutCompanyVisitor(Long visitorId) {
         companyVisitorRepository.save(
                 companyVisitorRepository.findById(visitorId)
-                        .orElseThrow(CompanyVisitorNotFoundException::new)
+                        .orElseThrow(() -> new ResourceNotFoundException("CompanyVisitor", "id", visitorId))
                         .checkOut()
         );
         return null;
