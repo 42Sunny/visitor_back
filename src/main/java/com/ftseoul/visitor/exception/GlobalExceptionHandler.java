@@ -74,20 +74,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(CompanyNotFoundException.class)
-    protected ResponseEntity<ErrorResponse> companyNotFoundException(CompanyNotFoundException e) {
-        log.error("존재하지 않는 회사입니다.");
-        ErrorResponse response = ErrorResponse.of(ErrorCode.RESOURCE_NOT_FOUND, new ArrayList<>());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(CompanyVisitorNotFoundException.class)
-    protected ResponseEntity<ErrorResponse> companyVisitorNotFoundException(CompanyVisitorNotFoundException e) {
-        log.error("존재하지 않는 방문 업체 직원입니다.");
-        ErrorResponse response = ErrorResponse.of(ErrorCode.RESOURCE_NOT_FOUND, new ArrayList<>());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
         log.error("서버내부 오류입니다. 에러의 내용은 다음과 같습니다. 에러 내용 : {}",e.getMessage());

@@ -4,7 +4,7 @@ import com.ftseoul.visitor.data.Company;
 import com.ftseoul.visitor.data.CompanyRepository;
 import com.ftseoul.visitor.dto.company.CompanyRequestDto;
 import com.ftseoul.visitor.dto.company.CompanyResponseDto;
-import com.ftseoul.visitor.exception.error.CompanyNotFoundException;
+import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class CompanyService {
     public Void deleteCompany(Long companyId) {
         companyRepository.save(
                 companyRepository.findById(companyId)
-                        .orElseThrow(CompanyNotFoundException::new)
+                        .orElseThrow(() -> new ResourceNotFoundException("Company", "id", companyId))
                         .LogicalDelete()
         );
         return null;
