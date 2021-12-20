@@ -3,11 +3,12 @@ package com.ftseoul.visitor.dto.companyvisitor;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
 public class CompanyVisitorRequestDto implements Serializable {
-    @NotBlank(message = "companyId를 입력해주세요.")
+    @NotNull(message = "companyId를 입력해주세요.")
     private Long companyId;
     @NotBlank(message = "이름을 입력해주세요")
     private String visitorName;
