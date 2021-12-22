@@ -19,25 +19,4 @@ public class CompanyResponseDto implements Serializable {
         this.name = name;
         this.phone = phone;
     }
-
-    @Deprecated
-    public static List<CompanyResponseDto> mockCompanyList() {
-        return List.of(
-                CompanyResponseDto.builder()
-                        .id(1L)
-                        .name("웅진")
-                        .phone("010-1234-5678")
-                        .build(),
-                CompanyResponseDto.builder()
-                        .id(2L)
-                        .name("LG")
-                        .phone("010-4321-8765")
-                        .build(),
-                CompanyResponseDto.builder()
-                        .id(3L)
-                        .name("Apple")
-                        .phone("010-1234-5678")
-                        .build()
-                );
-    }
 }
