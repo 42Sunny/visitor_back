@@ -27,12 +27,14 @@ public class CompanyService {
     }
 
     public Company saveCompany(CompanyRequestDto companyRequestDto) {
-        return companyRepository.save(Company.builder()
-                .name(companyRequestDto.getName())
-                .phone(companyRequestDto.getPhone())
-                .isDeleted(false)
-                .build()
-        );
+        return companyRepository.findByName(companyRequestDto.getName())
+                .map(company -> companyRepository.save(company.LogicalSave()))
+                .orElseGet(() -> companyRepository.save(Company.builder()
+                        .name(companyRequestDto.getName())
+                        .phone(companyRequestDto.getPhone())
+                        .isDeleted(false)
+                        .build()
+                ));
     }
 
     public Void deleteCompany(Long companyId) {
