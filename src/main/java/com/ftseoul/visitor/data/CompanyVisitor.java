@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.data;
 
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
+import com.ftseoul.visitor.dto.companyvisitor.CompanyVisitorResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class CompanyVisitor {
     @Column(length = 4, nullable = false)
     private String place;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT (CURRENT_TIMESTAMP())")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP()")
     private LocalDateTime checkInTime;
 
     @Column
@@ -45,5 +46,22 @@ public class CompanyVisitor {
         this.place = place;
         this.checkInTime = checkInTime;
         this.checkOutTime = checkOutTime;
+    }
+
+    public CompanyVisitor checkOut() {
+        this.status = VisitorStatus.퇴실;
+        this.checkOutTime = LocalDateTime.now();
+        return this;
+    }
+
+    public CompanyVisitorResponseDto companyVisitorResponseDto(String companyName) {
+        return CompanyVisitorResponseDto.builder()
+                .id(this.id)
+                .companyName(companyName)
+                .name(this.name)
+                .place(this.place)
+                .checkIn(this.checkInTime)
+                .checkOut(this.checkOutTime)
+                .build();
     }
 }

@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         webSocketService.sendMessageToSubscriber("/visitor", e.getMessage());
         log.warn("예약 날짜가 오늘이 아닙니다. 예약 날짜 : {}", e.getDate());
         ErrorResponse response = ErrorResponse.of(ErrorCode.UNAUTHORIZED_CODE,new ArrayList<>());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ExceptionHandler(InvalidQRCodeException.class)
