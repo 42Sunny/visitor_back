@@ -4,8 +4,10 @@ import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.encrypt.Seed;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class VisitorDecryptDto {
     private Long reserveId;
 

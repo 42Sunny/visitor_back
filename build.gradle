@@ -61,6 +61,9 @@ dependencies {
 			"javax.annotation:javax.annotation-api",
 			"com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
 
+
+	implementation 'org.mockito:mockito-core'
+
 }
 
 // QueryDSL
