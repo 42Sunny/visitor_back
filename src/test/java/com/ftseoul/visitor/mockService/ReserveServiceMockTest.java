@@ -28,7 +28,6 @@ import static org.mockito.Mockito.*;
 
 public class ReserveServiceMockTest extends MockReserveBaseTest{
 
-
     @DisplayName("단순예약_성공테스트")
     @Test
     void reserveSuccessTest(){
