@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.encrypt;
 
 import com.ftseoul.visitor.config.EncryptConfig;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -13,6 +14,7 @@ import java.util.Base64;
 
 @Component
 @RefreshScope
+@NoArgsConstructor
 public class Seed {
 
     @Value("${encrypt.seed}")

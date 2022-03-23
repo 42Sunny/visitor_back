@@ -72,6 +72,13 @@ public class ReserveController {
         return reserveService.visitorReserveDelete(reserve_id, deleteRequestDto);
     }
 
+    /**
+     * reserve service에서 예약 정보 변경
+     * visitor service에서 예약되어있는 인원 변경사항을 적용
+     *
+     * @param reserveModifyDto
+     * @return true(수정 성공시)
+     */
     @PutMapping("/reserve")
     @Transactional
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
