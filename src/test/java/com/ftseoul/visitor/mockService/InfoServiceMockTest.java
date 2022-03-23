@@ -1,5 +1,6 @@
 package com.ftseoul.visitor.mockService;
 
+<<<<<<< HEAD
 
 import com.ftseoul.visitor.data.QueryRepository;
 import com.ftseoul.visitor.data.ReserveRepository;
@@ -52,4 +53,8 @@ public class InfoServiceMockTest {
                 .build();
 
     }
+=======
+public class InfoServiceMockTest {
+
+>>>>>>> 10956da (Test ReserveMockTest 완료 #VSTR-134)
 }

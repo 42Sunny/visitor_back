@@ -6,6 +6,7 @@ import com.ftseoul.visitor.data.*;
 import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.dto.reserve.*;
 import com.ftseoul.visitor.dto.staff.StaffDecryptDto;
+<<<<<<< HEAD
 import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
 import com.ftseoul.visitor.exception.error.PhoneDuplicatedException;
@@ -17,6 +18,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 
+=======
+import com.ftseoul.visitor.dto.visitor.VisitorDecryptDto;
+import com.ftseoul.visitor.dto.visitor.VisitorDto;
+import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
+import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.exception.error.PhoneDuplicatedException;
+import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
+import com.ftseoul.visitor.service.ReserveService;
+import com.ftseoul.visitor.service.StaffService;
+import com.ftseoul.visitor.websocket.WebSocketService;
+import org.apache.tomcat.jni.Local;
+import org.aspectj.lang.annotation.Before;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.nio.charset.StandardCharsets;
+>>>>>>> 10956da (Test ReserveMockTest 완료 #VSTR-134)
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +55,71 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
+<<<<<<< HEAD
 public class ReserveServiceMockTest extends MockReserveBaseTest{
+=======
+@ExtendWith({MockitoExtension.class})
+public class ReserveServiceMockTest {
+
+
+    @Mock
+    private ReserveRepository reserveRepository;
+
+    @InjectMocks
+    private ReserveService reserveService;
+
+    @Mock
+    private VisitorRepository visitorRepository;
+
+    @Mock
+    private StaffRepository staffRepository;
+
+    @Mock
+    private StaffService staffService;
+
+    @Mock
+    private WebSocketService webSocketService;
+
+    private Reserve reserve;
+    private Staff staff;
+    private Visitor visitor;
+
+
+
+    @Spy
+    Seed seed;
+
+
+    @BeforeEach
+    void init(){
+        ReflectionTestUtils.setField(seed, "key", "visitorcrypt$#@!");
+        ReflectionTestUtils.setField(seed, "IV", "visitor987654321");
+
+        reserve = Reserve
+                .builder()
+                .targetStaff(1L)
+                .purpose("방문")
+                .date(LocalDateTime.now())
+                .place("개포")
+                .build();
+        staff = Staff
+                .builder()
+                .name(seed.encrypt("abcde"))
+                .phone(seed.encrypt("01012345678"))
+                .department("시설관리")
+                .build();
+
+        ReflectionTestUtils.setField(reserve, "id", 1L);
+        ReflectionTestUtils.setField(staff, "id", 1L);
+
+        visitor = Visitor.builder()
+                .name(seed.encrypt("지울이름"))
+                .reserve_id(1L)
+                .phone(seed.encrypt("01055555555"))
+                .organization("이노베이션아카데미")
+                .build();
+    }
+>>>>>>> 10956da (Test ReserveMockTest 완료 #VSTR-134)
 
     @DisplayName("단순예약_성공테스트")
     @Test
@@ -56,10 +149,18 @@ public class ReserveServiceMockTest extends MockReserveBaseTest{
 
         //given
         List<Visitor> visitors = new ArrayList<>();
+<<<<<<< HEAD
         visitors.add(visitor);
         StaffDecryptDto staffDecryptDto = new StaffDecryptDto(1L, "abcde", "01012345678","시설관리");
 
         //when
+=======
+        visitors.add(new Visitor());
+        StaffDecryptDto staffDecryptDto = new StaffDecryptDto(1L, "abcde", "01012345678","시설관리");
+
+        //when
+//        doReturn(reserve).when(reserveRepository).save(any(Reserve.class));
+>>>>>>> 10956da (Test ReserveMockTest 완료 #VSTR-134)
         doReturn(Optional.of(reserve)).when(reserveRepository).findById(any());
         doReturn(visitors).when(visitorRepository).findAllByReserveId(any());
         doReturn(Optional.of(staff)).when(staffRepository).findById(any());
@@ -211,7 +312,11 @@ public class ReserveServiceMockTest extends MockReserveBaseTest{
         //given
         doReturn(visitors).when(visitorRepository).findAllByReserveId(1L);
         doNothing().when(reserveRepository).delete(any());
+<<<<<<< HEAD
         doReturn(Optional.of(reserve)).when(reserveRepository).findById(1L);;
+=======
+        doReturn(Optional.of(reserve)).when(reserveRepository).findById(1L);
+>>>>>>> 10956da (Test ReserveMockTest 완료 #VSTR-134)
         /**
          *
          */
