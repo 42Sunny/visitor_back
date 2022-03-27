@@ -1,6 +1,5 @@
 package com.ftseoul.visitor.mockService;
 
-<<<<<<< HEAD
 
 import com.ftseoul.visitor.data.QueryRepository;
 import com.ftseoul.visitor.data.ReserveRepository;
@@ -39,7 +38,7 @@ public class InfoServiceMockTest {
     Seed seed;
 
     @BeforeEach
-    void init(){
+    void init() {
         ReflectionTestUtils.setField(seed, "key", "visitorcrypt$#@!");
         ReflectionTestUtils.setField(seed, "IV", "visitor987654321");
         ReflectionTestUtils.setField(seed, "pbszUserKey", "visitor987654321".getBytes(StandardCharsets.UTF_8));
@@ -53,8 +52,4 @@ public class InfoServiceMockTest {
                 .build();
 
     }
-=======
-public class InfoServiceMockTest {
-
->>>>>>> 10956da (Test ReserveMockTest 완료 #VSTR-134)
 }
