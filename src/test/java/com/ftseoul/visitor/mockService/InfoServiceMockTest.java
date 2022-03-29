@@ -18,38 +18,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.lang.ref.Reference;
 import java.nio.charset.StandardCharsets;
 
-@ExtendWith(MockitoExtension.class)
-public class InfoServiceMockTest {
+
+public class InfoServiceMockTest extends MockInfoBaseTest{
 
 
-    @InjectMocks
-    private InfoService infoService;
 
-    @Mock
-    private ReserveRepository reserveRepository;
 
-    @Mock
-    private VisitorRepository visitorRepository;
-
-    @Mock
-    private QueryRepository queryRepository;
-
-    @Spy
-    Seed seed;
-
-    @BeforeEach
-    void init() {
-        ReflectionTestUtils.setField(seed, "key", "visitorcrypt$#@!");
-        ReflectionTestUtils.setField(seed, "IV", "visitor987654321");
-        ReflectionTestUtils.setField(seed, "pbszUserKey", "visitor987654321".getBytes(StandardCharsets.UTF_8));
-        ReflectionTestUtils.setField(seed, "pbszIV", "visitor987654321".getBytes(StandardCharsets.UTF_8));
-
-        Staff staff = Staff
-                .builder()
-                .name(seed.encrypt("abcde"))
-                .phone(seed.encrypt("01012345678"))
-                .department("시설관리")
-                .build();
-
-    }
 }
