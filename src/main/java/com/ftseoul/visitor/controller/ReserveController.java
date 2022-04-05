@@ -98,7 +98,9 @@ public class ReserveController {
         List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
         ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
 
-        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
+        visitorShortUrls.forEach(v -> smsService
+                .sendMessage(v.getId(),
+                        visitorService.createSMSMessage(v.getValue())));
         smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(visitors, staffShortUrl.getValue()));
         log.info("Send text messages to visitors and staff");
 

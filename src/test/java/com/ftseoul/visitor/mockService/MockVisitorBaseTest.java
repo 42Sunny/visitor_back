@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.mockService;
 
 import com.ftseoul.visitor.data.*;
+import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.service.VisitorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import javax.persistence.MapKeyColumn;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class MockVisitorBaseTest {
@@ -36,6 +36,7 @@ public class MockVisitorBaseTest {
 
     protected Staff staff;
     protected Reserve reserve;
+
     @BeforeEach
     void init(){
         ReflectionTestUtils.setField(seed, "key", "visitorcrypt$#@!");
@@ -58,5 +59,6 @@ public class MockVisitorBaseTest {
                 .place("개포")
                 .build();
         ReflectionTestUtils.setField(reserve, "id", 1L);
+
     }
 }
