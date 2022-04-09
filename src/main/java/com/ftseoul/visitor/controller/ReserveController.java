@@ -72,6 +72,13 @@ public class ReserveController {
         return reserveService.visitorReserveDelete(reserve_id, deleteRequestDto);
     }
 
+    /**
+     * reserve service에서 예약 정보 변경
+     * visitor service에서 예약되어있는 인원 변경사항을 적용
+     *
+     * @param reserveModifyDto
+     * @return true(수정 성공시)
+     */
     @PutMapping("/reserve")
     @Transactional
     public boolean reserveUpdate(@Valid @RequestBody ReserveModifyDto reserveModifyDto) {
@@ -91,7 +98,9 @@ public class ReserveController {
         List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
         ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
 
-        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
+        visitorShortUrls.forEach(v -> smsService
+                .sendMessage(v.getId(),
+                        visitorService.createSMSMessage(v.getValue())));
         smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createModifySMSMessage(visitors, staffShortUrl.getValue()));
         log.info("Send text messages to visitors and staff");
 
