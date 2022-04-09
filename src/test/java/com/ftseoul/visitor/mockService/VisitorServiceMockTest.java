@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
@@ -81,7 +82,7 @@ public class VisitorServiceMockTest extends MockVisitorBaseTest {
         visitors.add(v1);
         visitors.add(v2);
         visitors.add(v3);
-        
+
         long result = visitors.stream()
                 .filter(v -> v.isChanged())
                 .count();
@@ -91,8 +92,18 @@ public class VisitorServiceMockTest extends MockVisitorBaseTest {
                 LocalDateTime.now(), visitors);
 
         //when
-        doReturn()
+        doNothing().when(visitorRepository).updateDeletedVisitors(any(), any());
+        doReturn(visitors.stream()
+                .filter(VisitorModifyDto::isChanged)
+                .collect(Collectors.toList())).when(visitorRepository).saveAll(any());
+        final List<Visitor> changeVisitors = this.visitorService.updateVisitors(request);
 
         //then
+        Assertions.assertThat(result).isEqualTo(changeVisitors.size());
+
+        //verify
+        verify(visitorRepository, times(1)).updateDeletedVisitors(any(), any());
+        verify(visitorRepository, times(1)).saveAll(any());
     }
+
 }
