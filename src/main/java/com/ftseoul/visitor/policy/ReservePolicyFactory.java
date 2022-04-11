@@ -12,7 +12,7 @@ public class ReservePolicyFactory {
 
     public ReservePolicyFactory(List<ReservePolicy> reservePolicyList) {
         if (reservePolicyList.isEmpty()){
-            throw new IllegalArgumentException("대표 ");
+            throw new IllegalArgumentException("대표");
         }
         for (ReservePolicy reservePolicy : reservePolicyList){
             reservePolicyHashMap.put(reservePolicy.getType(), reservePolicy);
