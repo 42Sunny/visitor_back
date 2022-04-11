@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @Slf4j
-public class ReserveService {
+public class ReserveService{
 
     private final ReserveRepository reserveRepository;
     private final VisitorRepository visitorRepository;
@@ -40,6 +40,7 @@ public class ReserveService {
     private final Seed seed;
     private final WebSocketService socketService;
 
+    
     public ReserveListResponseDto findById(Long id) {
         Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
@@ -60,7 +61,7 @@ public class ReserveService {
                 .visitor(visitor)
                 .build();
     }
-
+    
     public List<ReserveListResponseDto> findReservesByNameAndPhone(ReserveRequestDto requestDto) {
         log.info("Search reserve lists by name and phone\nname: {}, phone: {}", seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
@@ -90,6 +91,7 @@ public class ReserveService {
         return response;
     }
 
+
     private boolean deleteVisitorInList(List<Visitor> list, ReserveRequestDto requestDto) {
         Optional<Visitor> toDeleteVisitor = list.stream().filter( visitor ->
                 (visitor.getName().equals(seed.encrypt(requestDto.getName())))
@@ -104,6 +106,7 @@ public class ReserveService {
         return true;
     }
 
+    
     public boolean visitorReserveDelete(Long reserveId, ReserveRequestDto requestDto) {
         log.info("Delete Reserve Id: {}", reserveId);
         log.info("Delete Visitors: {}", requestDto);
@@ -127,6 +130,7 @@ public class ReserveService {
         return result;
     }
 
+    
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto, long staffId){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
         Reserve reserve = reserveRepository.save(Reserve.builder()
@@ -139,6 +143,7 @@ public class ReserveService {
         return reserve;
     }
 
+    
     public Reserve updateReserve(ReserveModifyDto reserveModifyDto, long staffId) {
         Reserve reserve = reserveRepository
             .findById(reserveModifyDto.getReserveId())
@@ -150,6 +155,7 @@ public class ReserveService {
         return reserve;
     }
 
+    
     public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {
         log.info("Check phone Duplication");
         Set<String> phones = new HashSet<>();
@@ -162,6 +168,7 @@ public class ReserveService {
         }
     }
 
+    
     public Response deleteById(Long id) {
         Optional<Reserve> reserve = reserveRepository.findById(id);
         if (reserve.isEmpty()) {
@@ -173,6 +180,7 @@ public class ReserveService {
         return new Response("2000", "예약이 삭제되었습니다");
     }
 
+    
     public void deleteAllByStaffId(Long id) {
         log.info("스태프 id: {}에 해당하는 예약 및 방문객 정보들을 삭제합니다", id);
         List<Reserve> reserveList = reserveRepository.findAllByTargetStaff(id);
@@ -185,6 +193,7 @@ public class ReserveService {
         }
     }
 
+    
     public Long findStaffByReserveId(Long reserveId) {
         Optional<Reserve> reserve = reserveRepository.findById(reserveId);
         return reserve.get().getTargetStaff();
