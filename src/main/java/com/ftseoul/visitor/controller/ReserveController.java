@@ -12,6 +12,8 @@ import com.ftseoul.visitor.dto.reserve.ReserveVisitorDto;
 import com.ftseoul.visitor.dto.shorturl.ShortUrlResponseDto;
 import com.ftseoul.visitor.dto.staff.StaffReserveDto;
 import com.ftseoul.visitor.encrypt.Seed;
+import com.ftseoul.visitor.policy.ReservePolicy;
+import com.ftseoul.visitor.policy.ReservePolicyFactory;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.ShortUrlService;
 import com.ftseoul.visitor.service.StaffService;
@@ -41,6 +43,7 @@ public class ReserveController {
     private final WebSocketService socketService;
     private final VisitorService visitorService;
     private final Seed seed;
+    private final ReservePolicyFactory reservePolicyFactory;
 
     @GetMapping("/reserve/{id}")
     public ReserveListResponseDto findById(@PathVariable Long id) {
@@ -109,29 +112,37 @@ public class ReserveController {
         return true;
     }
 
+//    @PostMapping(value = "/reserve/create")
+//    @Transactional
+//    public ResponseEntity<ReserveIdDto> saveReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
+//        reserveVisitorDto = reserveVisitorDto.encryptDto(seed);
+//        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
+//        log.info("staff found: {}", staff);
+//        Reserve reserve = reserveService.saveReserve(reserveVisitorDto, staff.getId());
+//        List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
+//
+//        StaffReserveDto staffReserveInfo = new StaffReserveDto(reserve.getId(), staff.getPhone(),
+//            reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
+//            visitors);
+//
+//        List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
+//        List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
+//        ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
+//
+//        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
+//        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createSaveSMSMessage(visitors, reserve.getDate(), staffShortUrl.getValue()));
+//        log.info("Send message to Staff and Visitors");
+//
+//        socketService.sendMessageToSubscriber("/visitor",
+//            "예약번호 :" + reserve.getId() + " 새로운 예약이 신청됐습니다");
+//        return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
+//    }
+
     @PostMapping(value = "/reserve/create")
     @Transactional
     public ResponseEntity<ReserveIdDto> saveReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
-        reserveVisitorDto = reserveVisitorDto.encryptDto(seed);
-        Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
-        log.info("staff found: {}", staff);
-        Reserve reserve = reserveService.saveReserve(reserveVisitorDto, staff.getId());
-        List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
-
-        StaffReserveDto staffReserveInfo = new StaffReserveDto(reserve.getId(), staff.getPhone(),
-            reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
-            visitors);
-
-        List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
-        List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
-        ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
-
-        visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
-        smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createSaveSMSMessage(visitors, reserve.getDate(), staffShortUrl.getValue()));
-        log.info("Send message to Staff and Visitors");
-
-        socketService.sendMessageToSubscriber("/visitor",
-            "예약번호 :" + reserve.getId() + " 새로운 예약이 신청됐습니다");
+        ReservePolicy reservePolicy = reservePolicyFactory.getPolicy(reserveVisitorDto.getRepresentative());
+        Reserve reserve = reservePolicy.saveReserve(reserveVisitorDto);
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }
 }
