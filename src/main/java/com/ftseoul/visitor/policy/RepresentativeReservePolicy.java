@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,16 +43,24 @@ public class RepresentativeReservePolicy implements ReservePolicy{
         reserveVisitorDto = reserveVisitorDto.encryptDto(seed);
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         log.info("staff found: {}", staff);
-        Reserve reserve = reserveService.saveReserve(reserveVisitorDto, staff.getId());
+        Reserve reserve = reserveService.saveReserveWithoutCheckDup(reserveVisitorDto, staff.getId());
         List<Visitor> visitors = visitorService.saveVisitors(reserve.getId(), reserveVisitorDto.getVisitor());
 
         StaffReserveDto staffReserveInfo = new StaffReserveDto(reserve.getId(), staff.getPhone(),
                 reserveVisitorDto.getPurpose(), reserveVisitorDto.getPlace(), reserveVisitorDto.getDate(),
                 visitors);
 
+        /**
+         * 더미 번호가 입력된 방문자 제거
+         */
+        visitors = visitors.stream()
+                .filter(visitor -> !visitor.getPhone().equals("00000000000"))
+                .collect(Collectors.toList());
+
         List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
         List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
         ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
+
 
         visitorShortUrls.forEach(v -> smsService.sendMessage(v.getId(),visitorService.createSMSMessage(v.getValue())));
         smsService.sendMessage(seed.decrypt(staff.getPhone()), staffService.createSaveSMSMessage(visitors, reserve.getDate(), staffShortUrl.getValue()));

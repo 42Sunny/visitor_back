@@ -17,7 +17,7 @@ public class ReservePolicyTest {
     @DisplayName("예약_서비스_팩토리_테스트")
     void policyFactoryTest(){
         //given
-        ReserveType defaultType = ReserveType.NO_REPRESENTATIVE;
+        ReserveType defaultType = ReserveType.DEFAULT;
         ReserveType representativeType = ReserveType.REPRESENTATIVE;
 
         //when

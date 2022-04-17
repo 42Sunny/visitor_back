@@ -143,6 +143,16 @@ public class ReserveService{
         return reserve;
     }
 
+    public Reserve saveReserveWithoutCheckDup(ReserveVisitorDto reserveVisitorDto, long staffId){
+        Reserve reserve = reserveRepository.save(Reserve.builder()
+                .targetStaff(staffId)
+                .place(reserveVisitorDto.getPlace())
+                .purpose(reserveVisitorDto.getPurpose())
+                .date(reserveVisitorDto.getDate())
+                .build());
+        log.info("Reserve Saved: {}", reserve);
+        return reserve;
+    }
     
     public Reserve updateReserve(ReserveModifyDto reserveModifyDto, long staffId) {
         Reserve reserve = reserveRepository

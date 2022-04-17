@@ -34,7 +34,7 @@ public class DefaultReservePolicy implements ReservePolicy {
 
     @Override
     public ReserveType getType() {
-        return ReserveType.NO_REPRESENTATIVE;
+        return ReserveType.DEFAULT;
     }
 
     @Override
