@@ -1,6 +1,7 @@
 package com.ftseoul.visitor.service;
 
 import com.ftseoul.visitor.data.DeviceRepository;
+import com.ftseoul.visitor.data.ReserveRepository;
 import com.ftseoul.visitor.data.Visitor;
 import com.ftseoul.visitor.data.VisitorRepository;
 import com.ftseoul.visitor.data.visitor.VisitorStatus;
@@ -14,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class QRcodeService {
     private final DeviceRepository deviceRepository;
     private final WebSocketService socketService;
     private final Seed seed;
+    private final ReserveRepository reserveRepository;
 
     public String decodeQRText(String text) {
         String result;
@@ -46,6 +51,11 @@ public class QRcodeService {
         String visitorName = seed.decrypt(visitor.getName());
         String message = visitorName + "님이 입실하셨습니다";
 
+        /**
+         * 0000... dummy 전화번호 방문자들 입실 처리 기능
+         */
+        checkRepresentativeVisitor(visitor);
+
         if (visitor.getStatus() == VisitorStatus.대기) {
             visitor.updateStatus(VisitorStatus.입실);
             visitor.checkIn();
@@ -63,6 +73,30 @@ public class QRcodeService {
         return result;
     }
 
+
+    private void checkRepresentativeVisitor(Visitor visitor){
+        List<Visitor> findVisitors = visitorRepository.findAllByReserveId(visitor.getReserveId());
+
+        if (isRepresentativeVisitor(findVisitors)){
+            findVisitors.forEach(
+                    visitor1 -> {
+                        if (visitor1.getStatus() == VisitorStatus.대기){
+                            visitor1.updateStatus(VisitorStatus.입실);
+                            visitor1.checkIn();
+                            log.info(seed.decrypt(visitor1.getName()) + "님이 입실하셨습니다");
+                            visitorRepository.save(visitor1);
+                        }
+                    }
+            );
+        }
+    }
+    private boolean isRepresentativeVisitor(List<Visitor> visitors){
+
+        Optional<Visitor> first = visitors.stream()
+                .filter(visitor1 -> visitor1.getPhone().equals("00000000000"))
+                .findFirst();
+        return first.isPresent();
+    }
     public void checkAllowedDevice(String deviceId) {
         log.info("DeviceId is {},", deviceId);
         if (!deviceRepository.existsById(deviceId)){
