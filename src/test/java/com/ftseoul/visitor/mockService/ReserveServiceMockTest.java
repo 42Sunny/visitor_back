@@ -9,6 +9,7 @@ import com.ftseoul.visitor.dto.visitor.VisitorDto;
 import com.ftseoul.visitor.dto.visitor.VisitorModifyDto;
 import com.ftseoul.visitor.exception.error.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
+import com.ftseoul.visitor.policy.ReserveType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class ReserveServiceMockTest extends MockReserveBaseTest{
         //given
         final List<VisitorDto> visitors = new ArrayList<>();
         visitors.add(new VisitorDto());
-        ReserveVisitorDto reserveRequestDto = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), visitors);
+        ReserveVisitorDto reserveRequestDto = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE,visitors);
 
        //when
 

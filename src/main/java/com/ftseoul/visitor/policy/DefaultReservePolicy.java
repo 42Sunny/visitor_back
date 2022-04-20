@@ -16,11 +16,13 @@ import com.ftseoul.visitor.websocket.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class DefaultReservePolicy implements ReservePolicy {
 
@@ -39,6 +41,7 @@ public class DefaultReservePolicy implements ReservePolicy {
 
     @Override
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto) {
+        log.info("seed{}",seed.toString());
         reserveVisitorDto = reserveVisitorDto.encryptDto(seed);
         Staff staff = staffService.findByName(reserveVisitorDto.getTargetStaffName());
         log.info("staff found: {}", staff);

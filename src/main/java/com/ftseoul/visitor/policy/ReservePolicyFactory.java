@@ -1,11 +1,13 @@
 package com.ftseoul.visitor.policy;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 
 @Component
+@Transactional
 public class ReservePolicyFactory {
 
     private final HashMap<ReserveType, ReservePolicy> reservePolicyHashMap = new HashMap<>();

@@ -15,10 +15,12 @@ import com.ftseoul.visitor.policy.ReserveType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class ReserveVisitorDto implements Serializable {
     @NotBlank(message = "예약 장소를 입력해주세요")
     private String place;
@@ -51,7 +53,9 @@ public class ReserveVisitorDto implements Serializable {
 
     public ReserveVisitorDto encryptDto(Seed seed) {
         this.targetStaffName = seed.encrypt(targetStaffName);
+        log.info("targetStaffName{}", this.targetStaffName);
         visitor = visitor.stream().map(visitorDto -> visitorDto.encryptDto(seed)).collect(Collectors.toList());
+        log.info("visitor {}", visitor.toString());
         return this;
     }
 }
