@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+
+import com.ftseoul.visitor.policy.ReservePolicy;
+import com.ftseoul.visitor.policy.ReservePolicyFactory;
+import com.ftseoul.visitor.policy.ReserveType;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,6 +58,9 @@ class ReserveServiceTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private ReservePolicyFactory reservePolicyFactory;
 
     Staff savedStaff;
 
@@ -187,10 +194,22 @@ class ReserveServiceTest {
     void 예약신청() {
         List<VisitorDto> mockVisitors = new ArrayList<>();
         mockVisitors.add(new VisitorDto());
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), mockVisitors);
+        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitors);
         Reserve result = reserveService.saveReserve(temp, savedStaff.getId());
         assertNotNull(result);
         reserveRepository.delete(result);
+
+    }
+
+    @Test
+    @Transactional
+    void 예약신청Policy() {
+        List<VisitorDto> mockVisitors = new ArrayList<>();
+        mockVisitors.add(new VisitorDto());
+        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT, mockVisitors);
+        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(ReserveType.DEFAULT);
+        defaultPolicy.saveReserve(temp);
+        //reserveRepository.delete();
     }
 
     @Test
