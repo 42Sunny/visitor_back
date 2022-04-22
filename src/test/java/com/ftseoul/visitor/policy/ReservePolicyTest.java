@@ -89,7 +89,7 @@ class ReservePolicyTest {
 
 
         //when
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitors);
+        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE.getTitle(), mockVisitors);
         ReservePolicy representativePolicy = reservePolicyFactory.getPolicy(temp.getType());
         Reserve reserve = representativePolicy.saveReserve(temp);
         Reserve reserve1 = reserveRepository.findById(reserve.getId()).orElseThrow(() -> new EntityNotFoundException("해당 예약 없음"));
@@ -119,7 +119,7 @@ class ReservePolicyTest {
         mockVisitors.add(visitor2);
 
         //when
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT, mockVisitors);
+        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT.getTitle(), mockVisitors);
         ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(temp.getType());
         Reserve reserve = defaultPolicy.saveReserve(temp);
         Reserve reserve1 = reserveRepository.findById(reserve.getId()).orElseThrow(() -> new EntityNotFoundException("해당 예약 없음"));
@@ -159,9 +159,9 @@ class ReservePolicyTest {
         mockVisitorsB.add(visitorC2);
 
         //when
-        ReserveVisitorDto tempA = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitorsA);
-        ReserveVisitorDto tempB = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitorsB);
-        ReserveVisitorDto tempC = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitorsC);
+        ReserveVisitorDto tempA = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE.getTitle(), mockVisitorsA);
+        ReserveVisitorDto tempB = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE.getTitle(), mockVisitorsB);
+        ReserveVisitorDto tempC = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE.getTitle(), mockVisitorsC);
         ReservePolicy reservePolicyA = reservePolicyFactory.getPolicy(tempA.getType());
         ReservePolicy reservePolicyB = reservePolicyFactory.getPolicy(tempB.getType());
         ReservePolicy reservePolicyC = reservePolicyFactory.getPolicy(tempC.getType());

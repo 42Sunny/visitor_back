@@ -31,7 +31,7 @@ public class ReserveServiceMockTest extends MockReserveBaseTest{
         //given
         final List<VisitorDto> visitors = new ArrayList<>();
         visitors.add(new VisitorDto());
-        ReserveVisitorDto reserveRequestDto = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE,visitors);
+        ReserveVisitorDto reserveRequestDto = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE.getTitle(),visitors);
 
        //when
 
