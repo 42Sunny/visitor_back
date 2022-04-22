@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,10 +52,13 @@ public class QRcodeService {
         String visitorName = seed.decrypt(visitor.getName());
         String message = visitorName + "님이 입실하셨습니다";
 
+        boolean representativeFlag = false;
         /**
          * 0000... dummy 전화번호 방문자들 입실 처리 기능
          */
-        checkRepresentativeVisitor(visitor);
+        representativeFlag = checkRepresentativeVisitor(visitor);
+        if (representativeFlag)
+            return new QRCheckResponseDto("2000", "인증된 방문자", "입실");
 
         if (visitor.getStatus() == VisitorStatus.대기) {
             visitor.updateStatus(VisitorStatus.입실);
@@ -73,11 +77,28 @@ public class QRcodeService {
         return result;
     }
 
-
-    private void checkRepresentativeVisitor(Visitor visitor){
+    /**
+     * Representative visitor 입실 처리 -> sendMessage
+     * 같은 reserveID 가지는 Visitors 찾은 후 representative 제외 리스트 생성 -> 입실처리 (메세지 X)
+     *
+     * @param visitor
+     * @return
+     */
+    private boolean checkRepresentativeVisitor(Visitor visitor){
         List<Visitor> findVisitors = visitorRepository.findAllByReserveId(visitor.getReserveId());
 
         if (isRepresentativeVisitor(findVisitors)){
+
+            visitor.updateStatus(VisitorStatus.입실);
+            visitor.checkIn();
+            log.info(visitor.getName() + "님이 입실하였습니다.");
+            socketService.sendMessageToSubscriber("/visitor", visitor.getName() + "님이 입실하였습니다.");
+            visitorRepository.save(visitor);
+
+            findVisitors = visitorRepository.findAllByReserveId(visitor.getReserveId()).stream()
+                    .filter(visitor1 -> !visitor1.getPhone().equals(visitor.getPhone()))
+                    .collect(Collectors.toList());
+
             findVisitors.forEach(
                     visitor1 -> {
                         if (visitor1.getStatus() == VisitorStatus.대기){
@@ -86,8 +107,15 @@ public class QRcodeService {
                             log.info(seed.decrypt(visitor1.getName()) + "님이 입실하셨습니다");
                             visitorRepository.save(visitor1);
                         }
+                        else if (visitor1.getStatus() == VisitorStatus.입실){
+                            log.info(seed.decrypt(visitor1.getName()) + "님이 입실하셨습니다");
+                        }
                     }
             );
+            return true;
+        }
+        else{
+            return false;
         }
     }
     private boolean isRepresentativeVisitor(List<Visitor> visitors){

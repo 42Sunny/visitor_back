@@ -58,7 +58,7 @@ public class RepresentativeReservePolicy implements ReservePolicy{
         visitors = visitors.stream()
                 .filter(visitor -> !visitor.getPhone().equals("00000000000"))
                 .collect(Collectors.toList());
-
+        log.info("visitors {}", visitors.toString());
         List<ShortUrlResponseDto> shortUrlList = shortUrlService.createShortUrls(visitors, staffReserveInfo);
         List<ShortUrlResponseDto> visitorShortUrls = shortUrlService.filterVisitorShortUrls(shortUrlList);
         ShortUrlResponseDto staffShortUrl = shortUrlService.filterStaffShortUrls(shortUrlList);
