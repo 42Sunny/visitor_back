@@ -14,6 +14,7 @@ import com.ftseoul.visitor.dto.staff.StaffReserveDto;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.policy.ReservePolicy;
 import com.ftseoul.visitor.policy.ReservePolicyFactory;
+import com.ftseoul.visitor.policy.ReserveType;
 import com.ftseoul.visitor.service.ReserveService;
 import com.ftseoul.visitor.service.ShortUrlService;
 import com.ftseoul.visitor.service.StaffService;
