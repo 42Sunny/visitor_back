@@ -141,7 +141,7 @@ public class ReserveController {
     @PostMapping(value = "/reserve/create")
     @Transactional
     public ResponseEntity<ReserveIdDto> saveReserve(@Valid @RequestBody ReserveVisitorDto reserveVisitorDto) {
-        ReservePolicy reservePolicy = reservePolicyFactory.getPolicy(reserveVisitorDto.getRepresentative());
+        ReservePolicy reservePolicy = reservePolicyFactory.getPolicy(reserveVisitorDto.getType());
         Reserve reserve = reservePolicy.saveReserve(reserveVisitorDto);
         return new ResponseEntity<>(new ReserveIdDto(reserve.getId()), HttpStatus.CREATED);
     }

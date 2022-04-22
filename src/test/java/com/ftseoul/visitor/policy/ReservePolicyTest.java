@@ -90,7 +90,7 @@ class ReservePolicyTest {
 
         //when
         ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitors);
-        ReservePolicy representativePolicy = reservePolicyFactory.getPolicy(temp.getRepresentative());
+        ReservePolicy representativePolicy = reservePolicyFactory.getPolicy(temp.getType());
         Reserve reserve = representativePolicy.saveReserve(temp);
         Reserve reserve1 = reserveRepository.findById(reserve.getId()).orElseThrow(() -> new EntityNotFoundException("해당 예약 없음"));
 
@@ -120,7 +120,7 @@ class ReservePolicyTest {
 
         //when
         ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT, mockVisitors);
-        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(temp.getRepresentative());
+        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(temp.getType());
         Reserve reserve = defaultPolicy.saveReserve(temp);
         Reserve reserve1 = reserveRepository.findById(reserve.getId()).orElseThrow(() -> new EntityNotFoundException("해당 예약 없음"));
         AtomicInteger i = new AtomicInteger(1);
@@ -162,9 +162,9 @@ class ReservePolicyTest {
         ReserveVisitorDto tempA = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitorsA);
         ReserveVisitorDto tempB = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitorsB);
         ReserveVisitorDto tempC = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitorsC);
-        ReservePolicy reservePolicyA = reservePolicyFactory.getPolicy(tempA.getRepresentative());
-        ReservePolicy reservePolicyB = reservePolicyFactory.getPolicy(tempB.getRepresentative());
-        ReservePolicy reservePolicyC = reservePolicyFactory.getPolicy(tempC.getRepresentative());
+        ReservePolicy reservePolicyA = reservePolicyFactory.getPolicy(tempA.getType());
+        ReservePolicy reservePolicyB = reservePolicyFactory.getPolicy(tempB.getType());
+        ReservePolicy reservePolicyC = reservePolicyFactory.getPolicy(tempC.getType());
         Reserve reserve = reservePolicyA.saveReserve(tempA);
         Reserve reserve1 = reservePolicyB.saveReserve(tempB);
         Reserve reserve2 = reservePolicyC.saveReserve(tempC);

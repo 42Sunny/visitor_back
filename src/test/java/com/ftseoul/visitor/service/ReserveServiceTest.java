@@ -203,17 +203,6 @@ class ReserveServiceTest {
 
     @Test
     @Transactional
-    void 예약신청Policy() {
-        List<VisitorDto> mockVisitors = new ArrayList<>();
-        mockVisitors.add(new VisitorDto());
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT, mockVisitors);
-        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(ReserveType.DEFAULT);
-        defaultPolicy.saveReserve(temp);
-        //reserveRepository.delete();
-    }
-
-    @Test
-    @Transactional
     void 스테프아이디로_예약삭제() {
 
         Staff staff = Staff
