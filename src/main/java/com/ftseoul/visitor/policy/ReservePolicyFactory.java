@@ -10,18 +10,18 @@ import java.util.List;
 @Transactional
 public class ReservePolicyFactory {
 
-    private final HashMap<ReserveType, ReservePolicy> reservePolicyHashMap = new HashMap<>();
+    private final HashMap<String, ReservePolicy> reservePolicyHashMap = new HashMap<>();
 
     public ReservePolicyFactory(List<ReservePolicy> reservePolicyList) {
         if (reservePolicyList.isEmpty()){
             throw new IllegalArgumentException("대표");
         }
         for (ReservePolicy reservePolicy : reservePolicyList){
-            reservePolicyHashMap.put(reservePolicy.getType(), reservePolicy);
+            reservePolicyHashMap.put(reservePolicy.getType().getTitle(), reservePolicy);
         }
     }
 
-    public ReservePolicy getPolicy(ReserveType reserveType){
+    public ReservePolicy getPolicy(String reserveType){
         return reservePolicyHashMap.get(reserveType);
     }
 }

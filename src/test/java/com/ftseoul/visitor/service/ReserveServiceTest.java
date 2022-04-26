@@ -194,7 +194,7 @@ class ReserveServiceTest {
     void 예약신청() {
         List<VisitorDto> mockVisitors = new ArrayList<>();
         mockVisitors.add(new VisitorDto());
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE, mockVisitors);
+        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.REPRESENTATIVE.getTitle(), mockVisitors);
         Reserve result = reserveService.saveReserve(temp, savedStaff.getId());
         assertNotNull(result);
         reserveRepository.delete(result);
@@ -206,8 +206,8 @@ class ReserveServiceTest {
     void 예약신청Policy() {
         List<VisitorDto> mockVisitors = new ArrayList<>();
         mockVisitors.add(new VisitorDto());
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT, mockVisitors);
-        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(ReserveType.DEFAULT);
+        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT.getTitle(), mockVisitors);
+        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(ReserveType.DEFAULT.getTitle());
         defaultPolicy.saveReserve(temp);
         //reserveRepository.delete();
     }
