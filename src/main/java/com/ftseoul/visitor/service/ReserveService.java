@@ -66,6 +66,10 @@ public class ReserveService{
         log.info("Search reserve lists by name and phone\nname: {}, phone: {}", seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<ReserveListResponseDto> response = new ArrayList<>();
+
+        if (isVisitorDummyPhoneNumber(requestDto))
+            return response;
+
         for (int i = 0; i < visitorList.size(); i++) {
             int finalI = i;
             Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
@@ -89,6 +93,10 @@ public class ReserveService{
                             .build());
         }
         return response;
+    }
+
+    private boolean isVisitorDummyPhoneNumber(ReserveRequestDto reserveRequestDto){
+        return reserveRequestDto.getPhone().equals("00000000000");
     }
 
 
