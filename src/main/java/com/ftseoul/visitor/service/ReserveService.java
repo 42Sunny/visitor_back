@@ -124,10 +124,10 @@ public class ReserveService{
                         .build());
     }
 
-
     private boolean isRepresentativeReservation(AtomicBoolean flag){
         return flag.get();
     }
+
     private boolean deleteVisitorInList(List<Visitor> list, ReserveRequestDto requestDto) {
         Optional<Visitor> toDeleteVisitor = list.stream().filter( visitor ->
                 (visitor.getName().equals(seed.encrypt(requestDto.getName())))
@@ -142,7 +142,6 @@ public class ReserveService{
         return true;
     }
 
-    
     public boolean visitorReserveDelete(Long reserveId, ReserveRequestDto requestDto) {
         log.info("Delete Reserve Id: {}", reserveId);
         log.info("Delete Visitors: {}", requestDto);
@@ -166,7 +165,6 @@ public class ReserveService{
         return result;
     }
 
-    
     public Reserve saveReserve(ReserveVisitorDto reserveVisitorDto, long staffId){
         checkDuplicatedPhone(reserveVisitorDto.getVisitor());
         Reserve reserve = reserveRepository.save(Reserve.builder()
