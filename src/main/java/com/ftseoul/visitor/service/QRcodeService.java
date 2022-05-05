@@ -52,11 +52,11 @@ public class QRcodeService {
         String visitorName = seed.decrypt(visitor.getName());
         String message = visitorName + "님이 입실하셨습니다";
 
-        boolean representativeFlag = false;
+
         /**
          * 0000... dummy 전화번호 방문자들 입실 처리 기능
          */
-        representativeFlag = checkRepresentativeVisitor(visitor);
+        boolean representativeFlag = checkRepresentativeVisitor(visitor);
         if (representativeFlag)
             return new QRCheckResponseDto("2000", "인증된 방문자", "입실");
 
@@ -121,7 +121,7 @@ public class QRcodeService {
     private boolean isRepresentativeVisitor(List<Visitor> visitors){
 
         Optional<Visitor> first = visitors.stream()
-                .filter(visitor1 -> visitor1.getPhone().equals("00000000000"))
+                .filter(visitor1 -> seed.encrypt(visitor1.getPhone()).equals("00000000000"))
                 .findFirst();
         return first.isPresent();
     }
