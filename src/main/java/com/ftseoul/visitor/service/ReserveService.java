@@ -67,7 +67,7 @@ public class ReserveService{
     public List<ReserveListResponseDto.Representative> findReservesByNameAndPhone(ReserveRequestDto requestDto) {
         log.info("Search reserve lists by name and phone\nname: {}, phone: {}", seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
         List<ReserveListResponseDto.Representative> response = new ArrayList<>();
-        if (isVisitorDummyPhoneNumber(requestDto.getPhone()))
+        if (isRequestDtoDummyPhoneNumber(requestDto))
             return response;
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
 
@@ -108,6 +108,10 @@ public class ReserveService{
 
     private boolean isVisitorDummyPhoneNumber(String phoneNum){
         return seed.decrypt(phoneNum).equals("00000000000");
+    }
+
+    private boolean isRequestDtoDummyPhoneNumber(ReserveRequestDto requestDto){
+        return requestDto.getPhone().equals("00000000000");
     }
 
     private void addResponseByReserveType(Reserve reserve, List<ReserveListResponseDto.Representative> response, List<VisitorDecryptDto> visitors, ReserveType reserveType){
