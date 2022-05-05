@@ -161,7 +161,7 @@ class ReserveServiceTest {
     @Transactional
     void 방문자_성함_핸드폰번호_예약조회() {
         ReserveRequestDto reserveRequestDto = new ReserveRequestDto("01011112222", "홍길동님");
-        List<ReserveListResponseDto> reservesByNameAndPhone = reserveService.findReservesByNameAndPhone(reserveRequestDto);
+        List<ReserveListResponseDto.Representative> reservesByNameAndPhone = reserveService.findReservesByNameAndPhone(reserveRequestDto);
         if (reservesByNameAndPhone.isEmpty()) {
             fail("조회되지 않음");
         }
@@ -199,17 +199,6 @@ class ReserveServiceTest {
         assertNotNull(result);
         reserveRepository.delete(result);
 
-    }
-
-    @Test
-    @Transactional
-    void 예약신청Policy() {
-        List<VisitorDto> mockVisitors = new ArrayList<>();
-        mockVisitors.add(new VisitorDto());
-        ReserveVisitorDto temp = new ReserveVisitorDto("개포", "김길동", "테스트", LocalDateTime.now(), ReserveType.DEFAULT.getTitle(), mockVisitors);
-        ReservePolicy defaultPolicy = reservePolicyFactory.getPolicy(ReserveType.DEFAULT.getTitle());
-        defaultPolicy.saveReserve(temp);
-        //reserveRepository.delete();
     }
 
     @Test

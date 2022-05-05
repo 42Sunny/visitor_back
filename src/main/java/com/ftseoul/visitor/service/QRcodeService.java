@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -52,11 +50,11 @@ public class QRcodeService {
         String visitorName = seed.decrypt(visitor.getName());
         String message = visitorName + "님이 입실하셨습니다";
 
-        boolean representativeFlag = false;
         /**
          * 0000... dummy 전화번호 방문자들 입실 처리 기능
          */
-        representativeFlag = checkRepresentativeVisitor(visitor);
+
+        boolean representativeFlag = checkRepresentativeVisitor(visitor);
         if (representativeFlag)
             return new QRCheckResponseDto("2000", "인증된 방문자", "입실");
 
@@ -87,17 +85,7 @@ public class QRcodeService {
     private boolean checkRepresentativeVisitor(Visitor visitor){
         List<Visitor> findVisitors = visitorRepository.findAllByReserveId(visitor.getReserveId());
 
-        if (isRepresentativeVisitor(findVisitors)){
-
-            visitor.updateStatus(VisitorStatus.입실);
-            visitor.checkIn();
-            log.info(visitor.getName() + "님이 입실하였습니다.");
-            socketService.sendMessageToSubscriber("/visitor", visitor.getName() + "님이 입실하였습니다.");
-            visitorRepository.save(visitor);
-
-            findVisitors = visitorRepository.findAllByReserveId(visitor.getReserveId()).stream()
-                    .filter(visitor1 -> !visitor1.getPhone().equals(visitor.getPhone()))
-                    .collect(Collectors.toList());
+        if (isVisitorDummyPhoneNum(findVisitors)){
 
             findVisitors.forEach(
                     visitor1 -> {
@@ -105,10 +93,12 @@ public class QRcodeService {
                             visitor1.updateStatus(VisitorStatus.입실);
                             visitor1.checkIn();
                             log.info(seed.decrypt(visitor1.getName()) + "님이 입실하셨습니다");
+                            socketService.sendMessageToSubscriber("/visitor", seed.decrypt(visitor1.getName()) + "님이 입실하였습니다.");
                             visitorRepository.save(visitor1);
                         }
                         else if (visitor1.getStatus() == VisitorStatus.입실){
                             log.info(seed.decrypt(visitor1.getName()) + "님이 입실하셨습니다");
+                            socketService.sendMessageToSubscriber("/visitor", seed.decrypt(visitor1.getName()) + "님이 입실하였습니다.");
                         }
                     }
             );
@@ -118,12 +108,9 @@ public class QRcodeService {
             return false;
         }
     }
-    private boolean isRepresentativeVisitor(List<Visitor> visitors){
-
-        Optional<Visitor> first = visitors.stream()
-                .filter(visitor1 -> visitor1.getPhone().equals("00000000000"))
-                .findFirst();
-        return first.isPresent();
+    private boolean isVisitorDummyPhoneNum(List<Visitor> visitors){
+        return visitors.stream()
+                .anyMatch(visitor1 -> seed.decrypt(visitor1.getPhone()).equals("00000000000"));
     }
     public void checkAllowedDevice(String deviceId) {
         log.info("DeviceId is {},", deviceId);

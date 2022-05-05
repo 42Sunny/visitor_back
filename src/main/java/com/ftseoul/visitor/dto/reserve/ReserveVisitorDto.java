@@ -47,6 +47,7 @@ public class ReserveVisitorDto implements Serializable {
                 ", targetStaffName='" + targetStaffName + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", date=" + date +
+                ", type=" + type +
                 ", visitor=" + visitor +
                 '}';
     }

@@ -45,7 +45,12 @@ public class WAuthFilter {
             );
             if (exchange.getBody() == null)
                 return false;
-            return exchange.getBody().get("payload").get("isAdmin").asBoolean();
+            if (exchange.getBody().get("payload") != null){
+                return exchange.getBody().get("payload").get("isAdmin").asBoolean();
+            }
+            else{
+                return exchange.getBody().get("isAdmin").asBoolean();
+            }
         } else {
             log.error("어드민 계정으로 다시 시도해주세요.");
             return false;

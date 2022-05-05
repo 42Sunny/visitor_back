@@ -66,7 +66,7 @@ public class ReserveController {
     }
 
     @PostMapping("/reserves")
-    public List<ReserveListResponseDto> searchReserveList(@Valid @RequestBody ReserveRequestDto reserveRequestDto) {
+    public List<ReserveListResponseDto.Representative> searchReserveList(@Valid @RequestBody ReserveRequestDto reserveRequestDto) {
         return reserveService.findReservesByNameAndPhone(reserveRequestDto);
     }
 
