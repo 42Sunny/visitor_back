@@ -15,12 +15,14 @@ import com.ftseoul.visitor.dto.payload.Response;
 import com.ftseoul.visitor.encrypt.Seed;
 import com.ftseoul.visitor.exception.error.PhoneDuplicatedException;
 import com.ftseoul.visitor.exception.error.ResourceNotFoundException;
+import com.ftseoul.visitor.policy.ReserveType;
 import com.ftseoul.visitor.websocket.WebSocketService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @Slf4j
-public class ReserveService {
+public class ReserveService{
 
     private final ReserveRepository reserveRepository;
     private final VisitorRepository visitorRepository;
@@ -40,6 +42,7 @@ public class ReserveService {
     private final Seed seed;
     private final WebSocketService socketService;
 
+    
     public ReserveListResponseDto findById(Long id) {
         Reserve reserve = reserveRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", id));
@@ -60,34 +63,73 @@ public class ReserveService {
                 .visitor(visitor)
                 .build();
     }
-
-    public List<ReserveListResponseDto> findReservesByNameAndPhone(ReserveRequestDto requestDto) {
+    
+    public List<ReserveListResponseDto.Representative> findReservesByNameAndPhone(ReserveRequestDto requestDto) {
         log.info("Search reserve lists by name and phone\nname: {}, phone: {}", seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
+        List<ReserveListResponseDto.Representative> response = new ArrayList<>();
+        if (isRequestDtoDummyPhoneNumber(requestDto))
+            return response;
         List<Visitor> visitorList = visitorRepository.findAllByNameAndPhone(seed.encrypt(requestDto.getName()), seed.encrypt(requestDto.getPhone()));
-        List<ReserveListResponseDto> response = new ArrayList<>();
+
         for (int i = 0; i < visitorList.size(); i++) {
             int finalI = i;
+            AtomicBoolean representativeFlag = new AtomicBoolean(false);
             Reserve reserve = reserveRepository.findById(visitorList.get(i).getReserveId())
                     .orElseThrow(() -> new ResourceNotFoundException("Reserve", "id", visitorList.get(finalI).getReserveId()));
             List<VisitorDecryptDto> visitors = visitorRepository.findAllByReserveId(reserve.getId())
-                    .stream().map(v -> VisitorDecryptDto.builder()
-                            .reserveId(v.getReserveId())
-                            .name(v.getName())
-                            .phone(v.getPhone())
-                            .organization(v.getOrganization())
-                            .build().decryptDto(seed)).collect(Collectors.toList());
-            response
-                    .add(ReserveListResponseDto.builder()
-                            .id(reserve.getId())
-                            .date(reserve.getDate())
-                            .place(reserve.getPlace())
-                            .purpose(reserve.getPurpose())
-                            .staff(staffService.decryptStaff(staffRepository.findById(reserve.getTargetStaff())
-                                    .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff()))))
-                            .visitor(visitors)
-                            .build());
+                    .stream()
+                    .map(v -> {
+                        if (isVisitorDummyPhoneNumber(v.getPhone())){
+                            representativeFlag.set(true);
+                        }
+                        return VisitorDecryptDto.builder()
+                                .reserveId(v.getReserveId())
+                                .name(v.getName())
+                                .phone(v.getPhone())
+                                .organization(v.getOrganization())
+                                .build().decryptDto(seed);
+                    }).collect(Collectors.toList());
+
+            addResponseByRepresentativeFlag(representativeFlag, response, reserve,visitors);
         }
         return response;
+    }
+
+    private void addResponseByRepresentativeFlag(AtomicBoolean flag, List<ReserveListResponseDto.Representative> response, Reserve reserve,
+                                                 List<VisitorDecryptDto> visitors){
+        if (isRepresentativeReservation(flag)){
+            addResponseByReserveType(reserve, response, visitors, ReserveType.REPRESENTATIVE);
+        }
+        else{
+            addResponseByReserveType(reserve, response, visitors, ReserveType.DEFAULT);
+        }
+
+    }
+
+    private boolean isVisitorDummyPhoneNumber(String phoneNum){
+        return seed.decrypt(phoneNum).equals("00000000000");
+    }
+
+    private boolean isRequestDtoDummyPhoneNumber(ReserveRequestDto requestDto){
+        return requestDto.getPhone().equals("00000000000");
+    }
+
+    private void addResponseByReserveType(Reserve reserve, List<ReserveListResponseDto.Representative> response, List<VisitorDecryptDto> visitors, ReserveType reserveType){
+        response
+                .add(ReserveListResponseDto.Representative.builder()
+                        .id(reserve.getId())
+                        .date(reserve.getDate())
+                        .place(reserve.getPlace())
+                        .purpose(reserve.getPurpose())
+                        .staff(staffService.decryptStaff(staffRepository.findById(reserve.getTargetStaff())
+                                .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff()))))
+                        .visitor(visitors)
+                        .reserveType(reserveType)
+                        .build());
+    }
+
+    private boolean isRepresentativeReservation(AtomicBoolean flag){
+        return flag.get();
     }
 
     private boolean deleteVisitorInList(List<Visitor> list, ReserveRequestDto requestDto) {
@@ -139,6 +181,17 @@ public class ReserveService {
         return reserve;
     }
 
+    public Reserve saveReserveWithoutCheckDup(ReserveVisitorDto reserveVisitorDto, long staffId){
+        Reserve reserve = reserveRepository.save(Reserve.builder()
+                .targetStaff(staffId)
+                .place(reserveVisitorDto.getPlace())
+                .purpose(reserveVisitorDto.getPurpose())
+                .date(reserveVisitorDto.getDate())
+                .build());
+        log.info("Reserve Saved: {}", reserve);
+        return reserve;
+    }
+    
     public Reserve updateReserve(ReserveModifyDto reserveModifyDto, long staffId) {
         Reserve reserve = reserveRepository
             .findById(reserveModifyDto.getReserveId())
@@ -150,6 +203,7 @@ public class ReserveService {
         return reserve;
     }
 
+    
     public void checkDuplicatedPhone(List<VisitorDto> visitorDto) {
         log.info("Check phone Duplication");
         Set<String> phones = new HashSet<>();
@@ -162,6 +216,7 @@ public class ReserveService {
         }
     }
 
+    
     public Response deleteById(Long id) {
         Optional<Reserve> reserve = reserveRepository.findById(id);
         if (reserve.isEmpty()) {
@@ -173,6 +228,7 @@ public class ReserveService {
         return new Response("2000", "예약이 삭제되었습니다");
     }
 
+    
     public void deleteAllByStaffId(Long id) {
         log.info("스태프 id: {}에 해당하는 예약 및 방문객 정보들을 삭제합니다", id);
         List<Reserve> reserveList = reserveRepository.findAllByTargetStaff(id);
@@ -185,6 +241,7 @@ public class ReserveService {
         }
     }
 
+    
     public Long findStaffByReserveId(Long reserveId) {
         Optional<Reserve> reserve = reserveRepository.findById(reserveId);
         return reserve.get().getTargetStaff();
