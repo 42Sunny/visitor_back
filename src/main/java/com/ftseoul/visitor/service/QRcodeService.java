@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -87,7 +85,7 @@ public class QRcodeService {
     private boolean checkRepresentativeVisitor(Visitor visitor){
         List<Visitor> findVisitors = visitorRepository.findAllByReserveId(visitor.getReserveId());
 
-        if (isRepresentativeVisitor(findVisitors)){
+        if (isVisitorDummyPhoneNum(findVisitors)){
 
             findVisitors.forEach(
                     visitor1 -> {
@@ -110,7 +108,7 @@ public class QRcodeService {
             return false;
         }
     }
-    private boolean isRepresentativeVisitor(List<Visitor> visitors){
+    private boolean isVisitorDummyPhoneNum(List<Visitor> visitors){
         return visitors.stream()
                 .anyMatch(visitor1 -> seed.decrypt(visitor1.getPhone()).equals("00000000000"));
     }
