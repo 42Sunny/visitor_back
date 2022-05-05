@@ -9,6 +9,6 @@ public enum ReserveType {
     private final String title;
 
     public String getTitle() {
-        return name();
+        return title;
     }
 }

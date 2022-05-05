@@ -120,7 +120,7 @@ public class ReserveService{
                         .staff(staffService.decryptStaff(staffRepository.findById(reserve.getTargetStaff())
                                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", reserve.getTargetStaff()))))
                         .visitor(visitors)
-                        .reserveType(ReserveType.REPRESENTATIVE)
+                        .reserveType(reserveType)
                         .build());
     }
 

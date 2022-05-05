@@ -34,7 +34,7 @@ public class ReserveVisitorDto implements Serializable {
     private LocalDateTime date;
 
     @NotBlank(message = "예약 정책을 입력해주세요")
-    private ReserveType type;
+    private String type;
 
     @NotNull(message = "방문자는 최소 한명이상이어야 합니다")
     @Valid
