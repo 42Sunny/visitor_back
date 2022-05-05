@@ -107,7 +107,7 @@ public class ReserveService{
     }
 
     private boolean isVisitorDummyPhoneNumber(String phoneNum){
-        return phoneNum.equals("00000000000");
+        return seed.decrypt(phoneNum).equals("00000000000");
     }
 
     private void addResponseByReserveType(Reserve reserve, List<ReserveListResponseDto.Representative> response, List<VisitorDecryptDto> visitors, ReserveType reserveType){
