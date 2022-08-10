@@ -20,7 +20,7 @@ public class CustomP6spySqlFormat implements MessageFormattingStrategy {
     private static final String MS = " ms\n";
     private static final String CONNECTION_ID = "\n\n\tConnection ID : ";
     private static final String NEW_LINE = "\n--------------------------------------";
-    private static final String QUERY_FILE_NAME = "../p6spy-%s.log";
+    private static final String QUERY_FILE_NAME = "../query_log/p6spy-%s.log";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final Logger logger = LoggerFactory.getLogger(CustomP6spySqlFormat.class);
 
