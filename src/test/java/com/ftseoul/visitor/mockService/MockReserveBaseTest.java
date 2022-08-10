@@ -52,7 +52,7 @@ public class MockReserveBaseTest {
         initStaff();
     }
 
-    void initSeed(){
+    private void initSeed(){
         ReflectionTestUtils.setField(seed, "key", "visitorcrypt$#@!");
         ReflectionTestUtils.setField(seed, "IV", "visitor987654321");
         ReflectionTestUtils.setField(seed, "pbszUserKey", "visitor987654321".getBytes(StandardCharsets.UTF_8));
